@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import addIcon from '../assets/add-pic.png';
@@ -10,7 +10,6 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
     const [newBio, setNewBio] = useState('');
-    const [newProfilePicture, setNewProfilePicture] = useState(null);
     const [error, setError] = useState("");
 
     const user = auth.currentUser;
@@ -29,21 +28,19 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         fetchProfile();
     }, [user]);
 
-    const handleProfilePictureUpload = async () => {
-        if (!newProfilePicture) return;
+    const handleProfilePictureUpload = async (file) => {
+        if (!file) return;
 
         try {
             const profilePictureRef = ref(storage, `profilePictures/${user.uid}`);
-            await uploadBytes(profilePictureRef, newProfilePicture);
+            await uploadBytes(profilePictureRef, file);
             const downloadURL = await getDownloadURL(profilePictureRef);
 
+            // Update Firestore with new profile picture URL
             const profileRef = doc(db, 'users', user.uid);
-            await updateDoc(profileRef, {
-                profilePictureURL: downloadURL,
-            });
+            await updateDoc(profileRef, { profilePictureURL: downloadURL });
 
             setProfile((prevProfile) => ({ ...prevProfile, profilePictureURL: downloadURL }));
-            setNewProfilePicture(null);
             onProfileUpdate();
         } catch (error) {
             console.error("Error uploading profile picture:", error);
@@ -53,19 +50,18 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
 
     const handleSave = async () => {
         if (user) {
-            const profileRef = doc(db, 'users', user.uid);
             try {
+                const profileRef = doc(db, 'users', user.uid);
                 await updateDoc(profileRef, {
                     name: newName || profile.name,
                     bio: newBio || profile.bio,
                 });
-                setProfile({ name: newName || profile.name, bio: newBio || profile.bio });
+                setProfile({ 
+                    name: newName || profile.name, 
+                    bio: newBio || profile.bio, 
+                    profilePictureURL: profile.profilePictureURL 
+                });
                 setIsEditing(false);
-
-                if (newProfilePicture) {
-                    await handleProfilePictureUpload();
-                }
-
                 onProfileUpdate();
             } catch (error) {
                 console.error("Error saving profile:", error);
@@ -82,24 +78,23 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         <div style={styles.sidebar}>
             <button onClick={onClose} style={styles.closeButton}>X</button>
             <div style={styles.profileContainer}>
-            <div style={styles.profilePictureContainer}>
-                <img 
-                    src={profile.profilePictureURL || addIcon} 
-                    alt="Add Icon" 
-                    style={styles.addIcon} 
-                />
-                <input 
-                    type="file" 
-                    style={styles.fileInput} 
-                    onChange={(e) => setNewProfilePicture(e.target.files[0])} 
+                <div style={styles.profilePictureContainer}>
+                    <img 
+                        src={profile.profilePictureURL || addIcon} 
+                        alt="Profile" 
+                        style={styles.addIcon} 
                     />
-            </div>
+                    <input 
+                        type="file" 
+                        style={styles.fileInput} 
+                        onChange={(e) => handleProfilePictureUpload(e.target.files[0])} // Automatically upload on selection
+                    />
+                </div>
 
-            <div style={styles.profileText}>
-                <h2 style={styles.name}>{profile.name || "User Name"}</h2>
-                {profile.bio && <p style={styles.bio}>{profile.bio}</p>} {/* Render bio only if it exists */}
-            </div>
-
+                <div style={styles.profileText}>
+                    <h2 style={styles.name}>{profile.name || "User Name"}</h2>
+                    {profile.bio && <p style={styles.bio}>{profile.bio}</p>}
+                </div>
             </div>
             {isEditing ? (
                 <div style={styles.editContainer}>
