@@ -7,12 +7,11 @@ import addIcon from '../assets/add-pic.png';
 import './profilesidebar.css';
 
 const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
-    const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '', streakCount: 0 });
+    const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '', streak: 0 });
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
     const [newBio, setNewBio] = useState('');
     const [error, setError] = useState("");
-    const [streak, setStreak] = useState(0);
 
     const user = auth.currentUser;
     const storage = getStorage();
@@ -61,7 +60,8 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
                 setProfile({ 
                     name: newName || profile.name, 
                     bio: newBio || profile.bio, 
-                    profilePictureURL: profile.profilePictureURL 
+                    profilePictureURL: profile.profilePictureURL,
+                    streak: profile.streak
                 });
                 setIsEditing(false);
                 onProfileUpdate();
@@ -95,15 +95,16 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
 
                 <div className="profileText">
                     <h2 className="name">{profile.name || "User Name"}</h2>
-                    <p className="bio">{profile.bio || "Hello"}</p>
+                    <p className="bio" style={{ fontStyle: 'italic' }}>
+                        {profile.bio || ""}
+                    </p>
                     <div className="streak-container">
                         <span role="img" aria-label="fire">🔥</span>
-                        <p className="streak">
-                            Streak: {profile.streak === 0 ? "No days yet" : `${profile.streak} ${profile.streak === 1 ? "day" : "days"}`}
+                        <p className="streak" style={{ fontStyle: 'italic' }}>
+                            Streak: {profile.streak > 0 ? `${profile.streak} ${profile.streak === 1 ? "day" : "days"}` : "No days yet"}
                         </p>
                     </div>
                 </div>
-
             </div>
             {isEditing ? (
                 <div className="editContainer">

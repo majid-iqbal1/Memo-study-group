@@ -48,41 +48,30 @@ export const Auth = () => {
     };
 
     const updateStreak = async (user) => {
-        if (!user) return;
-    
         const userRef = doc(db, 'users', user.uid);
         const userSnap = await getDoc(userRef);
-        
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); 
     
         if (userSnap.exists()) {
-            const userData = userSnap.data();
-            const lastLoginDate = userData.lastLogin?.toDate();
+            const data = userSnap.data();
+            const lastLogin = data.lastLogin ? data.lastLogin.toDate() : null;
+            const today = new Date();
+            
+            let newStreak = data.streak || 1;
+            
+            if (lastLogin) {
+                const differenceInDays = Math.floor((today - lastLogin) / (1000 * 60 * 60 * 24));
     
-            if (lastLoginDate) {
-                lastLoginDate.setHours(0, 0, 0, 0); 
-    
-                const timeDifference = today.getTime() - lastLoginDate.getTime();
-                const dayDifference = timeDifference / (1000 * 60 * 60 * 24); 
-    
-                if (dayDifference === 1) {
-                    await updateDoc(userRef, {
-                        streak: (userData.streak || 0) + 1,
-                        lastLogin: new Date()
-                    });
-                } else if (dayDifference > 1) {
-                    await updateDoc(userRef, {
-                        streak: 1,
-                        lastLogin: new Date()
-                    });
+                if (differenceInDays === 1) {
+                    newStreak += 1;
+                } else if (differenceInDays > 1) {
+                    newStreak = 1; // Reset if more than one day passed
                 }
-            } else {
-                await updateDoc(userRef, {
-                    streak: 1,
-                    lastLogin: new Date()
-                });
             }
+    
+            await updateDoc(userRef, {
+                streak: newStreak,
+                lastLogin: Timestamp.fromDate(today)
+            });
         }
     };
     
