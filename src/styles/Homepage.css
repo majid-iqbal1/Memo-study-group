@@ -35,21 +35,6 @@ header {
   float: left;
 }
 
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 20px;
-  padding: 0;
-}
-
-.nav-links a {
-  display: block;
-  color: #333;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.3s ease; /* Add transition for smooth scaling */
-}
 
 .nav-links ul {
   list-style-type: none;
@@ -59,13 +44,8 @@ header {
 }
 
 .nav-links li {
-  float: left;
-}
-
-.nav-links a:hover {
-  color: #3c91e6;
-  background-color: #f0f8ff; /* Light background color on hover */
-  transform: scale(1.1); /* Slightly enlarge the item on hover */
+  display: flex;
+  align-items: center;
 }
 
 main {
@@ -172,11 +152,16 @@ footer {
   margin-top: auto;
 }
 
+
 .logo-image {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 10px;
-  transition: transform 0.2s ease;
+  height: 70px; 
+  width: auto;
+  cursor: pointer; 
+  transition: transform 0.3s ease; 
+}
+
+.logo-image:hover {
+  transform: scale(1.05); 
 }
 
 .guide-item:hover .logo-image {
@@ -266,20 +251,25 @@ header {
   display: flex;
   list-style: none;
   gap: 20px;
-  padding: auto;
-  font-size: 20px;
+  margin-left: auto;
+  padding: 0;
+  align-items: center; /* Aligns nav links vertically with the logo */
 }
 
 .nav-links a {
   display: block;
   color: #333;
   text-align: center;
-  padding: 14px 16px;
+  padding: 10px 15px;
+  font-size: 1.2em; 
   text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
 .nav-links a:hover {
   color: #3c91e6;
+  background-color: #f0f8ff;
+  transform: scale(1.1);
 }
 
 main {
@@ -332,8 +322,14 @@ footer {
 .sign-out-button:hover {
   background-color: red;
 }
+.home-logo-image {
+  width: 100px;
+  height: auto;
+  z-index: 10; 
+  position: relative;
+  margin-right: 20px;
+}
 
-/* Icon and other specific styles remain unchanged */
 .logo-image {
   width: 50px;
   height: auto;
@@ -369,11 +365,20 @@ footer {
 }
 
 .profile-name {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #333;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  cursor: default;
+
 }
 
-/* Profile icon styles */
+.profile-name:hover {
+  color: #3c91e6;
+  background-color: #f0f8ff;
+  transform: scale(1.1);
+}
+
 .profile-icon {
   width: 50px;
   height: 50px;

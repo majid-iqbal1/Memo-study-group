@@ -43,15 +43,17 @@ const Homepage = () => {
         <div className="nav-container">
             <header>
             <nav>
-            <a href="/homepage" className="logo">Memo+</a>
-            <ul className="nav-links">
-                <li><Link to="/library">Your Library</Link></li>
-                <li><Link to="/create">Create</Link></li>
-                <li><Link to="/join">Join Groups</Link></li>
-                <li><Link to="/about">About Us</Link></li> 
-                <li><Link to="/contact">Contact</Link></li>
-            </ul>
-        </nav>
+                <Link to="/homepage" className="logo">
+                    <img src="/logo.png" alt="Memo+ Logo" className="home-logo-image" />
+                </Link>
+                <ul className="nav-links">
+                    <li><Link to="/library">Your Library</Link></li>
+                    <li><Link to="/create">Create</Link></li>
+                    <li><Link to="/join">Join Groups</Link></li>
+                    <li><Link to="/about">About Us</Link></li>
+                    <li><Link to="/contact">Contact</Link></li>
+                </ul>
+            </nav>
                 <div className="profile-container">
                     <span className="profile-name">{user ? user.name : 'User'}</span>
                     <button className="profile-icon" onClick={openSidebar}>
