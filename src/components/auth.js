@@ -1,40 +1,42 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
-import { auth, googleProvider } from '../config/firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 
 export const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isSigningUp, setIsSigningUp] = useState(false); // Track if user is in sign-up mode
+    const navigate = useNavigate();
 
-
-    const signIn = async () => {
+    const handleEmailAuth = async () => {
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        console.error(error);
-    }
-};
+            if (isSigningUp) {
+                // Sign up with email and password
+                await createUserWithEmailAndPassword(auth, email, password);
+            } else {
+                // Log in with email and password
+                await signInWithEmailAndPassword(auth, email, password);
+            }
+            navigate('/homepage'); // Redirect after successful sign up or login
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-const signInWithGoogle = async () => {
-    try {
-        await signInWithPopup(auth,googleProvider);
-} catch (error) {
-    console.error(error);
-}
-};
-
-/* const logOut = async () => {
-    try {
-        await signOut(auth);
-} catch (error) {
-    console.error(error);
-}
-}; */
+    const signInWithGoogle = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider);
+            navigate('/homepage'); // Redirect after Google sign-in
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div style={styles.container}>
             <div style={styles.form}>
-                <h2 style={styles.heading}>Sign In</h2>
+                <h2 style={styles.heading}>{isSigningUp ? "Sign Up" : "Sign In"}</h2>
                 <input
                     style={styles.input}
                     type="email"
@@ -47,13 +49,23 @@ const signInWithGoogle = async () => {
                     placeholder="Password.."
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button style={styles.button} onClick={signIn}>Sign In</button>
-                <button style={styles.Google_button} onClick={signInWithGoogle}> Sign In With Google</button>
+                <button style={styles.button} onClick={handleEmailAuth}>
+                    {isSigningUp ? "Sign Up" : "Sign In"}
+                </button>
+                <button style={styles.Google_button} onClick={signInWithGoogle}>
+                    Sign In With Google
+                </button>
+                <button
+                    style={styles.toggleButton}
+                    onClick={() => setIsSigningUp(!isSigningUp)}
+                >
+                    {isSigningUp ? "Already have an account? Sign In" : "Don’t have an account? Sign Up"}
+                </button>
             </div>
         </div>
     );
 };
-//<button onClick={logOut}>Sign Out</button>
+
 const styles = {
     container: {
         display: 'flex',
@@ -97,17 +109,26 @@ const styles = {
         cursor: 'pointer',
     },
     Google_button: {
-        marginTop: '0.5rem',      // Smaller margin for tighter spacing
-        padding: '0.5rem 1rem',   // Reduced padding for a smaller button size
-        width: 'auto',            // Allows the button to fit the text content
+        marginTop: '0.5rem',
+        padding: '0.5rem 1rem',
+        width: 'auto',
         borderRadius: '4px',
         border: 'none',
-        backgroundColor: '#4285F4', // Standard Google blue color for brand consistency
+        backgroundColor: '#4285F4',
         color: '#ffffff',
-        fontSize: '0.9rem',       // Slightly smaller font size
+        fontSize: '0.9rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         cursor: 'pointer',
+    },
+    toggleButton: {
+        marginTop: '1rem',
+        background: 'none',
+        border: 'none',
+        color: '#007bff',
+        cursor: 'pointer',
+        fontSize: '0.9rem',
+        textDecoration: 'underline',
     }
 };
