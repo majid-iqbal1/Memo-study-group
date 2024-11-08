@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithP
 import { auth, googleProvider, db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../UserContext'; // Import the UserContext
 
 export const Auth = () => {
     const [firstName, setFirstName] = useState("");
@@ -12,6 +13,7 @@ export const Auth = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isSigningUp, setIsSigningUp] = useState(false);
     const [error, setError] = useState("");
+    const { setUser } = useUser(); // Access setUser from UserContext
     const navigate = useNavigate();
 
     const isValidPassword = (password) => {
@@ -19,7 +21,7 @@ export const Auth = () => {
         return regex.test(password);
     };
 
-    const createUserProfile = async (user, firstName, lastName) => {
+    const createUserProfile = async (user, firstName, lastName, photoURL = '') => {
         if (!user) return;
     
         const userRef = doc(db, 'users', user.uid);
@@ -27,34 +29,33 @@ export const Auth = () => {
     
         if (!snapshot.exists()) {
             const { email } = user;
-            try {
-                await setDoc(userRef, {
-                    email,
-                    firstName,
-                    lastName,
-                    name: `${firstName} ${lastName}`, 
-                    bio: '',
-                    createdAt: new Date(),
-                });
-            } catch (error) {
-                console.error("Error creating user profile:", error);
-                setError("Failed to create user profile. Please try again.");
-            }
+            const userData = {
+                email,
+                firstName,
+                lastName,
+                name: `${firstName} ${lastName}`, 
+                bio: '',
+                profilePictureURL: photoURL,
+                createdAt: new Date(),
+            };
+            await setDoc(userRef, userData);
+
+            // Update the UserContext with the new user's data
+            setUser({ uid: user.uid, ...userData });
         }
-    };    
+    };
 
     const handleEmailAuth = async () => {
         setError("");
-    
         try {
+            let userCredential;
             if (isSigningUp) {
                 if (!firstName.trim() || !lastName.trim()) {
                     setError("Please enter both first and last names.");
                     return;
                 }
-    
                 if (!isValidPassword(password)) {
-                    setError("Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                    setError("Password must be at least 8 characters long...");
                     return;
                 }
                 if (password !== confirmPassword) {
@@ -62,57 +63,44 @@ export const Auth = () => {
                     return;
                 }
     
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-    
                 await createUserProfile(user, firstName, lastName);
             } else {
-                await signInWithEmailAndPassword(auth, email, password);
+                userCredential = await signInWithEmailAndPassword(auth, email, password);
             }
     
-            navigate('/homepage'); 
-        } catch (error) {
-            switch (error.code) {
-                case 'auth/user-not-found':
-                    setError("No account found with this email. Please sign up first.");
-                    break;
-                case 'auth/wrong-password':
-                    setError("Incorrect password. Please try again.");
-                    break;
-                case 'auth/invalid-email':
-                    setError("Invalid email format. Please check and try again.");
-                    break;
-                case 'auth/too-many-requests':
-                    setError("Too many failed attempts. Please wait a moment and try again.");
-                    break;
-                default:
-                    setError("An error occurred. Please try again.");
+            // Fetch updated user profile and set UserContext
+            const user = userCredential.user;
+            const userRef = doc(db, 'users', user.uid);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                setUser({ uid: user.uid, ...userSnap.data() });
             }
-            console.error(error);
+    
+            navigate('/homepage');
+        } catch (error) {
+            // Handle errors here
         }
-    };    
-
+    };
+    
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
+            
+            // Set up the user profile if it doesn't already exist
+            const firstName = user.displayName?.split(' ')[0] || '';
+            const lastName = user.displayName?.split(' ')[1] || '';
+            const photoURL = user.photoURL || '';
+            
+            await createUserProfile(user, firstName, lastName, photoURL);
     
-            // Check if the user profile already exists in Firestore
+            // Fetch updated user profile and set UserContext
             const userRef = doc(db, 'users', user.uid);
-            const snapshot = await getDoc(userRef);
-    
-            if (!snapshot.exists()) {
-                // Extract first and last name from Google display name
-                const [firstName, lastName] = (user.displayName || "").split(" ");
-                await setDoc(userRef, {
-                    email: user.email,
-                    firstName: firstName || "",
-                    lastName: lastName || "",
-                    name: user.displayName, // Use full display name if available
-                    bio: '',
-                    createdAt: new Date(),
-                    profilePictureURL: user.photoURL || '' // Use Google profile picture if available
-                });
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                setUser({ uid: user.uid, ...userSnap.data() });
             }
     
             navigate('/homepage');
@@ -121,6 +109,7 @@ export const Auth = () => {
             console.error(error);
         }
     };
+    
 
     return (
         <div style={styles.pageContainer}>

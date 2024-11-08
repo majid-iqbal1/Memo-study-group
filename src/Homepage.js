@@ -8,34 +8,13 @@ import ProfileSidebar from '../src/components/profilesildebar.js';
 import { useUser } from './UserContext';
 
 const Homepage = () => {
-    const { user } = useUser();
-    const [userName, setUserName] = useState('');
-    const [profilePictureURL, setProfilePictureURL] = useState(null);
+    const { user } = useUser(); // Access the user from the UserContext
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserName = async (user) => {
-            if (user) {
-                const userRef = doc(db, 'users', user.uid);
-                const userSnap = await getDoc(userRef);
-                if (userSnap.exists()) {
-                    const data = userSnap.data();
-                    setUserName(data.name || `${data.firstName} ${data.lastName}`);
-                    setProfilePictureURL(data.profilePictureURL || null);
-                }
-            }
-        };
-
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                fetchUserName(user);
-            } else {
-            }
-        });
-
-        return () => unsubscribe();
-    }, []);
+        // If user context is updated, it will automatically trigger UI updates
+    }, [user]);
 
     const getInitials = (name) => {
         if (!name) return "";
@@ -64,7 +43,7 @@ const Homepage = () => {
         <div className="homepage-container">
             <header>
                 <nav>
-                    <a href="index.html" className="logo">Memo+</a>
+                    <a href="homepage" className="logo">Memo+</a>
                     <ul className="nav-links">
                         <li><a href="#">Library</a></li>
                         <li><a href="#">Create</a></li>
@@ -73,12 +52,12 @@ const Homepage = () => {
                     </ul>
                 </nav>
                 <div className="profile-container">
-                    <span className="profile-name">{userName}</span>
+                    <span className="profile-name">{user ? user.name : 'User'}</span>
                     <button className="profile-icon" onClick={openSidebar}>
-                        {profilePictureURL ? (
-                            <img src={profilePictureURL} alt="Profile" className="profile-icon-image" />
+                        {user?.profilePictureURL ? (
+                            <img src={user.profilePictureURL} alt="Profile" className="profile-icon-image" />
                         ) : (
-                            <div className="initials-placeholder">{getInitials(userName)}</div>
+                            <div className="initials-placeholder">{getInitials(user?.name)}</div>
                         )}
                     </button>
                 </div>

@@ -273,20 +273,6 @@ const styles = {
         marginTop: '10px',
         color: '#ecf0f1',
     },
-
-    initialsPlaceholder: {
-        width: '50px',
-        height: '50px',
-        borderRadius: '50%',
-        backgroundColor: '#3c91e6',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: '1.2rem',
-        textTransform: 'uppercase',
-    },
 };
 
 
