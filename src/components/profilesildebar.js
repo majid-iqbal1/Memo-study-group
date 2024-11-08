@@ -21,12 +21,16 @@ const ProfileSidebar = ({ onClose }) => {
                 const profileRef = doc(db, 'users', user.uid);
                 const profileSnap = await getDoc(profileRef);
                 if (profileSnap.exists()) {
-                    setProfile(profileSnap.data());
+                    const data = profileSnap.data();
+                    setProfile({
+                        ...data,
+                        name: data.name || `${data.firstName} ${data.lastName}`, // Use full name if available
+                    });
                 }
             }
         };
         fetchProfile();
-    }, [user]);
+    }, [user]);       
 
     const handleProfilePictureUpload = async () => {
         if (!newProfilePicture) return;
@@ -265,4 +269,3 @@ const styles = {
 
 
 export default ProfileSidebar;
-

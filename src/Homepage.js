@@ -18,12 +18,13 @@ const Homepage = () => {
                 const userRef = doc(db, 'users', user.uid);
                 const userSnap = await getDoc(userRef);
                 if (userSnap.exists()) {
-                    setUserName(userSnap.data().name || 'User');
+                    const data = userSnap.data();
+                    setUserName(data.name || `${data.firstName} ${data.lastName}`); // Show full name
                 }
             }
         };
         fetchUserName();
-    }, []);
+    }, []);    
 
     const handleSignOut = async () => {
         try {

@@ -1,53 +1,61 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider, db } from '../firebase'; // Import Firestore and Firebase auth
-import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore functions
+import { auth, googleProvider, db } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 export const Auth = () => {
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState(""); // For confirmation during sign-up
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [isSigningUp, setIsSigningUp] = useState(false);
-    const [error, setError] = useState(""); // For displaying error messages
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    // Password validation function
     const isValidPassword = (password) => {
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$%^&*-])[A-Za-z\d#?!@$%^&*-]{8,}$/;
         return regex.test(password);
     };
 
-    // Function to create user profile in Firestore after sign-up
-    const createUserProfile = async (user) => {
+    const createUserProfile = async (user, firstName, lastName) => {
         if (!user) return;
-
+    
         const userRef = doc(db, 'users', user.uid);
         const snapshot = await getDoc(userRef);
-
-        // If the document doesn't exist, create it with default values
+    
+        // If the document doesn't exist, create it with the first name and last name
         if (!snapshot.exists()) {
             const { email } = user;
             try {
                 await setDoc(userRef, {
                     email,
-                    name: '',
+                    firstName,
+                    lastName,
+                    name: `${firstName} ${lastName}`, // Store full name for easy access
                     bio: '',
-                    createdAt: new Date()
+                    createdAt: new Date(),
                 });
             } catch (error) {
                 console.error("Error creating user profile:", error);
                 setError("Failed to create user profile. Please try again.");
             }
         }
-    };
+    };    
 
     const handleEmailAuth = async () => {
         setError(""); // Reset error message
-
+    
         try {
             if (isSigningUp) {
-                // Sign-up validations
+                // Validate that firstName and lastName are not empty
+                if (!firstName.trim() || !lastName.trim()) {
+                    setError("Please enter both first and last names.");
+                    return;
+                }
+    
+                // Sign-up validations for password
                 if (!isValidPassword(password)) {
                     setError("Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.");
                     return;
@@ -56,14 +64,18 @@ export const Auth = () => {
                     setError("Passwords do not match.");
                     return;
                 }
-
+    
                 // Sign up with email and password
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                await createUserProfile(userCredential.user); // Create user profile in Firestore
+                const user = userCredential.user;
+    
+                // Create user profile in Firestore with first name and last name
+                await createUserProfile(user, firstName, lastName);
             } else {
                 // Log in with email and password
                 await signInWithEmailAndPassword(auth, email, password);
             }
+    
             navigate('/homepage'); // Redirect after successful login or sign-up
         } catch (error) {
             // Handle Firebase authentication errors
@@ -74,16 +86,16 @@ export const Auth = () => {
             }
             console.error(error);
         }
-    };
+    };    
 
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
-            await createUserProfile(result.user); // Create user profile in Firestore if new
-            navigate('/homepage'); // Redirect after Google sign-in
+            await createUserProfile(result.user);
+            navigate('/homepage');
         } catch (error) {
+            setError("Google sign-in failed. Please try again.");
             console.error(error);
-            setError("Failed to sign in with Google. Please try again.");
         }
     };
 
@@ -98,23 +110,42 @@ export const Auth = () => {
                     <h2 style={styles.heading}>{isSigningUp ? "Sign Up" : "Sign In"}</h2>
                     {error && <p style={styles.error}>{error}</p>}
                     
+                    {isSigningUp && (
+                        <>
+                            <input
+                                style={styles.input}
+                                type="text"
+                                placeholder="First Name"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                            <input
+                                style={styles.input}
+                                type="text"
+                                placeholder="Last Name"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </>
+                    )}
+                    
                     <input
                         style={styles.input}
                         type="email"
-                        placeholder="Email.."
+                        placeholder="Email"
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
                         style={styles.input}
                         type="password"
-                        placeholder="Password.."
+                        placeholder="Password"
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     {isSigningUp && (
                         <input
                             style={styles.input}
                             type="password"
-                            placeholder="Confirm Password.."
+                            placeholder="Confirm Password"
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     )}
