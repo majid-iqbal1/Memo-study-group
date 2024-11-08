@@ -1,15 +1,26 @@
 import React from 'react';
 import '../styles/contact.css';
-import '../styles/basic-page.css';
+import BackHomeNav from '../components/BackHomeNav';
 
 const Contact = () => {
     return (
-        <div className="content-section">
+        <div className="contact-page">
+            <BackHomeNav />
             <h1>Contact Us</h1>
-            <p>Have questions or feedback? Reach out to us and we'll get back to you soon.</p>
-            <button className="button">Send a Message</button>
+            <form className="contact-form">
+                <label htmlFor="name">Name:</label>
+                <input type="text" id="name" name="name" required />
+
+                <label htmlFor="email">Email:</label>
+                <input type="email" id="email" name="email" required />
+
+                <label htmlFor="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+
+                <button type="submit">Send Message</button>
+            </form>
         </div>
     );
-};;
+};
 
 export default Contact;

@@ -1,13 +1,14 @@
 import React from 'react';
 import '../styles/create.css';
-import '../styles/basic-page.css';
+import BackHomeNav from '../components/BackHomeNav';
 
 const Create = () => {
     return (
-        <div className="content-section">
-            <h1>Create Content</h1>
-            <p>Start creating new study materials or flashcards to aid your learning.</p>
-            <button className="button">Start Creating</button>
+        <div className="create-page">
+            <BackHomeNav />
+            <h1>Create New Content</h1>
+            <p>Start adding new flashcards, notes, or quizzes to your collection.</p>
+            <button className="create-button">Start Creating</button>
         </div>
     );
 };

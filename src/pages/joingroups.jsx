@@ -1,13 +1,14 @@
 import React from 'react';
 import '../styles/joingroups.css';
-import '../styles/basic-page.css';
+import BackHomeNav from '../components/BackHomeNav';
 
 const JoinGroups = () => {
     return (
-        <div className="content-section">
-            <h1>Join Groups</h1>
-            <p>Find study groups or create your own to collaborate with peers.</p>
-            <button className="button">Find Groups</button>
+        <div className="join-groups-page">
+            <BackHomeNav />
+            <h1>Join Study Groups</h1>
+            <p>Collaborate and learn with others by joining a study group.</p>
+            <button className="join-button">Find Groups</button>
         </div>
     );
 };

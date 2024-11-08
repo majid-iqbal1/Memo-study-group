@@ -1,17 +1,30 @@
 import React from 'react';
 import '../styles/about.css';
-import '../styles/basic-page.css';
+import BackHomeNav from '../components/BackHomeNav';
 
 const About = () => {
     return (
-        <div className="About-page">
+        <div className="about-page">
+            <BackHomeNav />
             <h1>About Us</h1>
-            <p>Profile: </p>
-            <p>Bruce Duong: Senior college student majoring in computer science. Active ping pong player and rock climber. Experienced with C++ and ARM. </p>
-            <p>Ethan Humrich: A senior college student majoring in Computer Science and Software Engineering. Some experience with StreamLit and hosting a website using GitHub pages. Experienced with C++, C#, C, Python, HT	L, CSS, JavaScript, and ASM in that order. Giggler </p>
-            <p>Sulav Shakya: Junior college student majoring in Computer Science. Experience with C++, Python, Java, JavaScript, HTML,CSS, SQL. Have developed apps utilizing both Discord’s and Spotify’s API within a python code-base. </p>
-            <p>Majid Iqbal: A senior student majoring in computer science and software engineering. Experienced in C++, python, HTML, CSS, Javascript, ARM, & SQL. </p>
-            {/* Add your About-specific content here */}
+            <div className="profile-section">
+                <div className="profile">
+                    <h2>Bruce Duong</h2>
+                    <p>Senior college student majoring in computer science. Active ping pong player and rock climber. Experienced with C++ and ARM.</p>
+                </div>
+                <div className="profile">
+                    <h2>Ethan Humrich</h2>
+                    <p>Senior in Computer Science and Software Engineering. Experienced with C++, C#, C, Python, HTML, CSS, JavaScript, and ASM.</p>
+                </div>
+                <div className="profile">
+                    <h2>Sulav Shakya</h2>
+                    <p>Junior in Computer Science with experience in C++, Python, Java, JavaScript, HTML, CSS, SQL. Developed apps with Discord and Spotify APIs.</p>
+                </div>
+                <div className="profile">
+                    <h2>Majid Iqbal</h2>
+                    <p>Senior in Computer Science and Software Engineering. Experienced in C++, Python, HTML, CSS, JavaScript, ARM, & SQL.</p>
+                </div>
+            </div>
         </div>
     );
 };

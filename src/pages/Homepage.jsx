@@ -8,7 +8,7 @@ import { useUser } from '../UserContext.jsx';
 import { Link } from 'react-router-dom';
 
 const Homepage = () => {
-    const { user, loading } = useUser(); // Access user and loading from UserContext
+    const { user, loading } = useUser(); 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ const Homepage = () => {
                 <li><Link to="/library">Your Library</Link></li>
                 <li><Link to="/create">Create</Link></li>
                 <li><Link to="/join">Join Groups</Link></li>
-                <li><Link to="/about">About</Link></li>  {/* Use an absolute path */}
+                <li><Link to="/about">About Us</Link></li> 
                 <li><Link to="/contact">Contact</Link></li>
             </ul>
         </nav>
