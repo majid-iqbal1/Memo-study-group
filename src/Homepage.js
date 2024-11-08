@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import './style.css';
 import ProfileSidebar from '../src/components/profilesildebar.js';
+import { useUser } from './UserContext';
 
 const Homepage = () => {
+    const { user } = useUser();
     const [userName, setUserName] = useState('');
     const [profilePictureURL, setProfilePictureURL] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserName = async () => {
-            const user = auth.currentUser;
+        const fetchUserName = async (user) => {
             if (user) {
                 const userRef = doc(db, 'users', user.uid);
                 const userSnap = await getDoc(userRef);
@@ -25,12 +26,19 @@ const Homepage = () => {
                 }
             }
         };
-        fetchUserName();
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchUserName(user);
+            } else {
+            }
+        });
+
+        return () => unsubscribe();
     }, []);
 
     const getInitials = (name) => {
-        if (!name) return ""; // Return empty string if name is undefined or empty
-
+        if (!name) return "";
         const names = name.split(" ");
         return names.length > 1 ? `${names[0][0]}${names[1][0]}`.toUpperCase() : names[0][0].toUpperCase();
     };
