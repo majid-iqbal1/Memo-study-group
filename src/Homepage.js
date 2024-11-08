@@ -10,14 +10,14 @@ const Homepage = () => {
     const handleSignOut = async () => {
         try {
             await signOut(auth);
-            navigate('/'); // Redirects to the sign-in page ("/" route in this example)
+            navigate('/');
         } catch (error) {
             console.error("Error signing out:", error);
         }
     };
 
     return (
-        <div>
+        <div className="homepage-container">
             <header>
                 <nav>
                     <a href="index.html" className="logo">Memo+</a>
@@ -62,3 +62,4 @@ const Homepage = () => {
 };
 
 export default Homepage;
+

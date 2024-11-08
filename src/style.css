@@ -169,7 +169,7 @@ footer {
 }
 
 .sign-out-button {
-  background-color: #f44336; /* Red color */
+  background-color: #3c91e6; /* Red color */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -181,5 +181,148 @@ footer {
 }
 
 .sign-out-button:hover {
-  background-color: #d32f2f;
+  background-color: red;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f4f9;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  /* Removed padding and flex direction from body */
+}
+
+/* Flex container for full-page layout */
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo {
+  font-size: 1.8em;
+  color: #3c91e6;
+  font-weight: bold;
+  margin-right: auto;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  padding: auto;
+}
+
+.nav-links a {
+  display: block;
+  color: #333;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: #3c91e6;
+}
+
+main {
+  padding: 50px 20px;
+  flex: 1; /* Allow main content to grow and fill space */
+}
+
+main h1 {
+  font-size: 4em;
+  color: #3c91e6;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 1.5s ease-out forwards;
+}
+
+main p {
+  font-size: 2.0em;
+  color: #555;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  animation: textReveal 1.5s ease-out forwards 0.5s;
+}
+
+.guide {
+  margin-top: 50px;
+  flex: 1; /* Allow guide section to fill remaining space */
+}
+
+.guide-items {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+footer {
+  background-color: #3c91e6;
+  color: #f4f4f9;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 0.9em;
+  margin-top: auto; /* Push footer to bottom */
+}
+
+.sign-out-button {
+  background-color: #3c91e6;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.sign-out-button:hover {
+  background-color: red;
+}
+
+/* Icon and other specific styles remain unchanged */
+.logo-image {
+  width: 50px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes textReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
