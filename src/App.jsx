@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Auth } from './components/auth';
-import Homepage from './Homepage';
-import About  from './pages/about';
+import Homepage from './pages/Homepage';
+import About from './pages/about';
 import Contact from './pages/contact';
 import Library from './pages/library';
 import Create from './pages/create';
@@ -28,9 +28,16 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+          {/* Redirect to homepage if authenticated, otherwise show Auth component */}
           <Route path="/" element={isAuthenticated ? <Navigate to="/homepage" /> : <Auth />} />
+
+          {/* Protected routes, accessible only if authenticated */}
           <Route path="/homepage" element={isAuthenticated ? <Homepage /> : <Navigate to="/" />} />
           <Route path="/about" element={isAuthenticated ? <About /> : <Navigate to="/" />} />
+          <Route path="/contact" element={isAuthenticated ? <Contact /> : <Navigate to="/" />} />
+          <Route path="/library" element={isAuthenticated ? <Library /> : <Navigate to="/" />} />
+          <Route path="/create" element={isAuthenticated ? <Create /> : <Navigate to="/" />} />
+          <Route path="/join" element={isAuthenticated ? <JoinGroups /> : <Navigate to="/" />} />
         </Routes>
       </div>
     </Router>

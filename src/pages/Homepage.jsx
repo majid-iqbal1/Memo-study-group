@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from './firebase.jsx';
-import './styles/Homepage.css';
-import ProfileSidebar from './components/profilesildebar.jsx';
-import { useUser } from './UserContext.jsx';
+import { auth } from '../firebase.jsx';
+import '../styles/homepage.css';
+import ProfileSidebar from '../components/profilesildebar.jsx';
+import { useUser } from '../UserContext.jsx';
 import { Link } from 'react-router-dom';
 
 const Homepage = () => {
