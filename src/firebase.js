@@ -13,7 +13,7 @@ const app = initializeApp({
 });
 
 export const auth = getAuth(app);
-const db = getFirestore(app);
+export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 
 onAuthStateChanged(auth, (user) => {

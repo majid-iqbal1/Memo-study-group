@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import './style.css';
+import ProfileSidebar from '../src/components/profilesildebar.js'; // Import ProfileSidebar from
 
 const Homepage = () => {
+    const [userName, setUserName] = useState('');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUserName = async () => {
+            const user = auth.currentUser;
+            if (user) {
+                const userRef = doc(db, 'users', user.uid);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    setUserName(userSnap.data().name || 'User');
+                }
+            }
+        };
+        fetchUserName();
+    }, []);
 
     const handleSignOut = async () => {
         try {
@@ -14,6 +32,14 @@ const Homepage = () => {
         } catch (error) {
             console.error("Error signing out:", error);
         }
+    };
+
+    const openSidebar = () => {
+        setIsSidebarOpen(true);
+    };
+
+    const closeSidebar = () => {
+        setIsSidebarOpen(false);
     };
 
     return (
@@ -28,7 +54,12 @@ const Homepage = () => {
                         <li><a href="#">Join</a></li>
                     </ul>
                 </nav>
-                <button onClick={handleSignOut} className="sign-out-button">Sign Out</button>
+                <div className="profile-container">
+                    <span className="profile-name">{userName}</span>
+                    <button className="profile-icon" onClick={openSidebar}>
+                        {/* Profile icon */}
+                    </button>
+                </div>
             </header>
             <main>
                 <h1>Memo+</h1>
@@ -57,9 +88,11 @@ const Homepage = () => {
             <footer>
                 <p>&copy; 2024 Memo+</p>
             </footer>
+
+            {/* Render ProfileSidebar only when isSidebarOpen is true */}
+            {isSidebarOpen && <ProfileSidebar onClose={closeSidebar} />}
         </div>
     );
 };
 
 export default Homepage;
-

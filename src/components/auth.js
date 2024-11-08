@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase';
+import { auth, googleProvider, db } from '../firebase'; // Import Firestore and Firebase auth
+import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 import { useNavigate } from 'react-router-dom';
 
 export const Auth = () => {
@@ -15,6 +16,30 @@ export const Auth = () => {
     const isValidPassword = (password) => {
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$%^&*-])[A-Za-z\d#?!@$%^&*-]{8,}$/;
         return regex.test(password);
+    };
+
+    // Function to create user profile in Firestore after sign-up
+    const createUserProfile = async (user) => {
+        if (!user) return;
+
+        const userRef = doc(db, 'users', user.uid);
+        const snapshot = await getDoc(userRef);
+
+        // If the document doesn't exist, create it with default values
+        if (!snapshot.exists()) {
+            const { email } = user;
+            try {
+                await setDoc(userRef, {
+                    email,
+                    name: '',
+                    bio: '',
+                    createdAt: new Date()
+                });
+            } catch (error) {
+                console.error("Error creating user profile:", error);
+                setError("Failed to create user profile. Please try again.");
+            }
+        }
     };
 
     const handleEmailAuth = async () => {
@@ -33,7 +58,8 @@ export const Auth = () => {
                 }
 
                 // Sign up with email and password
-                await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await createUserProfile(userCredential.user); // Create user profile in Firestore
             } else {
                 // Log in with email and password
                 await signInWithEmailAndPassword(auth, email, password);
@@ -42,7 +68,7 @@ export const Auth = () => {
         } catch (error) {
             // Handle Firebase authentication errors
             if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                setError("Invalid-login-credentials).");
+                setError("Invalid login credentials.");
             } else {
                 setError(error.message);
             }
@@ -52,10 +78,12 @@ export const Auth = () => {
 
     const signInWithGoogle = async () => {
         try {
-            await signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, googleProvider);
+            await createUserProfile(result.user); // Create user profile in Firestore if new
             navigate('/homepage'); // Redirect after Google sign-in
         } catch (error) {
             console.error(error);
+            setError("Failed to sign in with Google. Please try again.");
         }
     };
 
@@ -119,25 +147,25 @@ export const Auth = () => {
 const styles = {
     container: {
         display: 'flex',
-        alignItems: 'flex-start', // Align items to the top of the container
+        alignItems: 'flex-start',
         justifyContent: 'center',
         height: '100vh',
         backgroundColor: '#f4f4f9',
-        paddingTop: '2rem', // Add padding at the top to create space from the top of the screen
+        paddingTop: '2rem',
     },
     form: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '2.5rem', // Increased padding for larger form size
+        padding: '2.5rem',
         borderRadius: '8px',
         boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
         backgroundColor: '#ffffff',
-        width: '350px', // Increased width for a larger form box
+        width: '350px',
     },
     heading: {
         marginBottom: '1rem',
-        fontSize: '1.5rem', // Adjust font size if needed
+        fontSize: '1.5rem',
         color: '#333',
     },
     input: {
@@ -174,7 +202,7 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         width: '100%',
-        margin: '1rem 0', 
+        margin: '1rem 0',
     },
     dividerLine: {
         flex: 1,
@@ -223,4 +251,4 @@ const styles = {
     },
 };
 
-
+export default Auth;

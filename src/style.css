@@ -326,3 +326,31 @@ footer {
     transform: translateX(0);
   }
 }
+
+.profile-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-name {
+  font-size: 1rem;
+  color: #333;
+}
+
+.profile-icon {
+  background-image: url('../public/profile-icon.png');
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#sidebar {
+  width: 0;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+
