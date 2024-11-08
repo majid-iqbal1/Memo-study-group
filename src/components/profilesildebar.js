@@ -3,8 +3,9 @@ import { auth, db } from '../firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
+import addIcon from '../assets/add-pic.png';
 
-const ProfileSidebar = ({ onClose }) => {
+const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
     const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '' });
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
@@ -21,57 +22,51 @@ const ProfileSidebar = ({ onClose }) => {
                 const profileRef = doc(db, 'users', user.uid);
                 const profileSnap = await getDoc(profileRef);
                 if (profileSnap.exists()) {
-                    const data = profileSnap.data();
-                    setProfile({
-                        ...data,
-                        name: data.name || `${data.firstName} ${data.lastName}`, // Use full name if available
-                    });
+                    setProfile(profileSnap.data());
                 }
             }
         };
         fetchProfile();
-    }, [user]);       
+    }, [user]);
 
     const handleProfilePictureUpload = async () => {
         if (!newProfilePicture) return;
-        
-        const profilePictureRef = ref(storage, `profilePictures/${user.uid}`);
-        
-        await uploadBytes(profilePictureRef, newProfilePicture);
-        const downloadURL = await getDownloadURL(profilePictureRef);
-        
-        const profileRef = doc(db, 'users', user.uid);
-        await updateDoc(profileRef, {
-            profilePictureURL: downloadURL,
-        });
 
-        setProfile((prevProfile) => ({ ...prevProfile, profilePictureURL: downloadURL }));
-        setNewProfilePicture(null);
+        try {
+            const profilePictureRef = ref(storage, `profilePictures/${user.uid}`);
+            await uploadBytes(profilePictureRef, newProfilePicture);
+            const downloadURL = await getDownloadURL(profilePictureRef);
+
+            const profileRef = doc(db, 'users', user.uid);
+            await updateDoc(profileRef, {
+                profilePictureURL: downloadURL,
+            });
+
+            setProfile((prevProfile) => ({ ...prevProfile, profilePictureURL: downloadURL }));
+            setNewProfilePicture(null);
+            onProfileUpdate();
+        } catch (error) {
+            console.error("Error uploading profile picture:", error);
+            setError("Failed to upload profile picture. Please try again.");
+        }
     };
 
     const handleSave = async () => {
         if (user) {
             const profileRef = doc(db, 'users', user.uid);
             try {
-                const profileSnap = await getDoc(profileRef);
-
-                if (profileSnap.exists()) {
-                    await updateDoc(profileRef, {
-                        name: newName || profile.name,
-                        bio: newBio || profile.bio,
-                    });
-                } else {
-                    await setDoc(profileRef, {
-                        name: newName,
-                        bio: newBio,
-                        email: user.email,
-                        profilePictureURL: '',
-                        createdAt: new Date(),
-                    });
-                }
-
+                await updateDoc(profileRef, {
+                    name: newName || profile.name,
+                    bio: newBio || profile.bio,
+                });
                 setProfile({ name: newName || profile.name, bio: newBio || profile.bio });
                 setIsEditing(false);
+
+                if (newProfilePicture) {
+                    await handleProfilePictureUpload();
+                }
+
+                onProfileUpdate();
             } catch (error) {
                 console.error("Error saving profile:", error);
                 setError("Failed to save profile. Please try again.");
@@ -87,24 +82,24 @@ const ProfileSidebar = ({ onClose }) => {
         <div style={styles.sidebar}>
             <button onClick={onClose} style={styles.closeButton}>X</button>
             <div style={styles.profileContainer}>
-                <div style={styles.profilePictureContainer}>
-                    {profile.profilePictureURL ? (
-                        <img src={profile.profilePictureURL} alt="Profile" style={styles.profilePicture} />
-                    ) : (
-                        <div style={styles.placeholderPicture}>No Image</div>
-                    )}
-                    {isEditing && (
-                        <input
-                            type="file"
-                            onChange={(e) => setNewProfilePicture(e.target.files[0])}
-                            style={styles.fileInput}
-                        />
-                    )}
-                </div>
-                <div style={styles.profileText}>
-                    <h2 style={styles.name}>{profile.name || "User Name"}</h2>
-                    <p style={styles.bio}>{profile.bio || "Your bio here"}</p>
-                </div>
+            <div style={styles.profilePictureContainer}>
+                <img 
+                    src={profile.profilePictureURL || addIcon} 
+                    alt="Add Icon" 
+                    style={styles.addIcon} 
+                />
+                <input 
+                    type="file" 
+                    style={styles.fileInput} 
+                    onChange={(e) => setNewProfilePicture(e.target.files[0])} 
+                    />
+            </div>
+
+            <div style={styles.profileText}>
+                <h2 style={styles.name}>{profile.name || "User Name"}</h2>
+                {profile.bio && <p style={styles.bio}>{profile.bio}</p>} {/* Render bio only if it exists */}
+            </div>
+
             </div>
             {isEditing ? (
                 <div style={styles.editContainer}>
@@ -128,7 +123,7 @@ const ProfileSidebar = ({ onClose }) => {
             ) : (
                 <div style={styles.navLinks}>
                     <button onClick={() => setIsEditing(true)} style={styles.editButton}>Edit Profile</button>
-                    <button onClick={() => onClose()} style={styles.homeButton}>Home</button>
+                    <a href="/Homepage" style={styles.homeButton}>Home</a>
                     <button onClick={handleLogout} style={styles.logoutButton}>Log Out</button>
                 </div>
             )}
@@ -167,32 +162,50 @@ const styles = {
     },
     profilePictureContainer: {
         position: 'relative',
-        marginBottom: '10px',
-    },
-    profilePicture: {
-        width: '80px',
-        height: '80px',
+        width: '120px', 
+        height: '120px',
         borderRadius: '50%',
-    },
-    placeholderPicture: {
-        width: '80px',
-        height: '80px',
-        borderRadius: '50%',
-        backgroundColor: '#bdc3c7',
+        overflow: 'hidden',
+        backgroundColor: '#3c91e6', 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#7f8c8d',
+        cursor: 'pointer',
+        marginBottom: '20px',
+    },
+    profilePicture: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover', 
+    },
+    initialsPlaceholder: {
+        width: '100px',
+        height: '100px',
+        borderRadius: '50%',
+        backgroundColor: '#3c91e6',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: '1.2rem',
+        textTransform: 'uppercase',
+    },
+    addIcon: {
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
     },
     fileInput: {
         position: 'absolute',
-        top: '0',
-        left: '0',
-        opacity: 0,
+        top: 0,
+        left: 0,
         width: '100%',
         height: '100%',
+        opacity: 0,
         cursor: 'pointer',
     },
+    
     editContainer: {
         display: 'flex',
         flexDirection: 'column',
@@ -236,7 +249,7 @@ const styles = {
         fontSize: '1rem',
     },
     homeButton: {
-        backgroundColor: '#3498db',  // Same color as Edit Profile button
+        backgroundColor: '#3498db',  
         color: '#fff',
         padding: '10px',
         textAlign: 'center',
@@ -264,6 +277,20 @@ const styles = {
         fontSize: '1rem',
         marginTop: '10px',
         color: '#ecf0f1',
+    },
+
+    initialsPlaceholder: {
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%',
+        backgroundColor: '#3c91e6',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: '1.2rem',
+        textTransform: 'uppercase',
     },
 };
 

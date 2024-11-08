@@ -25,7 +25,6 @@ export const Auth = () => {
         const userRef = doc(db, 'users', user.uid);
         const snapshot = await getDoc(userRef);
     
-        // If the document doesn't exist, create it with the first name and last name
         if (!snapshot.exists()) {
             const { email } = user;
             try {
@@ -33,7 +32,7 @@ export const Auth = () => {
                     email,
                     firstName,
                     lastName,
-                    name: `${firstName} ${lastName}`, // Store full name for easy access
+                    name: `${firstName} ${lastName}`, 
                     bio: '',
                     createdAt: new Date(),
                 });
@@ -45,17 +44,15 @@ export const Auth = () => {
     };    
 
     const handleEmailAuth = async () => {
-        setError(""); // Reset error message
+        setError("");
     
         try {
             if (isSigningUp) {
-                // Validate that firstName and lastName are not empty
                 if (!firstName.trim() || !lastName.trim()) {
                     setError("Please enter both first and last names.");
                     return;
                 }
     
-                // Sign-up validations for password
                 if (!isValidPassword(password)) {
                     setError("Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.");
                     return;
@@ -65,24 +62,31 @@ export const Auth = () => {
                     return;
                 }
     
-                // Sign up with email and password
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
     
-                // Create user profile in Firestore with first name and last name
                 await createUserProfile(user, firstName, lastName);
             } else {
-                // Log in with email and password
                 await signInWithEmailAndPassword(auth, email, password);
             }
     
-            navigate('/homepage'); // Redirect after successful login or sign-up
+            navigate('/homepage'); 
         } catch (error) {
-            // Handle Firebase authentication errors
-            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                setError("Invalid login credentials.");
-            } else {
-                setError(error.message);
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    setError("No account found with this email. Please sign up first.");
+                    break;
+                case 'auth/wrong-password':
+                    setError("Incorrect password. Please try again.");
+                    break;
+                case 'auth/invalid-email':
+                    setError("Invalid email format. Please check and try again.");
+                    break;
+                case 'auth/too-many-requests':
+                    setError("Too many failed attempts. Please wait a moment and try again.");
+                    break;
+                default:
+                    setError("An error occurred. Please try again.");
             }
             console.error(error);
         }

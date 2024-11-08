@@ -4,10 +4,11 @@ import { signOut } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import './style.css';
-import ProfileSidebar from '../src/components/profilesildebar.js'; // Import ProfileSidebar from
+import ProfileSidebar from '../src/components/profilesildebar.js';
 
 const Homepage = () => {
     const [userName, setUserName] = useState('');
+    const [profilePictureURL, setProfilePictureURL] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -19,12 +20,20 @@ const Homepage = () => {
                 const userSnap = await getDoc(userRef);
                 if (userSnap.exists()) {
                     const data = userSnap.data();
-                    setUserName(data.name || `${data.firstName} ${data.lastName}`); // Show full name
+                    setUserName(data.name || `${data.firstName} ${data.lastName}`);
+                    setProfilePictureURL(data.profilePictureURL || null);
                 }
             }
         };
         fetchUserName();
-    }, []);    
+    }, []);
+
+    const getInitials = (name) => {
+        if (!name) return ""; // Return empty string if name is undefined or empty
+
+        const names = name.split(" ");
+        return names.length > 1 ? `${names[0][0]}${names[1][0]}`.toUpperCase() : names[0][0].toUpperCase();
+    };
 
     const handleSignOut = async () => {
         try {
@@ -58,7 +67,11 @@ const Homepage = () => {
                 <div className="profile-container">
                     <span className="profile-name">{userName}</span>
                     <button className="profile-icon" onClick={openSidebar}>
-                        {/* Profile icon */}
+                        {profilePictureURL ? (
+                            <img src={profilePictureURL} alt="Profile" className="profile-icon-image" />
+                        ) : (
+                            <div className="initials-placeholder">{getInitials(userName)}</div>
+                        )}
                     </button>
                 </div>
             </header>
@@ -90,7 +103,6 @@ const Homepage = () => {
                 <p>&copy; 2024 Memo+</p>
             </footer>
 
-            {/* Render ProfileSidebar only when isSidebarOpen is true */}
             {isSidebarOpen && <ProfileSidebar onClose={closeSidebar} />}
         </div>
     );
