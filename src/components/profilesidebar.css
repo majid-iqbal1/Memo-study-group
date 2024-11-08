@@ -185,6 +185,19 @@ button {
     text-align: center;
 }
 
+.profileText p {
+    font-style: italic;
+    color: #ecf0f1;
+}
+
+.streak-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-style: italic;
+    color: #ecf0f1;
+}
+
 .name {
     font-size: 1.2rem;
     font-weight: bold;

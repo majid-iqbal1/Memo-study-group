@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider, db } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext'; 
-import './auth.css'; // Import the CSS file
+import './auth.css';
 
 export const Auth = () => {
     const [firstName, setFirstName] = useState("");
@@ -38,13 +38,54 @@ export const Auth = () => {
                 bio: '',
                 profilePictureURL: photoURL,
                 createdAt: new Date(),
+                streakCount: 1, 
+                lastLoginDate: new Date().toISOString().split('T')[0], 
             };
             await setDoc(userRef, userData);
-
+    
             setUser({ uid: user.uid, ...userData });
         }
     };
 
+    const updateStreak = async (user) => {
+        if (!user) return;
+    
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+    
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const lastLoginDate = userData.lastLogin?.toDate();
+    
+            if (lastLoginDate) {
+                lastLoginDate.setHours(0, 0, 0, 0); 
+    
+                const timeDifference = today.getTime() - lastLoginDate.getTime();
+                const dayDifference = timeDifference / (1000 * 60 * 60 * 24); 
+    
+                if (dayDifference === 1) {
+                    await updateDoc(userRef, {
+                        streak: (userData.streak || 0) + 1,
+                        lastLogin: new Date()
+                    });
+                } else if (dayDifference > 1) {
+                    await updateDoc(userRef, {
+                        streak: 1,
+                        lastLogin: new Date()
+                    });
+                }
+            } else {
+                await updateDoc(userRef, {
+                    streak: 1,
+                    lastLogin: new Date()
+                });
+            }
+        }
+    };
+    
     const handleEmailAuth = async () => {
         setError("");
         try {
@@ -73,8 +114,10 @@ export const Auth = () => {
             const user = userCredential.user;
             const userRef = doc(db, 'users', user.uid);
             const userSnap = await getDoc(userRef);
+    
             if (userSnap.exists()) {
                 setUser({ uid: user.uid, ...userSnap.data() });
+                await updateStreak(user);  // Update streak here after retrieving user data
             }
     
             navigate('/homepage');
@@ -88,17 +131,19 @@ export const Auth = () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
-            
+    
             const firstName = user.displayName?.split(' ')[0] || '';
             const lastName = user.displayName?.split(' ')[1] || '';
             const photoURL = user.photoURL || '';
-            
+    
             await createUserProfile(user, firstName, lastName, photoURL);
     
             const userRef = doc(db, 'users', user.uid);
             const userSnap = await getDoc(userRef);
+    
             if (userSnap.exists()) {
                 setUser({ uid: user.uid, ...userSnap.data() });
+                await updateStreak(user);
             }
     
             navigate('/homepage');
@@ -108,7 +153,6 @@ export const Auth = () => {
         }
     };
     
-
     return (
         <div className="pageContainer">
             <main className="mainContent">

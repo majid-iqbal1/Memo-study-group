@@ -7,11 +7,12 @@ import addIcon from '../assets/add-pic.png';
 import './profilesidebar.css';
 
 const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
-    const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '' });
+    const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '', streakCount: 0 });
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
     const [newBio, setNewBio] = useState('');
     const [error, setError] = useState("");
+    const [streak, setStreak] = useState(0);
 
     const user = auth.currentUser;
     const storage = getStorage();
@@ -26,6 +27,7 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
                 }
             }
         };
+        
         fetchProfile();
     }, [user]);
 
@@ -37,7 +39,6 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
             await uploadBytes(profilePictureRef, file);
             const downloadURL = await getDownloadURL(profilePictureRef);
 
-            // Update Firestore with new profile picture URL
             const profileRef = doc(db, 'users', user.uid);
             await updateDoc(profileRef, { profilePictureURL: downloadURL });
 
@@ -94,8 +95,15 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
 
                 <div className="profileText">
                     <h2 className="name">{profile.name || "User Name"}</h2>
-                    {profile.bio && <p className="bio">{profile.bio}</p>}
+                    <p className="bio">{profile.bio || "Hello"}</p>
+                    <div className="streak-container">
+                        <span role="img" aria-label="fire">🔥</span>
+                        <p className="streak">
+                            Streak: {profile.streak === 0 ? "No days yet" : `${profile.streak} ${profile.streak === 1 ? "day" : "days"}`}
+                        </p>
+                    </div>
                 </div>
+
             </div>
             {isEditing ? (
                 <div className="editContainer">

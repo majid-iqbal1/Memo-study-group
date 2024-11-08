@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth, db } from './firebase.jsx';
-import { doc, getDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
+import { auth } from './firebase.jsx';
 import './Homepage.css';
 import ProfileSidebar from './components/profilesildebar.jsx';
 import { useUser } from './UserContext.jsx';
 
 const Homepage = () => {
-    const { user } = useUser(); // Access the user from the UserContext
+    const { user, loading } = useUser(); // Access user and loading from UserContext
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        // If user context is updated, it will automatically trigger UI updates
-    }, [user]);
 
     const getInitials = (name) => {
         if (!name) return "";
@@ -39,6 +34,10 @@ const Homepage = () => {
         setIsSidebarOpen(false);
     };
 
+    if (loading) {
+        return <div>Loading...</div>; 
+    }
+
     return (
         <div className="nav-container">
             <header>
@@ -47,7 +46,6 @@ const Homepage = () => {
                     <ul className="nav-links">
                         <li><a href="#">Library</a></li>
                         <li><a href="#">Create</a></li>
-                        <li><a href="#">Streak</a></li>
                         <li><a href="#">Join</a></li>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>

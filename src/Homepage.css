@@ -135,6 +135,11 @@ main p {
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.guide-item:hover {
+  transform: scale(0.95); 
 }
 
 .guide-item:hover h3 {
@@ -168,14 +173,18 @@ footer {
 }
 
 .logo-image {
-  width: 60px; 
-  height: 60px; 
-  margin-bottom: 10px; 
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease;
 }
 
+.guide-item:hover .logo-image {
+  transform: scale(0.9); 
+}
 
 .sign-out-button {
-  background-color: #3c91e6; /* Red color */
+  background-color: #3c91e6; 
   color: white;
   padding: 10px 20px;
   border: none;
@@ -275,15 +284,16 @@ header {
 
 main {
   padding: 50px 20px;
-  flex: 1; /* Allow main content to grow and fill space */
+  flex: 1; 
 }
 
 main h1 {
-  font-size: 4em;
+  font-size: 5em;
   color: #3c91e6;
   opacity: 0;
   transform: translateY(-20px);
   animation: slideIn 1.5s ease-out forwards;
+  font-weight: bold;
 }
 
 main p {
@@ -306,7 +316,7 @@ footer {
   padding: 15px 0;
   text-align: center;
   font-size: 0.9em;
-  margin-top: auto; /* Push footer to bottom */
+  margin-top: auto;
 }
 
 .sign-out-button {

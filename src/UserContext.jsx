@@ -8,6 +8,7 @@ export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true); // Add loading state
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
@@ -20,13 +21,14 @@ export const UserProvider = ({ children }) => {
             } else {
                 setUser(null);
             }
+            setLoading(false); // Set loading to false once data is fetched
         });
 
         return () => unsubscribe();
     }, []);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, loading }}>
             {children}
         </UserContext.Provider>
     );
