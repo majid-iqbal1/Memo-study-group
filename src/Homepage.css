@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   margin: 0;
   padding: 0;
@@ -10,10 +14,7 @@ body {
   color: #333;
   text-align: center;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
-  margin: 0;
 }
 
 header {
@@ -38,7 +39,7 @@ header {
   display: flex;
   list-style: none;
   gap: 20px;
-  padding: auto;
+  padding: 0;
 }
 
 .nav-links a {
@@ -47,7 +48,7 @@ header {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-
+  transition: transform 0.2s ease, background-color 0.3s ease; /* Add transition for smooth scaling */
 }
 
 .nav-links ul {
@@ -55,7 +56,6 @@ header {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
 }
 
 .nav-links li {
@@ -64,6 +64,8 @@ header {
 
 .nav-links a:hover {
   color: #3c91e6;
+  background-color: #f0f8ff; /* Light background color on hover */
+  transform: scale(1.1); /* Slightly enlarge the item on hover */
 }
 
 main {
@@ -215,7 +217,7 @@ header {
 }
 
 .logo {
-  font-size: 1.8em;
+  font-size: 2em;
   color: #3c91e6;
   font-weight: bold;
   margin-right: auto;
@@ -349,10 +351,15 @@ footer {
 }
 
 .profile-icon-image {
-  width: 50px; /* Increase width */
-  height: 50px; /* Increase height */
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
+  transition: transform 0.2s ease; /* Smooth transition */
+}
+
+.profile-icon:hover .profile-icon-image {
+  transform: scale(0.95); /* Slightly shrink on hover */
 }
 
 .default-profile-icon {
@@ -389,4 +396,9 @@ footer {
   overflow: hidden;
 }
 
-
+.form-container {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  background-color: #fff;
+}

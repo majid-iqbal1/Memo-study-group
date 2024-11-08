@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth, db } from './firebase';
+import { auth, db } from './firebase.jsx';
 import { doc, getDoc } from 'firebase/firestore';
-import './style.css';
-import ProfileSidebar from '../src/components/profilesildebar.js';
-import { useUser } from './UserContext';
+import './Homepage.css';
+import ProfileSidebar from './components/profilesildebar.jsx';
+import { useUser } from './UserContext.jsx';
 
 const Homepage = () => {
     const { user } = useUser(); // Access the user from the UserContext
