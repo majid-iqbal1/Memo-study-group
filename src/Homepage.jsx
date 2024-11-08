@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase.jsx';
-import './Homepage.css';
+import './styles/Homepage.css';
 import ProfileSidebar from './components/profilesildebar.jsx';
 import { useUser } from './UserContext.jsx';
+import { Link } from 'react-router-dom';
 
 const Homepage = () => {
     const { user, loading } = useUser(); // Access user and loading from UserContext
@@ -41,16 +42,16 @@ const Homepage = () => {
     return (
         <div className="nav-container">
             <header>
-                <nav>
-                    <a href="homepage" className="logo">Memo+</a>
-                    <ul className="nav-links">
-                        <li><a href="#">Library</a></li>
-                        <li><a href="#">Create</a></li>
-                        <li><a href="#">Join</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </nav>
+            <nav>
+            <a href="/homepage" className="logo">Memo+</a>
+            <ul className="nav-links">
+                <li><Link to="/library">Your Library</Link></li>
+                <li><Link to="/create">Create</Link></li>
+                <li><Link to="/join">Join Groups</Link></li>
+                <li><Link to="/about">About</Link></li>  {/* Use an absolute path */}
+                <li><Link to="/contact">Contact</Link></li>
+            </ul>
+        </nav>
                 <div className="profile-container">
                     <span className="profile-name">{user ? user.name : 'User'}</span>
                     <button className="profile-icon" onClick={openSidebar}>

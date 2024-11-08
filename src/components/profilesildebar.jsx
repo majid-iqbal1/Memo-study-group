@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import addIcon from '../assets/add-pic.png';
-import './profilesidebar.css';
+import '../styles/profilesidebar.css';
 
 const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
     const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '', streak: 0 });

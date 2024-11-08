@@ -3,6 +3,11 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Auth } from './components/auth';
 import Homepage from './Homepage';
+import About  from './pages/about';
+import Contact from './pages/contact';
+import Library from './pages/library';
+import Create from './pages/create';
+import JoinGroups from './pages/joingroups';
 import { auth } from './firebase';
 
 function App() {
@@ -24,10 +29,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={isAuthenticated ? <Navigate to="/homepage" /> : <Auth />} />
-          <Route
-            path="/homepage"
-            element={isAuthenticated ? <Homepage /> : <Navigate to="/" />}
-          />
+          <Route path="/homepage" element={isAuthenticated ? <Homepage /> : <Navigate to="/" />} />
+          <Route path="/about" element={isAuthenticated ? <About /> : <Navigate to="/" />} />
         </Routes>
       </div>
     </Router>

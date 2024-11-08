@@ -4,7 +4,7 @@ import { auth, googleProvider, db } from '../firebase';
 import { doc, getDoc, setDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext'; 
-import './auth.css';
+import '../styles/auth.css';
 
 export const Auth = () => {
     const [firstName, setFirstName] = useState("");
