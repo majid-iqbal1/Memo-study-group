@@ -1,0 +1,183 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f4f9;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+
+.logo {
+  font-size: 1.8em;
+  color: #3c91e6; 
+  font-weight: bold;
+  margin-right: auto; 
+  text-decoration: none; 
+  float: left;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  padding: auto;
+}
+
+.nav-links a {
+  display: block;
+  color: #333;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+
+}
+
+.nav-links ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.nav-links li {
+  float: left;
+}
+
+.nav-links a:hover {
+  color: #3c91e6;
+}
+
+.sign-in-btn {
+  padding: 8px 16px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  float: right;
+}
+
+.sign-in-btn:hover {
+  border-color: #3c91e6;
+  color: #3c91e6;
+}
+
+main {
+  padding: 50px 20px;
+  flex: 1;
+}
+
+main h1 {
+  font-size: 4em;
+  color: #3c91e6;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 1.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main p {
+  font-size: 2.0em;
+  color: #555;
+  overflow: hidden; 
+  white-space: nowrap; 
+  opacity: 0;
+  animation: textReveal 1.5s ease-out forwards 0.5s; 
+}
+
+@keyframes textReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-100%); 
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.guide {
+  margin-top: 50px;
+}
+
+.guide h2 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.guide-items {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.guide-item {
+  max-width: 200px;
+  text-align: center;
+}
+
+.guide-item:hover h3 {
+  color: #3c91e6;
+}
+
+.icon {
+  font-size: 2em;
+  color: #3c91e6;
+}
+
+.guide-item h3 {
+  font-size: 1.2em;
+  margin-top: 10px;
+  color: #333;
+}
+
+.guide-item p {
+  color: #555;
+  font-size: 0.9em;
+  margin-top: 8px;
+}
+
+footer {
+  background-color: #3c91e6;
+  color: #f4f4f9;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 0.9em;
+  margin-top: auto;
+}
+
+.logo-image {
+  width: 50px; 
+  height: auto;
+  margin-bottom: 10px; 
+}

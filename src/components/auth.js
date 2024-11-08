@@ -23,13 +23,13 @@ const signInWithGoogle = async () => {
 }
 };
 
-const logOut = async () => {
+/* const logOut = async () => {
     try {
         await signOut(auth);
 } catch (error) {
     console.error(error);
 }
-};
+}; */
 
     return (
         <div style={styles.container}>
@@ -48,13 +48,12 @@ const logOut = async () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button style={styles.button} onClick={signIn}>Sign In</button>
-                <button onClick={signInWithGoogle}> Sign In With Google</button>
-                <button onClick={logOut}>Sign Out</button>
+                <button style={styles.Google_button} onClick={signInWithGoogle}> Sign In With Google</button>
             </div>
         </div>
     );
 };
-
+//<button onClick={logOut}>Sign Out</button>
 const styles = {
     container: {
         display: 'flex',
@@ -95,6 +94,20 @@ const styles = {
         backgroundColor: '#007bff',
         color: '#ffffff',
         fontSize: '1rem',
+        cursor: 'pointer',
+    },
+    Google_button: {
+        marginTop: '0.5rem',      // Smaller margin for tighter spacing
+        padding: '0.5rem 1rem',   // Reduced padding for a smaller button size
+        width: 'auto',            // Allows the button to fit the text content
+        borderRadius: '4px',
+        border: 'none',
+        backgroundColor: '#4285F4', // Standard Google blue color for brand consistency
+        color: '#ffffff',
+        fontSize: '0.9rem',       // Slightly smaller font size
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         cursor: 'pointer',
     }
 };
