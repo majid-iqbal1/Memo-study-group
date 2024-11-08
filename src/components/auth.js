@@ -95,7 +95,26 @@ export const Auth = () => {
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
-            await createUserProfile(result.user);
+            const user = result.user;
+    
+            // Check if the user profile already exists in Firestore
+            const userRef = doc(db, 'users', user.uid);
+            const snapshot = await getDoc(userRef);
+    
+            if (!snapshot.exists()) {
+                // Extract first and last name from Google display name
+                const [firstName, lastName] = (user.displayName || "").split(" ");
+                await setDoc(userRef, {
+                    email: user.email,
+                    firstName: firstName || "",
+                    lastName: lastName || "",
+                    name: user.displayName, // Use full display name if available
+                    bio: '',
+                    createdAt: new Date(),
+                    profilePictureURL: user.photoURL || '' // Use Google profile picture if available
+                });
+            }
+    
             navigate('/homepage');
         } catch (error) {
             setError("Google sign-in failed. Please try again.");
