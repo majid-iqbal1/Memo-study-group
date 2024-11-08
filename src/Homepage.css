@@ -132,6 +132,9 @@ main p {
 .guide-item {
   max-width: 200px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .guide-item:hover h3 {
@@ -165,10 +168,11 @@ footer {
 }
 
 .logo-image {
-  width: 50px; 
-  height: auto;
+  width: 60px; 
+  height: 60px; 
   margin-bottom: 10px; 
 }
+
 
 .sign-out-button {
   background-color: #3c91e6; /* Red color */
@@ -198,14 +202,39 @@ body {
   color: #333;
   text-align: center;
   margin: 0;
-  /* Removed padding and flex direction from body */
 }
 
-/* Flex container for full-page layout */
-.homepage-container {
+.nav-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Full viewport height */
+  min-height: 100vh; 
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+      display: none;
+  }
+
+  .menu-icon {
+    display: none;
+}
+
+
+  .dropdown {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background-color: #f4f4f9;
+      padding: 10px 20px;
+  }
+
+  .profile-container {
+      flex-direction: column;
+      align-items: flex-start;
+  }
 }
 
 header {
@@ -229,6 +258,7 @@ header {
   list-style: none;
   gap: 20px;
   padding: auto;
+  font-size: 20px;
 }
 
 .nav-links a {
@@ -267,14 +297,7 @@ main p {
 
 .guide {
   margin-top: 50px;
-  flex: 1; /* Allow guide section to fill remaining space */
-}
-
-.guide-items {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 20px;
+  flex: 1; 
 }
 
 footer {

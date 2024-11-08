@@ -40,7 +40,7 @@ const Homepage = () => {
     };
 
     return (
-        <div className="homepage-container">
+        <div className="nav-container">
             <header>
                 <nav>
                     <a href="homepage" className="logo">Memo+</a>
@@ -49,6 +49,8 @@ const Homepage = () => {
                         <li><a href="#">Create</a></li>
                         <li><a href="#">Streak</a></li>
                         <li><a href="#">Join</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
                     </ul>
                 </nav>
                 <div className="profile-container">
