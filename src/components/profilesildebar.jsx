@@ -6,12 +6,13 @@ import { signOut } from 'firebase/auth';
 import addIcon from '../assets/add-pic.png';
 import '../styles/profilesidebar.css';
 
-const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
+const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
     const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '', streak: 0 });
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
     const [newBio, setNewBio] = useState('');
     const [error, setError] = useState("");
+    const [isClosing, setIsClosing] = useState(false);
 
     const user = auth.currentUser;
     const storage = getStorage();
@@ -29,6 +30,14 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         
         fetchProfile();
     }, [user]);
+
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsClosing(false);
+            onClose();
+        }, 300); // Match this with CSS transition duration
+    };
 
     const handleProfilePictureUpload = async (file) => {
         if (!file) return;
@@ -76,63 +85,68 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         await signOut(auth);
     };
 
-    return (
-        <div className="sidebar">
-            <button onClick={onClose} className="closeButton">X</button>
-            <div className="profileContainer">
-                <div className="profilePictureContainer">
-                    <img 
-                        src={profile.profilePictureURL || addIcon} 
-                        alt="Profile" 
-                        className="addIcon" 
-                    />
-                    <input 
-                        type="file" 
-                        className="fileInput" 
-                        onChange={(e) => handleProfilePictureUpload(e.target.files[0])} 
-                    />
-                </div>
+    const sidebarClass = `sidebar ${isClosing ? 'closing' : 'opening'}`;
 
-                <div className="profileText">
-                    <h2 className="name">{profile.name || "User Name"}</h2>
-                    <p className="bio" style={{ fontStyle: 'italic' }}>
-                        {profile.bio || ""}
-                    </p>
-                    <div className="streak-container">
-                        <span role="img" aria-label="fire">🔥</span>
-                        <p className="streak" style={{ fontStyle: 'italic' }}>
-                            Streak: {profile.streak > 0 ? `${profile.streak} ${profile.streak === 1 ? "day" : "days"}` : "No days yet"}
+    return (
+        <>
+            <div className="sidebar-overlay" onClick={handleClose} />
+            <div className={sidebarClass}>
+                <button onClick={handleClose} className="closeButton">X</button>
+                <div className="profileContainer">
+                    <div className="profilePictureContainer">
+                        <img 
+                            src={profile.profilePictureURL || addIcon} 
+                            alt="Profile" 
+                            className="addIcon" 
+                        />
+                        <input 
+                            type="file" 
+                            className="fileInput" 
+                            onChange={(e) => handleProfilePictureUpload(e.target.files[0])} 
+                        />
+                    </div>
+
+                    <div className="profileText">
+                        <h2 className="name">{profile.name || "User Name"}</h2>
+                        <p className="bio" style={{ fontStyle: 'italic' }}>
+                            {profile.bio || ""}
                         </p>
+                        <div className="streak-container">
+                            <span role="img" aria-label="fire">🔥</span>
+                            <p className="streak" style={{ fontStyle: 'italic' }}>
+                                Streak: {profile.streak > 0 ? `${profile.streak} ${profile.streak === 1 ? "day" : "days"}` : "No days yet"}
+                            </p>
+                        </div>
                     </div>
                 </div>
+                {isEditing ? (
+                    <div className="editContainer">
+                        <input
+                            type="text"
+                            placeholder="Enter new name"
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
+                            className="input"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Enter new bio"
+                            value={newBio}
+                            onChange={(e) => setNewBio(e.target.value)}
+                            className="input"
+                        />
+                        <button onClick={handleSave} className="saveButton">Save</button>
+                        <button onClick={() => setIsEditing(false)} className="cancelButton">Cancel</button>
+                    </div>
+                ) : (
+                    <div className="navLinks">
+                        <button onClick={() => setIsEditing(true)} className="editButton">Edit Profile</button>
+                        <a href="/Homepage" className="homeButton">Home</a>
+                        <button onClick={handleLogout} className="logoutButton">Log Out</button>
+                    </div>
+                )}
             </div>
-            {isEditing ? (
-                <div className="editContainer">
-                    <input
-                        type="text"
-                        placeholder="Enter new name"
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                        className="input"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter new bio"
-                        value={newBio}
-                        onChange={(e) => setNewBio(e.target.value)}
-                        className="input"
-                    />
-                    <button onClick={handleSave} className="saveButton">Save</button>
-                    <button onClick={() => setIsEditing(false)} className="cancelButton">Cancel</button>
-                </div>
-            ) : (
-                <div className="navLinks">
-                    <button onClick={() => setIsEditing(true)} className="editButton">Edit Profile</button>
-                    <a href="/Homepage" className="homeButton">Home</a>
-                    <button onClick={handleLogout} className="logoutButton">Log Out</button>
-                </div>
-            )}
-        </div>
+        </>
     );
 };
 
