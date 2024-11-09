@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Auth } from './components/auth';
@@ -9,6 +9,16 @@ import Library from './pages/library';
 import Create from './pages/create';
 import JoinGroups from './pages/joingroups';
 import { auth } from './firebase';
+
+// Layout component to handle transitions
+const PageLayout = ({ children }) => {
+  const location = useLocation();
+  return (
+    <div key={location.pathname} className="page-transition">
+      {children}
+    </div>
+  );
+};
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,16 +38,90 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* Redirect to homepage if authenticated, otherwise show Auth component */}
-          <Route path="/" element={isAuthenticated ? <Navigate to="/homepage" /> : <Auth />} />
-
-          {/* Protected routes, accessible only if authenticated */}
-          <Route path="/homepage" element={isAuthenticated ? <Homepage /> : <Navigate to="/" />} />
-          <Route path="/about" element={isAuthenticated ? <About /> : <Navigate to="/" />} />
-          <Route path="/contact" element={isAuthenticated ? <Contact /> : <Navigate to="/" />} />
-          <Route path="/library" element={isAuthenticated ? <Library /> : <Navigate to="/" />} />
-          <Route path="/create" element={isAuthenticated ? <Create /> : <Navigate to="/" />} />
-          <Route path="/join" element={isAuthenticated ? <JoinGroups /> : <Navigate to="/" />} />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/homepage" />
+              ) : (
+                <PageLayout>
+                  <Auth />
+                </PageLayout>
+              )
+            }
+          />
+          <Route
+            path="/homepage"
+            element={
+              isAuthenticated ? (
+                <PageLayout>
+                  <Homepage />
+                </PageLayout>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              isAuthenticated ? (
+                <PageLayout>
+                  <About />
+                </PageLayout>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              isAuthenticated ? (
+                <PageLayout>
+                  <Contact />
+                </PageLayout>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/library"
+            element={
+              isAuthenticated ? (
+                <PageLayout>
+                  <Library />
+                </PageLayout>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/create"
+            element={
+              isAuthenticated ? (
+                <PageLayout>
+                  <Create />
+                </PageLayout>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/join"
+            element={
+              isAuthenticated ? (
+                <PageLayout>
+                  <JoinGroups />
+                </PageLayout>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
         </Routes>
       </div>
     </Router>

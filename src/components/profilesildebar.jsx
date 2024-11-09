@@ -6,13 +6,13 @@ import { signOut } from 'firebase/auth';
 import addIcon from '../assets/add-pic.png';
 import '../styles/profilesidebar.css';
 
-const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
+const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
     const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '', streak: 0 });
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
     const [newBio, setNewBio] = useState('');
-    const [error, setError] = useState("");
     const [isClosing, setIsClosing] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
 
     const user = auth.currentUser;
     const storage = getStorage();
@@ -29,14 +29,15 @@ const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
         };
         
         fetchProfile();
+        setTimeout(() => setIsVisible(true), 50);
     }, [user]);
 
     const handleClose = () => {
+        setIsVisible(false);
         setIsClosing(true);
         setTimeout(() => {
-            setIsClosing(false);
             onClose();
-        }, 300); // Match this with CSS transition duration
+        }, 300);
     };
 
     const handleProfilePictureUpload = async (file) => {
@@ -51,10 +52,9 @@ const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
             await updateDoc(profileRef, { profilePictureURL: downloadURL });
 
             setProfile((prevProfile) => ({ ...prevProfile, profilePictureURL: downloadURL }));
-            onProfileUpdate();
+            onProfileUpdate && onProfileUpdate();
         } catch (error) {
             console.error("Error uploading profile picture:", error);
-            setError("Failed to upload profile picture. Please try again.");
         }
     };
 
@@ -67,16 +67,14 @@ const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
                     bio: newBio || profile.bio,
                 });
                 setProfile({ 
+                    ...profile,
                     name: newName || profile.name, 
                     bio: newBio || profile.bio, 
-                    profilePictureURL: profile.profilePictureURL,
-                    streak: profile.streak
                 });
                 setIsEditing(false);
-                onProfileUpdate();
+                onProfileUpdate && onProfileUpdate();
             } catch (error) {
                 console.error("Error saving profile:", error);
-                setError("Failed to save profile. Please try again.");
             }
         }
     };
@@ -85,12 +83,12 @@ const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
         await signOut(auth);
     };
 
-    const sidebarClass = `sidebar ${isClosing ? 'closing' : 'opening'}`;
+    const sidebarClasses = `sidebar ${isVisible ? 'opening' : ''} ${isClosing ? 'closing' : ''}`;
 
     return (
         <>
             <div className="sidebar-overlay" onClick={handleClose} />
-            <div className={sidebarClass}>
+            <div className={sidebarClasses}>
                 <button onClick={handleClose} className="closeButton">X</button>
                 <div className="profileContainer">
                     <div className="profilePictureContainer">
@@ -108,12 +106,12 @@ const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
 
                     <div className="profileText">
                         <h2 className="name">{profile.name || "User Name"}</h2>
-                        <p className="bio" style={{ fontStyle: 'italic' }}>
+                        <p className="bio">
                             {profile.bio || ""}
                         </p>
                         <div className="streak-container">
                             <span role="img" aria-label="fire">🔥</span>
-                            <p className="streak" style={{ fontStyle: 'italic' }}>
+                            <p className="streak">
                                 Streak: {profile.streak > 0 ? `${profile.streak} ${profile.streak === 1 ? "day" : "days"}` : "No days yet"}
                             </p>
                         </div>
@@ -141,7 +139,6 @@ const ProfileSidebar = ({ onClose, onProfileUpdate, isOpen }) => {
                 ) : (
                     <div className="navLinks">
                         <button onClick={() => setIsEditing(true)} className="editButton">Edit Profile</button>
-                        <a href="/Homepage" className="homeButton">Home</a>
                         <button onClick={handleLogout} className="logoutButton">Log Out</button>
                     </div>
                 )}

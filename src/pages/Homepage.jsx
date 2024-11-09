@@ -5,12 +5,18 @@ import { auth } from '../firebase.jsx';
 import '../styles/homepage.css';
 import ProfileSidebar from '../components/profilesildebar.jsx';
 import { useUser } from '../UserContext.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Homepage = () => {
     const { user, loading } = useUser(); 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
+
+    const location = useLocation();
+  
+  const isActive = (path) => {
+    return location.pathname === path ? 'active' : '';
+  };
 
     const getInitials = (name) => {
         if (!name) return "";
@@ -41,19 +47,19 @@ const Homepage = () => {
 
     return (
         <div className="nav-container">
-            <header>
-            <nav>
-                <Link to="/homepage" className="logo">
-                    <img src="/logo.png" alt="Memo+ Logo" className="home-logo-image" />
-                </Link>
-                <ul className="nav-links">
-                    <li><Link to="/library">Your Library</Link></li>
-                    <li><Link to="/create">Create</Link></li>
-                    <li><Link to="/join">Join Groups</Link></li>
-                    <li><Link to="/about">About Us</Link></li>
-                    <li><Link to="/contact">Contact</Link></li>
-                </ul>
-            </nav>
+        <header>
+          <nav>
+            <Link to="/homepage" className="logo">
+              <img src="/logo.png" alt="Memo+ Logo" className="home-logo-image" />
+            </Link>
+            <ul className="nav-links">
+              <li><Link to="/library" className={isActive('/library')}>Your Library</Link></li>
+              <li><Link to="/create" className={isActive('/create')}>Create</Link></li>
+              <li><Link to="/join" className={isActive('/join')}>Join Groups</Link></li>
+              <li><Link to="/about" className={isActive('/about')}>About Us</Link></li>
+              <li><Link to="/contact" className={isActive('/contact')}>Contact</Link></li>
+            </ul>
+          </nav>
                 <div className="profile-container">
                     <span className="profile-name">{user ? user.name : 'User'}</span>
                     <button className="profile-icon" onClick={openSidebar}>
