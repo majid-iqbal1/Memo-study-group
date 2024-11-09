@@ -141,15 +141,40 @@ export const Auth = () => {
             console.error(error);
         }
     };
+
+    const handleWelcomeClick = () => {
+        setIsSigningUp(true); // Switch to sign-up mode
+    };
     
     return (
         <div className="pageContainer">
-            <main className="mainContent">
-                <h1 className="mainHeading">Memo+</h1>
-                <p className="mainParagraph">Learn Faster Using Only the Essentials</p>
-            </main>
-    
-            <div className="container">
+            <div className="mainGrid">
+                <div className="leftColumn">
+                    <div className="brandSection">
+                        <h1 className="mainHeading">Memo+</h1>
+                        <p className="mainParagraph">Learn Faster Using Only the Essentials</p>
+                    </div>
+
+                    <div 
+                        className="welcomeSection"
+                        onClick={handleWelcomeClick}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') handleWelcomeClick();
+                        }}
+                    >
+                        <h2 className="welcomeHeading">New Here?</h2>
+                        <p className="welcomeText">
+                            Sign up and discover a great amount of new opportunities!
+                        </p>
+                        <span className="welcomeSignUp">
+                            Sign Up →
+                        </span>
+                    </div>
+                </div>
+
+                <div className="rightColumn">
                 <div className="form">
                     <h2 className="heading">{isSigningUp ? "Sign Up" : "Sign In"}</h2>
     
@@ -219,6 +244,7 @@ export const Auth = () => {
                     </button>
                 </div>
             </div>
+        </div>
         </div>
     );
     

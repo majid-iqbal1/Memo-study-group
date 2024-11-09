@@ -1,75 +1,154 @@
-
 .pageContainer {
+    min-height: 100vh;
+    background-color: #f4f4f9;
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f4f4f9;
-    padding-top: 2rem;
 }
 
-.mainContent {
+.mainGrid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 6rem; /* Increased gap between columns */
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.leftColumn {
+    display: grid;
+    gap: 4rem; 
+}
+
+.brandSection {
     text-align: center;
-    margin-bottom: 2rem;
 }
 
 .mainHeading {
-    font-size: 4.5rem;
+    font-size: 5.5rem;
     font-weight: bold;
     color: #3c91e6;
     margin: 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 1.5s ease-out forwards;
 }
 
 .mainParagraph {
     font-size: 2rem;
     color: #555;
     margin-top: 0.5rem;
+    opacity: 0;
+    animation: textReveal 1.5s ease-out forwards 0.5s;
+    font-family: 'Inter', sans-serif; /* Modern font - make sure to import it */
 }
 
-.container {
+/* Animation keyframes */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes textReveal {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Welcome Section - Removed background and enhanced typography */
+.welcomeSection {
+    text-align: center;
+    padding: 2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.welcomeHeading {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+}
+
+.welcomeText {
+    font-size: 1.5rem;
+    color: #555;
+    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.welcomeSignUp {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: #3c91e6;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.welcomeSignUp:hover {
+    transform: translateY(-2px);
+    color: #2c7ed6;
+}
+
+
+/* Right Column Styles */
+.rightColumn {
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    width: 100%;
+    align-items: center;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: white;
     padding: 2.5rem;
     border-radius: 8px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-    width: 350px;
+    width: 100%;
 }
 
 .heading {
-    margin-bottom: 2rem;
     font-size: 2.5rem;
     color: #333;
+    margin-bottom: 2rem;
 }
 
+/* Form Elements */
 .input {
     width: 100%;
     padding: 0.75rem;
     margin: 0.5rem 0;
     border-radius: 4px;
-    border: 1px solid #8d8b8b !important; /* Slightly darker gray */
+    border: 1px solid #8d8b8b !important;
     outline: none;
     font-size: 1rem;
 }
 
 .input:focus {
-    border-color: #3c91e6; /* Blue color on focus */
-    box-shadow: 0 0 5px rgba(60, 145, 230, 0.5); /* Light shadow to emphasize focus */
+    border-color: #3c91e6;
+    box-shadow: 0 0 5px rgba(60, 145, 230, 0.5);
 }
 
-
 .primaryButton {
-    margin-top: 1rem;
-    padding: 0.75rem;
     width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
     border-radius: 4px;
     border: none;
     background-color: black;
@@ -90,6 +169,7 @@
     text-decoration: underline;
 }
 
+/* Divider */
 .divider {
     display: flex;
     align-items: center;
@@ -109,6 +189,7 @@
     color: #888;
 }
 
+/* Social Button */
 .socialButton {
     display: flex;
     align-items: center;
@@ -134,4 +215,21 @@
     color: red;
     font-size: 0.9rem;
     margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .mainGrid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 1rem;
+    }
+
+    .welcomeHeading {
+        font-size: 2.8rem;
+    }
+
+    .welcomeText {
+        font-size: 1.3rem;
+    }
 }
