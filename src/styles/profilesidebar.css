@@ -119,43 +119,90 @@ button {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
+    padding: 0 10px;
 }
 
 .input {
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
+    width: 100%;
+    padding: 12px;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     outline: none;
     font-size: 1rem;
-    color: #2c3e50;
+    color: #444;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    border-color: #3c91e6;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(60, 145, 230, 0.1);
 }
 
 .saveButton {
-    background-color: #27ae60;
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 1.1rem;
+    background-color: #f7fcf7;
+    color: #2ecc71;
+    box-shadow: 
+        0 2px 4px rgba(46, 204, 113, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin-bottom: 8px;
 }
 
 .saveButton:hover {
-    transform: scale(0.95);
-    background-color: #229954;
+    background-color: #f9fdf9;
+    transform: translateY(-1px);
+    box-shadow: 
+        0 4px 8px rgba(46, 204, 113, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.saveButton:active {
+    transform: translateY(1px);
+    box-shadow: 
+        0 2px 4px rgba(46, 204, 113, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .cancelButton {
-    background-color: #c0392b;
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 1.1rem;
+    background-color: #fff5f5;
+    color: #d63031;
+    box-shadow: 
+        0 2px 4px rgba(214, 48, 49, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .cancelButton:hover {
-    transform: scale(0.95);
-    background-color: #a93226;
+    background-color: #fff8f8;
+    transform: translateY(-1px);
+    box-shadow: 
+        0 4px 8px rgba(214, 48, 49, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.cancelButton:active {
+    transform: translateY(1px);
+    box-shadow: 
+        0 2px 4px rgba(214, 48, 49, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 
@@ -165,34 +212,50 @@ button {
     gap: 10px;
 }
 
-.editButton{
-    background-color: #3498db;
-    color: #fff;
+.editButton {
+    background-color: #fafafa;
+    color: #444;
     padding: 12px;
-    border: none;
-    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1.1rem;
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .editButton:hover {
-    transform: scale(0.95); 
-    background-color: #2980b9;
+    background-color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .logoutButton {
-    background-color: #e74c3c;
-    color: #fff;
+    background-color: #fff5f5;
+    color: #d63031;
     padding: 12px;
-    border: none;
-    border-radius: 4px;
+    border: 1px solid rgba(214, 48, 49, 0.2);
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1.1rem;
+    box-shadow: 
+        0 2px 4px rgba(214, 48, 49, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .logoutButton:hover {
-    transform: scale(0.95);
-    background-color: #c0392b;
+    background-color: #fff8f8;
+    transform: translateY(-1px);
+    box-shadow: 
+        0 4px 8px rgba(214, 48, 49, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .profileText {

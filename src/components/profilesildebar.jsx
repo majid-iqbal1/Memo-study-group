@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { auth, db } from '../firebase';
+import { auth, db, storage } from '../firebase';
 import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import addIcon from '../assets/add-pic.png';
 import '../styles/profilesidebar.css';
@@ -15,7 +15,6 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
     const [isVisible, setIsVisible] = useState(false);
 
     const user = auth.currentUser;
-    const storage = getStorage();
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -46,7 +45,6 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
                 }
             }
         };
-        
         fetchProfile();
         setTimeout(() => setIsVisible(true), 50);
     }, [user]);
@@ -61,15 +59,12 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
 
     const handleProfilePictureUpload = async (file) => {
         if (!file) return;
-
         try {
             const profilePictureRef = ref(storage, `profilePictures/${user.uid}`);
             await uploadBytes(profilePictureRef, file);
             const downloadURL = await getDownloadURL(profilePictureRef);
-
             const profileRef = doc(db, 'users', user.uid);
             await updateDoc(profileRef, { profilePictureURL: downloadURL });
-
             setProfile((prevProfile) => ({ ...prevProfile, profilePictureURL: downloadURL }));
             onProfileUpdate && onProfileUpdate();
         } catch (error) {
@@ -140,6 +135,7 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
                         </div>
                     </div>
                 </div>
+
                 {isEditing ? (
                     <div className="editContainer">
                         <input
