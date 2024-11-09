@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Page transition styles */
 .page-transition {
     animation: fadeIn 0.3s ease-out;
     min-height: 100vh;
@@ -21,7 +20,6 @@
     }
   }
   
-  /* Navigation styles */
   .nav-links {
     display: flex;
     gap: 20px;
@@ -65,12 +63,10 @@
     transform: scaleX(1);
   }
   
-  /* Click effect */
   .nav-links a:active {
     transform: scale(0.97);
   }
   
-  /* For smoother animations */
   * {
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;

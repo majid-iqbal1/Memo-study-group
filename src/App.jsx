@@ -11,65 +11,141 @@ import JoinGroups from './pages/joingroups';
 import LearnMore from './pages/LearnMore';
 import Test from './pages/Test';
 import { auth } from './firebase';
+import useAutoLogout from './hooks/useAutoLogout';
+
+const AuthenticatedRoute = ({ children }) => {
+    const { WarningComponent } = useAutoLogout(10); 
+    
+    return (
+        <>
+            {children}
+            {WarningComponent}
+        </>
+    );
+};
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsAuthenticated(!!user);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsAuthenticated(!!user);
+            setLoading(false);
+        });
+        return () => unsubscribe();
+    }, []);
 
-  if (loading) return <p>Loading...</p>;
+    if (loading) return <p>Loading...</p>;
 
-  return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route 
-            path="/" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <Auth />} 
-          />
-          <Route 
-            path="/homepage" 
-            element={isAuthenticated ? <Homepage /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/about" 
-            element={isAuthenticated ? <About /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/contact" 
-            element={isAuthenticated ? <Contact /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/library" 
-            element={isAuthenticated ? <Library /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/create" 
-            element={isAuthenticated ? <Create /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/join" 
-            element={isAuthenticated ? <JoinGroups /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/learn" 
-            element={isAuthenticated ? <LearnMore /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/test" 
-            element={isAuthenticated ? <Test /> : <Navigate to="/" />} 
-          />
-        </Routes>
-      </div>
-    </Router>
-  );
+    return (
+        <Router>
+            <div className="App">
+                <Routes>
+                    <Route 
+                        path="/" 
+                        element={isAuthenticated ? <Navigate to="/homepage" /> : <Auth />} 
+                    />
+                    <Route 
+                        path="/homepage" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <Homepage />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/about" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <About />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/contact" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <Contact />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/library" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <Library />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/create" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <Create />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/join" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <JoinGroups />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/learn" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <LearnMore />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/test" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <Test />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

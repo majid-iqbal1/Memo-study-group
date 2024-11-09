@@ -1,4 +1,3 @@
-// src/components/BackHomeNav.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/backhome-nav.css';

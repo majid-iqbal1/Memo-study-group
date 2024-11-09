@@ -64,7 +64,7 @@ export const Auth = () => {
                 if (differenceInDays === 1) {
                     newStreak += 1;
                 } else if (differenceInDays > 1) {
-                    newStreak = 1; // Reset if more than one day passed
+                    newStreak = 1; 
                 }
             }
     
@@ -106,7 +106,7 @@ export const Auth = () => {
     
             if (userSnap.exists()) {
                 setUser({ uid: user.uid, ...userSnap.data() });
-                await updateStreak(user);  // Update streak here after retrieving user data
+                await updateStreak(user); 
             }
     
             navigate('/homepage');
@@ -143,7 +143,7 @@ export const Auth = () => {
     };
 
     const handleWelcomeClick = () => {
-        setIsSigningUp(true); // Switch to sign-up mode
+        setIsSigningUp(true);
     };
     
     return (

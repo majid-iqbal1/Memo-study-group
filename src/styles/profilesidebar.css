@@ -171,8 +171,8 @@ button {
 }
 
 .editButton:hover {
-    transform: scale(0.95); /* Slightly shrink on hover */
-    background-color: #2980b9; /* Darker shade for hover effect */
+    transform: scale(0.95); 
+    background-color: #2980b9;
 }
 
 .logoutButton {
