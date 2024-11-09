@@ -1,11 +1,11 @@
 import React from 'react';
 import '../styles/contact.css';
-import BackHomeNav from '../components/BackHomeNav';
+import NavLayout from '../components/NavLayout';
 
 const Contact = () => {
     return (
+        <NavLayout>
         <div className="contact-page">
-            <BackHomeNav />
             <h1>Contact Us</h1>
             <form className="contact-form">
                 <label htmlFor="name">Name:</label>
@@ -20,6 +20,7 @@ const Contact = () => {
                 <button type="submit">Send Message</button>
             </form>
         </div>
+      </NavLayout>
     );
 };
 

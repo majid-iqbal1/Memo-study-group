@@ -1,11 +1,11 @@
 import React from 'react';
 import '../styles/about.css';
-import BackHomeNav from '../components/BackHomeNav';
+import NavLayout from '../components/NavLayout';
 
 const About = () => {
     return (
+        <NavLayout>
         <div className="about-page">
-            <BackHomeNav />
             <h1>About Us</h1>
             <div className="profile-section">
                 <div className="profile">
@@ -26,6 +26,7 @@ const About = () => {
                 </div>
             </div>
         </div>
+        </NavLayout>
     );
 };
 

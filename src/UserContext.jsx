@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, db } from './firebase'; // Adjust this path if firebase is elsewhere
+import { auth, db } from './firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 const UserContext = createContext();
@@ -8,7 +8,7 @@ export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true); // Add loading state
+    const [loading, setLoading] = useState(true); 
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
@@ -21,7 +21,7 @@ export const UserProvider = ({ children }) => {
             } else {
                 setUser(null);
             }
-            setLoading(false); // Set loading to false once data is fetched
+            setLoading(false); 
         });
 
         return () => unsubscribe();

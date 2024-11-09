@@ -8,7 +8,7 @@ import Contact from './pages/contact';
 import Library from './pages/library';
 import Create from './pages/create';
 import JoinGroups from './pages/joingroups';
-import LearnMore from './pages/LearnMore';
+import LearnMode from './pages/LearnMode';
 import Test from './pages/Test';
 import { auth } from './firebase';
 import useAutoLogout from './hooks/useAutoLogout';
@@ -123,7 +123,7 @@ function App() {
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
-                                    <LearnMore />
+                                    <LearnMode />
                                 </AuthenticatedRoute>
                             ) : (
                                 <Navigate to="/" />

@@ -38,41 +38,48 @@ export const Auth = () => {
                 bio: '',
                 profilePictureURL: photoURL,
                 createdAt: new Date(),
-                streakCount: 1, 
-                lastLoginDate: new Date().toISOString().split('T')[0], 
+                streak: 0,
+                lastLogin: Timestamp.fromDate(new Date())
             };
             await setDoc(userRef, userData);
     
             setUser({ uid: user.uid, ...userData });
         }
     };
-
+    
     const updateStreak = async (user) => {
         const userRef = doc(db, 'users', user.uid);
         const userSnap = await getDoc(userRef);
     
         if (userSnap.exists()) {
             const data = userSnap.data();
-            const lastLogin = data.lastLogin ? data.lastLogin.toDate() : null;
+            const lastLogin = data.lastLogin?.toDate() || new Date();
             const today = new Date();
+
+            lastLogin.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
             
-            let newStreak = data.streak || 1;
-            
-            if (lastLogin) {
-                const differenceInDays = Math.floor((today - lastLogin) / (1000 * 60 * 60 * 24));
+            const differenceInTime = today.getTime() - lastLogin.getTime();
+            const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
     
-                if (differenceInDays === 1) {
-                    newStreak += 1;
-                } else if (differenceInDays > 1) {
-                    newStreak = 1; 
-                }
+            let newStreak = data.streak || 0;
+    
+            if (differenceInDays === 1) {
+                newStreak += 1;
+            } else if (differenceInDays === 0) {
+                newStreak = data.streak;
+            } else {
+                newStreak = 1;
             }
     
             await updateDoc(userRef, {
                 streak: newStreak,
                 lastLogin: Timestamp.fromDate(today)
             });
+    
+            return newStreak;
         }
+        return 1;
     };
     
     const handleEmailAuth = async () => {

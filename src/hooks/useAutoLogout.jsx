@@ -2,17 +2,22 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import TimeoutWarning from '../components/timeout/TimeoutWarning';
 
 const useAutoLogout = (timeoutMinutes = 30) => {
     const navigate = useNavigate();
     const [lastActivity, setLastActivity] = useState(Date.now());
     const [showWarning, setShowWarning] = useState(false);
-    const warningTimeSeconds = 60;
 
     const updateLastActivity = (event) => {
-        const isWarningModal = event?.target?.closest('.timeout-warning');
-        if (!showWarning || !isWarningModal) {
+        // Check if event exists and has target before using closest
+        if (event && event.target && typeof event.target.closest === 'function') {
+            const isWarningModal = event.target.closest('.timeout-warning');
+            if (!showWarning || !isWarningModal) {
+                setLastActivity(Date.now());
+                setShowWarning(false);
+            }
+        } else {
+            // If no event or target, just update the activity
             setLastActivity(Date.now());
             setShowWarning(false);
         }
@@ -42,14 +47,17 @@ const useAutoLogout = (timeoutMinutes = 30) => {
             'click'
         ];
 
+        // Add event listeners
+        const handleEvent = (e) => updateLastActivity(e);
         events.forEach(event => {
-            window.addEventListener(event, updateLastActivity);
+            window.addEventListener(event, handleEvent);
         });
 
+        // Check for inactivity
         const intervalId = setInterval(() => {
             const timeoutMilliseconds = timeoutMinutes * 60 * 1000;
             const timeSinceLastActivity = Date.now() - lastActivity;
-            const warningMilliseconds = (timeoutMinutes * 60 - warningTimeSeconds) * 1000;
+            const warningMilliseconds = (timeoutMinutes * 60 - 60) * 1000; // Warning 60 seconds before timeout
 
             if (timeSinceLastActivity > timeoutMilliseconds) {
                 handleLogout();
@@ -60,21 +68,17 @@ const useAutoLogout = (timeoutMinutes = 30) => {
 
         return () => {
             events.forEach(event => {
-                window.removeEventListener(event, updateLastActivity);
+                window.removeEventListener(event, handleEvent);
             });
             clearInterval(intervalId);
         };
-    }, [lastActivity, timeoutMinutes, showWarning]);
+    }, [lastActivity, timeoutMinutes, showWarning, navigate]);
 
     return {
         updateLastActivity,
-        WarningComponent: showWarning ? (
-            <TimeoutWarning
-                onStayLoggedIn={handleStayLoggedIn}
-                onLogout={handleLogout}
-                warningTime={warningTimeSeconds}
-            />
-        ) : null
+        handleStayLoggedIn,
+        showWarning,
+        handleLogout
     };
 };
 

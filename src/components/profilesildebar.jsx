@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import addIcon from '../assets/add-pic.png';
@@ -23,7 +23,26 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
                 const profileRef = doc(db, 'users', user.uid);
                 const profileSnap = await getDoc(profileRef);
                 if (profileSnap.exists()) {
-                    setProfile(profileSnap.data());
+                    const data = profileSnap.data();
+                    const lastLogin = data.lastLogin?.toDate() || new Date();
+                    const today = new Date();
+                    
+                    lastLogin.setHours(0, 0, 0, 0);
+                    today.setHours(0, 0, 0, 0);
+                    
+                    const differenceInTime = today.getTime() - lastLogin.getTime();
+                    const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+
+                    if (differenceInDays >= 1) {
+                        const newStreak = differenceInDays === 1 ? data.streak + 1 : 1;
+                        await updateDoc(profileRef, {
+                            streak: newStreak,
+                            lastLogin: Timestamp.fromDate(today)
+                        });
+                        setProfile({ ...data, streak: newStreak });
+                    } else {
+                        setProfile(data);
+                    }
                 }
             }
         };
@@ -112,7 +131,11 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
                         <div className="streak-container">
                             <span role="img" aria-label="fire">🔥</span>
                             <p className="streak">
-                                Streak: {profile.streak > 0 ? `${profile.streak} ${profile.streak === 1 ? "day" : "days"}` : "No days yet"}
+                                {profile.streak === 0 ? (
+                                    "Welcome! Start your streak by coming back tomorrow!"
+                                ) : (
+                                    `Streak: ${profile.streak} ${profile.streak === 1 ? "day" : "days"}`
+                                )}
                             </p>
                         </div>
                     </div>
