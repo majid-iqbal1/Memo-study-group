@@ -12,6 +12,7 @@ import LearnMode from './pages/LearnMode';
 import Test from './pages/Test';
 import { auth } from './firebase';
 import useAutoLogout from './hooks/useAutoLogout';
+import LoadingSpinner from './components/LoadingSpinner';
 
 const AuthenticatedRoute = ({ children }) => {
     const { WarningComponent } = useAutoLogout(10); 
@@ -36,7 +37,9 @@ function App() {
         return () => unsubscribe();
     }, []);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+      return <LoadingSpinner />;
+  }
 
     return (
         <Router>

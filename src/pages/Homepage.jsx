@@ -6,6 +6,7 @@ import '../styles/homepage.css';
 import ProfileSidebar from '../components/profilesildebar.jsx';
 import { useUser } from '../UserContext.jsx';
 import { Link, useLocation } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Homepage = () => {
     const { user, loading } = useUser(); 
@@ -42,7 +43,7 @@ const Homepage = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>; 
+        return <LoadingSpinner />;
     }
 
     return (
