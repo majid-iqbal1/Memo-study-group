@@ -1,34 +1,172 @@
-.create-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.flashcard-creator {
+    width: 100%;
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.create-page h1 {
-    font-size: 2.5em;
-    color: #3c91e6;
-    margin-bottom: 15px;
+.flashcard-creator h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 30px;
 }
 
-.create-page p {
-    font-size: 1.2em;
-    color: #555;
+.creator-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.create-button {
-    padding: 10px 20px;
-    background-color: #3c91e6;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1em;
+.title-input, .description-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.description-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.tool-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.tool-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    color: #666;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
 }
 
-.create-button:hover {
-    background-color: #2a6dab;
+.tool-btn:hover {
+    border-color: #3c91e6;
+    color: #3c91e6;
+}
+
+.flashcard-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 15px;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.card-number {
+    color: #666;
+    font-size: 1.1rem;
+    width: 30px;
+    text-align: center;
+}
+
+.card-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.term-input, .definition-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 100%;
+    transition: border-color 0.2s ease;
+}
+
+.term-input:focus, .definition-input:focus {
+    border-color: #3c91e6;
+    outline: none;
+}
+
+.image-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.image-btn:hover {
+    border-color: #3c91e6;
+    color: #3c91e6;
+}
+
+.add-card-btn {
+    padding: 12px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    background: white;
+    color: #3c91e6;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: all 0.2s ease;
+}
+
+.add-card-btn:hover {
+    border-color: #3c91e6;
+    background: #f8f9fa;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.create-btn {
+    padding: 10px 20px;
+    border: 1px solid #3c91e6;
+    border-radius: 6px;
+    background: white;
+    color: #3c91e6;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create-btn:hover {
+    background: #f8f9fa;
+}
+
+.create-practice-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #3c91e6;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create-practice-btn:hover {
+    background: #2a7bd7;
+}
+
+.create-btn:disabled,
+.create-practice-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.create-btn:disabled:hover,
+.create-practice-btn:disabled:hover {
+    background: inherit;
+    transform: none;
 }
