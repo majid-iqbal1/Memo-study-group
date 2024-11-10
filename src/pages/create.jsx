@@ -136,18 +136,22 @@ const Create = () => {
 
                     <div className="action-buttons">
                         <button 
-                            className="create-btn" 
-                            onClick={() => handleCreateSet(false)}
-                            disabled={isSubmitting}
+                            onClick={() => navigate('/homepage')} 
+                            className="cancel-button"
                         >
-                            {isSubmitting ? 'Creating...' : 'Create'}
+                            Cancel
                         </button>
                         <button 
-                            className="create-practice-btn" 
-                            onClick={handleCreateAndPractice}
-                            disabled={isSubmitting}
+                            onClick={handleCreateSet}
+                            className="create-btn"
                         >
-                            {isSubmitting ? 'Creating...' : 'Create and practice'}
+                            Create
+                        </button>
+                        <button 
+                            onClick={handleCreateAndPractice}
+                            className="create-practice-btn"
+                        >
+                            Create and practice
                         </button>
                     </div>
                 </div>

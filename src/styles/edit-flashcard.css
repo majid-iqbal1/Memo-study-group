@@ -1,0 +1,252 @@
+.edit-flashcard-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: calc(100vh - 100px);
+    background-color: #f4f4f9;
+}
+
+.edit-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+}
+
+.edit-header h1 {
+    font-size: 2.5rem;
+    color: #3c91e6;
+    margin-bottom: 1.5rem;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.edit-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.title-input,
+.description-input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.title-input:focus,
+.description-input:focus {
+    outline: none;
+    border-color: #3c91e6;
+}
+
+.description-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.card-edit-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    position: relative;
+}
+
+.card-number {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 24px;
+    height: 24px;
+    background-color: #3c91e6;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.card-inputs {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.card-inputs input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.card-inputs input:focus {
+    outline: none;
+    border-color: #3c91e6;
+}
+
+/* Buttons */
+.cancel-button,
+.save-button,
+.delete-button,
+.delete-card-button,
+.add-card-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.cancel-button {
+    background-color: #f5f5f5;
+    color: #424242;
+    border: 1px solid #e0e0e0;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
+.save-button {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+}
+
+.save-button:hover {
+    background-color: #bbdefb;
+}
+
+.delete-button {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.delete-button:hover {
+    background-color: #ffcdd2;
+}
+
+.delete-card-button {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+    padding: 0.5rem 1rem;
+}
+
+.delete-card-button:hover:not(:disabled) {
+    background-color: #ffcdd2;
+}
+
+.delete-card-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.add-card-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    color: #424242;
+    border: 2px dashed #e0e0e0;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.add-card-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Error message */
+.error-message {
+    text-align: center;
+    padding: 2rem;
+    background: #fff5f5;
+    border-radius: 12px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.error-message p {
+    color: #c62828;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-edit-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .edit-flashcard-page {
+        padding: 1rem;
+    }
+
+    .edit-header {
+        margin-bottom: 2rem;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .card-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .card-edit-item {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .delete-card-button {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .card-number {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}

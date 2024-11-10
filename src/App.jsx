@@ -9,6 +9,7 @@ import Library from './pages/library';
 import Create from './pages/create';
 import JoinGroups from './pages/joingroups';
 import LearnMode from './pages/LearnMode';
+import EditFlashcardSet from './pages/EditFlashcardSet';
 import Test from './pages/Test';
 import { auth } from './firebase';
 import useAutoLogout from './hooks/useAutoLogout';
@@ -127,6 +128,18 @@ function App() {
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
                                     <LearnMode />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/edit/:setId" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <EditFlashcardSet />
                                 </AuthenticatedRoute>
                             ) : (
                                 <Navigate to="/" />
