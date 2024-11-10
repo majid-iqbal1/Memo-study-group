@@ -6,7 +6,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    width: 350px;  
+    width: 400px;  
     height: 100vh;
     padding: 30px; 
     background-color: #f6f6f6;
@@ -53,27 +53,33 @@ button {
 
 .closeButton {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
+    top: 20px; 
+    right: 20px; 
+    width: 36px; 
+    height: 36px; 
+    background-color: rgba(236, 240, 241, 0.1);
     border: none;
-    color: #272525;
-    font-size: 1.5rem;
+    border-radius: 50%;
+    font-size: 1.2rem;
     cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
-  }
+    color: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
 
-  .closeButton:hover {
-    color: #ff0000; 
-    transform: scale(1.2);
-  }
+.closeButton:hover {
+    background-color: rgba(236, 240, 241, 0.2);
+    transform: rotate(90deg);
+}
 
 .profileContainer {
+    margin-top: 40px; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
-    transition: transform 0.3s ease; 
+    gap: 20px;
 }
 
 .sidebar:hover .profileContainer {
@@ -260,6 +266,10 @@ button {
 
 .profileText {
     text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .profileText p {
@@ -270,11 +280,10 @@ button {
 .streak-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
-    font-style: italic;
-    color: #000000;
-    margin-top: 10px;
-    text-align: center;
+    margin: 15px 0 30px 0;
+    color: #ecf0f1;
 }
 
 .streak {
@@ -300,12 +309,14 @@ button {
 
 
 .name {
-    font-size: 1.4rem;  
+    font-size: 1.5rem;
     font-weight: bold;
+    margin-bottom: 5px;
+
 }
 
 .bio {
-    font-size: 1.1rem; 
-    margin-top: 12px;
-    color: #000000;
+    font-size: 1rem;
+    color: #ecf0f1;
+    font-style: italic;
 }

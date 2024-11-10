@@ -120,18 +120,22 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
 
                     <div className="profileText">
                         <h2 className="name">{profile.name || "User Name"}</h2>
-                        <p className="bio">
-                            {profile.bio || ""}
-                        </p>
-                        <div className="streak-container">
-                            <span role="img" aria-label="fire">🔥</span>
-                            <p className="streak">
-                                {profile.streak === 0 ? (
-                                    "Welcome! Start your streak by coming back tomorrow!"
-                                ) : (
-                                    `Streak: ${profile.streak} ${profile.streak === 1 ? "day" : "days"}`
-                                )}
+                        {profile.bio && (
+                            <p className="bio">
+                                {profile.bio}
                             </p>
+                        )}
+                        <div className="streak-container">
+                            <div className="streak-status">
+                                <span role="img" aria-label="fire">🔥</span>
+                                <p className="streak">
+                                    {profile.streak === 0 ? (
+                                        "Welcome! Start your streak"
+                                    ) : (
+                                        `Streak: ${profile.streak} ${profile.streak === 1 ? "day" : "days"}`
+                                    )}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
