@@ -7,6 +7,7 @@ import ProfileSidebar from '../components/profilesildebar.jsx';
 import { useUser } from '../UserContext.jsx';
 import { Link, useLocation } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
+import CreateDropdown from '../components/CreateDropdown';
 
 const Homepage = () => {
     const { user, loading } = useUser(); 
@@ -56,13 +57,13 @@ const Homepage = () => {
                     <ul className="nav-links">
                         <li><Link to="/homepage" className={isActive('/homepage')}>Home</Link></li>
                         <li><Link to="/library" className={isActive('/library')}>Your Library</Link></li>
-                        <li><Link to="/create" className={isActive('/create')}>Create</Link></li>
                         <li><Link to="/join" className={isActive('/join')}>Join Groups</Link></li>
                         <li><Link to="/about" className={isActive('/about')}>About Us</Link></li>
                         <li><Link to="/contact" className={isActive('/contact')}>Contact</Link></li>
                     </ul>
                 </nav>
                 <div className="profile-container">
+                    <CreateDropdown />
                     <span className="profile-name">{user ? user.name : 'User'}</span>
                     <button className="profile-icon" onClick={openSidebar}>
                         {user?.profilePictureURL ? (

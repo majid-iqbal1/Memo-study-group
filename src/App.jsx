@@ -1,6 +1,14 @@
+// Router for application
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+
+// React hooks imports
 import { useEffect, useState } from 'react';
+
+// Firebase imports
 import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
+
+// Component imports and pages
 import { Auth } from './components/auth';
 import Homepage from './pages/Homepage';
 import About from './pages/about';
@@ -11,10 +19,13 @@ import JoinGroups from './pages/joingroups';
 import LearnMode from './pages/LearnMode';
 import EditFlashcardSet from './pages/EditFlashcardSet';
 import Test from './pages/Test';
-import { auth } from './firebase';
+
+// custom hook and utility function imports
 import useAutoLogout from './hooks/useAutoLogout';
 import LoadingSpinner from './components/LoadingSpinner';
 
+// implement auto logout after 10 minutes of inactivity
+// wraps all authenticated routes
 const AuthenticatedRoute = ({ children }) => {
     const { WarningComponent } = useAutoLogout(10); 
     
@@ -26,6 +37,9 @@ const AuthenticatedRoute = ({ children }) => {
     );
 };
 
+// manage authentication state
+// use firebase onAuthStateChanged to check if user is authenticated
+// if authenticated, render the homepage and show loading spinner while checking
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);

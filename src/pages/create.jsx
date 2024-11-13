@@ -95,7 +95,7 @@ const Create = () => {
                         onChange={(e) => setDescription(e.target.value)}
                     />
 
-                    <div className="tool-buttons">
+                    {/* <div className="tool-buttons">
                         <button className="tool-btn">
                             <span>+</span> Import
                         </button>
@@ -105,7 +105,7 @@ const Create = () => {
                         <button className="tool-btn">
                             <span>→</span> Create from notes
                         </button>
-                    </div>
+                    </div> */}
 
                     {flashcards.map((card) => (
                         <div key={card.id} className="flashcard-item">
@@ -135,12 +135,13 @@ const Create = () => {
                     </button>
 
                     <div className="action-buttons">
-                        <button 
+                       {/* <button 
                             onClick={() => navigate('/homepage')} 
                             className="cancel-button"
                         >
-                            Cancel
-                        </button>
+                            Cancel 
+                        </button> */}
+                        
                         <button 
                             onClick={handleCreateSet}
                             className="create-btn"
