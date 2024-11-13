@@ -37,7 +37,7 @@ const NavLayout = ({ children }) => {
                     </ul>
                 </nav>
                 <div className="profile-container">
-                    <CreateDropdown /> {/* Add the dropdown here */}
+                    <CreateDropdown /> {}
                     <span className="profile-name">{user ? user.name : 'User'}</span>
                     <button className="profile-icon" onClick={() => setIsSidebarOpen(true)}>
                         {user?.profilePictureURL ? (
