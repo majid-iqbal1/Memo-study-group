@@ -311,3 +311,157 @@ footer {
         margin-right: 20px;
     }
 }
+
+.search-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    position: relative;
+    z-index: 100;
+}
+
+.search-header {
+    margin-bottom: 1rem;
+}
+
+.search-mode-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mode-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    background: white;
+    color: #666;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-btn.active {
+    background: #3c91e6;
+    color: white;
+    border-color: #3c91e6;
+}
+
+.mode-btn:hover:not(.active) {
+    background: #f5f5f5;
+}
+
+.search-box {
+    position: relative;
+}
+
+.result-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.result-creator {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.loading-results {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #3c91e6;
+    box-shadow: 0 4px 12px rgba(60, 145, 230, 0.1);
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-results h2 {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.result-item:hover {
+    background-color: #f8f9fa;
+}
+
+.result-title {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.card-count {
+    font-size: 0.85rem;
+    color: #666;
+    margin-left: 1rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+
+@media (max-width: 768px) {
+    .search-mode-toggle {
+        gap: 0.5rem;
+    }
+
+    .mode-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .result-info {
+        gap: 0.15rem;
+    }
+}
