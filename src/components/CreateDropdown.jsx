@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, Book, CheckSquare, Folder, Users } from 'lucide-react';
-import './create-dropdown.css';
+import '../styles/create-dropdown.css';
 
 const CreateDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +22,7 @@ const CreateDropdown = () => {
     <div className="create-dropdown" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="create-button"
+        className="create-button-nav"
       >
         <span>+</span>
       </button>
