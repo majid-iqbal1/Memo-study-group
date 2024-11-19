@@ -5,9 +5,9 @@ import { db } from '../firebase';
 import { useUser } from '../UserContext';
 import NavLayout from '../components/NavLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
-import '../styles/test.css';
+import '../styles/tests.css';
 
-const Test = () => {
+const Tests = () => {
     const [tests, setTests] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useUser();
@@ -47,7 +47,7 @@ const Test = () => {
     };
 
     const handleTest = (test) => {
-        navigate(`/test/${test.id}`);
+        navigate(`/test?testId=${test.id}`);
     };
 
     if (loading) {
@@ -56,7 +56,7 @@ const Test = () => {
 
     return (
         <NavLayout>
-            <div className="test-page">
+            <div className="tests-page">
                 <h1>Test Your Knowledge</h1>
                 {tests.length === 0 ? (
                     <div className="empty-tests">
@@ -67,6 +67,9 @@ const Test = () => {
                     </div>
                 ) : (
                     <div className="tests-list">
+                        <button onClick={handleCreateTest} className="create-button">
+                            Create New Test
+                        </button>
                         {tests.map((test) => (
                             <div key={test.id} className="test-card">
                                 <h3>{test.title}</h3>
@@ -88,4 +91,4 @@ const Test = () => {
     );
 };
 
-export default Test;
+export default Tests;

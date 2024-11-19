@@ -1,37 +1,96 @@
-import React, { useState } from "react";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import { useUser } from "../UserContext";
+import { useUser } from '../UserContext';
 import { useNavigate } from "react-router-dom";
+import NavLayout from '../components/NavLayout';
+import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/create-test.css';
 
 const CreateTest = () => {
     const [title, setTitle] = useState('');
-    const [questions, setQuestions] = useState([{ id: 1, question: '', correctAnswer: '', wrongAnswers: ['', '', ''] }]);
-    const [useFlashcards, setUseFlashcards] = useState(false);
-    const { user } = useUser();
+    const [questions, setQuestions] = useState([]);
+    const [flashcardSets, setFlashcardSets] = useState([]);
+    const [selectedSet, setSelectedSet] = useState('');
+    const [loading, setLoading] = useState(true); // State for loading
+    const { user } = useUser(); // Retrieve user from context
     const navigate = useNavigate();
 
-    const addQuestion = () => {
-        const newId = questions.length + 1;
-        setQuestions([...questions, { id: newId, question: '', correctAnswer: '', wrongAnswers: ['', '', ''] }]);
+    useEffect(() => {
+        const fetchFlashcardSets = async () => {
+            if (!user?.uid) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const q = query(collection(db, 'flashcardSets'), where('userId', '==', user.uid));
+                const querySnapshot = await getDocs(q);
+                const sets = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setFlashcardSets(sets);
+            } catch (error) {
+                console.error('Error fetching flashcard sets:', error);
+            } finally {
+                setLoading(false); // Stop loading when fetching completes
+            }
+        };
+
+        fetchFlashcardSets();
+    }, [user]);
+
+    const handleFlashcardSetChange = (e) => {
+        const setId = e.target.value;
+        setSelectedSet(setId);
+
+        if (setId === '') {
+            setQuestions([]); // Allow manual question addition when no set is selected
+            return;
+        }
+
+        const selectedSet = flashcardSets.find(set => set.id === setId);
+        if (selectedSet) {
+            const newQuestions = selectedSet.cards.map(card => ({
+                question: card.term || '', // Assuming "term" represents the question in flashcard
+                correctAnswer: card.definition || '', // Assuming "definition" represents the answer
+                wrongAnswers: ['', '', ''] // Placeholder for wrong answers
+            }));
+            setQuestions(newQuestions);
+        }
     };
 
-    const handleQuestionChange = (id, field, value) => {
-        setQuestions(questions.map(q => q.id === id ? { ...q, [field]: value } : q));
+    const handleAddQuestion = () => {
+        setQuestions([
+            ...questions,
+            { question: '', correctAnswer: '', wrongAnswers: ['', '', ''] }
+        ]);
     };
 
-    const handleWrongAnswerChange = (id, index, value) => {
-        setQuestions(questions.map(q => q.id === id ? { ...q, wrongAnswers: q.wrongAnswers.map((a, i) => i === index ? value : a) } : q));
+    const handleRemoveQuestion = (index) => {
+        const updatedQuestions = questions.filter((_, i) => i !== index);
+        setQuestions(updatedQuestions);
     };
 
-    const handleSaveTest = async () => {
+    const handleQuestionChange = (index, field, value) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions[index][field] = value;
+        setQuestions(updatedQuestions);
+    };
+
+    const handleWrongAnswerChange = (qIndex, aIndex, value) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions[qIndex].wrongAnswers[aIndex] = value;
+        setQuestions(updatedQuestions);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
         if (!title.trim()) {
             alert('Please enter a title for the test.');
             return;
         }
 
-        if (questions.some(q => !q.question.trim() || !q.correctAnswer.trim() || q.wrongAnswers.some(a => !a.trim()))) {
+        if (questions.some(q => !q.question.trim() || !q.correctAnswer.trim())) {
             alert('Please fill out all fields for each question.');
             return;
         }
@@ -54,41 +113,80 @@ const CreateTest = () => {
         }
     };
 
+    if (loading) {
+        return (
+            <NavLayout>
+                <LoadingSpinner />
+            </NavLayout>
+        );
+    }
+
     return (
-        <div className="create-test">
-            <h1>Create a Test</h1>
-            <div>
-                <label>
-                    Test Title:
-                    <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
-                </label>
-            </div>
-            <div>
-                <label>
-                    <input type="checkbox" checked={useFlashcards} onChange={e => setUseFlashcards(e.target.checked)} />
-                </label>
-            </div>
-            {questions.map((q, index) => (
-                <div key={q.id} className="question-block">
+        <NavLayout>
+            <div className="create-test">
+                <h1>Create a Test</h1>
+                <div>
                     <label>
-                        Question {index + 1}:
-                        <input type="text" value={q.question} onChange={e => handleQuestionChange(q.id, 'question', e.target.value)} />
+                        Test Title:
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
                     </label>
-                    <label>
-                        Correct Answer:
-                        <input type="text" value={q.correctAnswer} onChange={e => handleQuestionChange(q.id, 'correctAnswer', e.target.value)} />
-                    </label>
-                    {q.wrongAnswers.map((answer, i) => (
-                        <label key={i}>
-                            Wrong Answer {i + 1}:
-                            <input type="text" value={answer} onChange={e => handleWrongAnswerChange(q.id, i, e.target.value)} />
-                        </label>
-                    ))}
                 </div>
-            ))}
-            <button onClick={addQuestion}>Add Question</button>
-            <button onClick={handleSaveTest}>Save Test</button>
-        </div>
+                <div>
+                    <label>
+                        Select Flashcard Set:
+                        <select value={selectedSet} onChange={handleFlashcardSetChange}>
+                            <option value="">None</option>
+                            {flashcardSets.map((set) => (
+                                <option key={set.id} value={set.id}>{set.title}</option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+                <div className="question-list">
+                    {questions.map((q, index) => (
+                        <div key={index} className="question-block">
+                            <label>
+                                Question {index + 1}:
+                                <input
+                                    type="text"
+                                    value={q.question}
+                                    onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+                                />
+                            </label>
+                            <label>
+                                Correct Answer:
+                                <input
+                                    type="text"
+                                    value={q.correctAnswer}
+                                    onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+                                />
+                            </label>
+                            {q.wrongAnswers.map((wrongAnswer, i) => (
+                                <label key={i}>
+                                    Wrong Answer {i + 1}:
+                                    <input
+                                        type="text"
+                                        value={wrongAnswer}
+                                        onChange={(e) => handleWrongAnswerChange(index, i, e.target.value)}
+                                    />
+                                </label>
+                            ))}
+                            <button onClick={() => handleRemoveQuestion(index)} className="remove-question-button">
+                                Remove Question
+                            </button>
+                        </div>
+                    ))}
+                    <button onClick={handleAddQuestion} className="add-question-button">
+                        Add Question
+                    </button>
+                </div>
+                <button onClick={handleSubmit}>Create Test</button>
+            </div>
+        </NavLayout>
     );
 };
 

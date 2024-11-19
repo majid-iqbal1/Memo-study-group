@@ -18,8 +18,9 @@ import Create from './pages/create';
 import JoinGroups from './pages/joingroups';
 import LearnMode from './pages/LearnMode';
 import EditFlashcardSet from './pages/EditFlashcardSet';
-import Test from './pages/Test';
+import Tests from './pages/Tests';
 import CreateTest from './pages/CreateTest';
+import TestMode from './pages/TestMode';
 
 // custom hook and utility function imports
 import useAutoLogout from './hooks/useAutoLogout';
@@ -162,11 +163,11 @@ function App() {
                         }
                     />
                     <Route
-                        path="/test"
+                        path="/tests"
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
-                                    <Test />
+                                    <Tests />
                                 </AuthenticatedRoute>
                             ) : (
                                 <Navigate to="/" />
@@ -179,6 +180,18 @@ function App() {
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
                                     <CreateTest />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/test"
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <TestMode />
                                 </AuthenticatedRoute>
                             ) : (
                                 <Navigate to="/" />
