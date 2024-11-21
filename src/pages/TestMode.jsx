@@ -14,6 +14,7 @@ const TestMode = () => {
     const [loading, setLoading] = useState(true);
     const [testTitle, setTestTitle] = useState('');
     const [showScore, setShowScore] = useState(false);
+    const [answeredCorrectly, setAnsweredCorrectly] = useState([]);
     const [searchParams] = useSearchParams();
     const testId = searchParams.get('testId');
     const navigate = useNavigate();
@@ -27,6 +28,7 @@ const TestMode = () => {
                 const data = docSnap.data();
                 setTestTitle(data.title);
                 setQuestions(data.questions);
+                setAnsweredCorrectly(new Array(data.questions.length).fill(false));
             } else {
                 alert('Test not found.');
                 navigate('/tests');
@@ -53,9 +55,17 @@ const TestMode = () => {
 
     const handleNextQuestion = () => {
         const currentQuestion = questions[currentQuestionIndex];
-        if (selectedAnswer === currentQuestion.correctAnswer) {
+        const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+
+        if (isCorrect && !answeredCorrectly[currentQuestionIndex]) {
             setScore((prevScore) => prevScore + 1);
+            setAnsweredCorrectly((prevState) => {
+                const newState = [...prevState];
+                newState[currentQuestionIndex] = true;
+                return newState;
+            });
         }
+
         setSelectedAnswer('');
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
@@ -76,6 +86,7 @@ const TestMode = () => {
         setCurrentQuestionIndex(0);
         setShowScore(false);
         setSelectedAnswer('');
+        setAnsweredCorrectly(new Array(questions.length).fill(false));
     };
 
     if (loading) {
@@ -110,8 +121,7 @@ const TestMode = () => {
                         <h2>Question {currentQuestionIndex + 1}:</h2>
                         <p>{currentQuestion.question}</p>
                         <div className="answers">
-                            {[currentQuestion.correctAnswer,
-                            ...currentQuestion.wrongAnswers.filter((answer) => answer.trim() !== '')]
+                            {[currentQuestion.correctAnswer, ...currentQuestion.wrongAnswers.filter((answer) => answer.trim() !== '')]
                                 .sort()
                                 .map((answer, index) => (
                                     <button
@@ -123,7 +133,6 @@ const TestMode = () => {
                                     </button>
                                 ))}
                         </div>
-
                         <div className="navigation-buttons">
                             {currentQuestionIndex > 0 && (
                                 <button
