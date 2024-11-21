@@ -1,6 +1,6 @@
 // PopupNotification.jsx
 import React, { useEffect } from 'react';
-import './PopupNotification.css';
+import '../styles/PopupNotification.css';
 
 const PopupNotification = ({ message, onClose }) => {
   useEffect(() => {
