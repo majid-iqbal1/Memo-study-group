@@ -1,73 +1,91 @@
-import React, { useState, useEffect } from "react";
-import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
-import { useUser } from '../UserContext';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 import NavLayout from '../components/NavLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
-import '../styles/create-test.css';
+import '../styles/edit-test.css';
 
-const CreateTest = () => {
-    const [title, setTitle] = useState('');
-    const [questions, setQuestions] = useState([]);
-    const [description, setDescription] = useState('');
-    const [flashcardSets, setFlashcardSets] = useState([]);
-    const [selectedSet, setSelectedSet] = useState('');
-    const [loading, setLoading] = useState(true);
-    const { user } = useUser();
+const EditTest = () => {
+    const { testId } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [questions, setQuestions] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchFlashcardSets = async () => {
-            if (!user?.uid) {
-                setLoading(false);
-                return;
-            }
+        const fetchTest = async () => {
             try {
-                const q = query(collection(db, 'flashcardSets'), where('userId', '==', user.uid));
-                const querySnapshot = await getDocs(q);
-                const sets = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setFlashcardSets(sets);
+                const docRef = doc(db, 'tests', testId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    setTitle(data.title);
+                    setDescription(data.description || '');
+                    setQuestions(data.questions);
+                } else {
+                    setError('Test not found');
+                }
             } catch (error) {
-                console.error('Error fetching flashcard sets:', error);
+                console.error('Error fetching test:', error);
+                setError('Error loading test');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchFlashcardSets();
-    }, [user]);
+        fetchTest();
+    }, [testId]);
 
-    const handleFlashcardSetChange = (e) => {
-        const setId = e.target.value;
-        setSelectedSet(setId);
-
-        if (setId === '') {
-            setQuestions([]);
+    const handleSave = async () => {
+        if (!title.trim()) {
+            alert('Please enter a title for your test.');
             return;
         }
 
-        const selectedSet = flashcardSets.find(set => set.id === setId);
-        if (selectedSet) {
-            const newQuestions = selectedSet.cards.map(card => ({
-                question: card.term || '',
-                correctAnswer: card.definition || '',
-                wrongAnswers: ['', '', '']
-            }));
-            setQuestions(newQuestions);
+        if (questions.some(q => !q.question.trim() || !q.correctAnswer.trim())) {
+            alert('Please fill in all questions and correct answers.');
+            return;
+        }
+
+        try {
+            const docRef = doc(db, 'tests', testId);
+            await updateDoc(docRef, {
+                title: title.trim(),
+                description: description.trim(),
+                questions,
+                updatedAt: new Date()
+            });
+            alert('Test updated successfully!');
+            navigate('/tests');
+        } catch (error) {
+            console.error('Error updating test:', error);
+            alert('Failed to save changes. Please try again.');
+        }
+    };
+
+    const handleDelete = async () => {
+        if (window.confirm('Are you sure you want to delete this test? This action cannot be undone.')) {
+            try {
+                await deleteDoc(doc(db, 'tests', testId));
+                alert('Test deleted successfully!');
+                navigate('/tests');
+            } catch (error) {
+                console.error('Error deleting test:', error);
+                alert('Failed to delete test. Please try again.');
+            }
         }
     };
 
     const handleAddQuestion = () => {
-        setQuestions([
-            ...questions,
-            { question: '', correctAnswer: '', wrongAnswers: ['', '', ''] }
-        ]);
+        setQuestions([...questions, { question: '', correctAnswer: '', wrongAnswers: ['', '', ''] }]);
     };
 
     const handleRemoveQuestion = (index) => {
-        const updatedQuestions = questions.filter((_, i) => i !== index);
-        setQuestions(updatedQuestions);
+        setQuestions(questions.filter((_, i) => i !== index));
     };
 
     const handleQuestionChange = (index, field, value) => {
@@ -82,38 +100,6 @@ const CreateTest = () => {
         setQuestions(updatedQuestions);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!title.trim()) {
-            alert('Please enter a title for the test.');
-            return;
-        }
-
-        if (questions.some(q => !q.question.trim() || !q.correctAnswer.trim())) {
-            alert('Please fill out all fields for each question.');
-            return;
-        }
-
-        const test = {
-            title: title.trim(),
-            description: description.trim(),
-            questions,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-            userId: user.uid
-        };
-
-        try {
-            await addDoc(collection(db, 'tests'), test);
-            alert('Test created successfully!');
-            navigate('/test');
-        } catch (error) {
-            console.error('Error creating test:', error);
-            alert('Failed to save the test. Please try again.');
-        }
-    };
-
     if (loading) {
         return (
             <NavLayout>
@@ -122,38 +108,41 @@ const CreateTest = () => {
         );
     }
 
+    if (error) {
+        return (
+            <NavLayout>
+                <div className="edit-test-page">
+                    <div className="error-message">
+                        <p>{error}</p>
+                        <button onClick={() => navigate('/tests')} className="back-button">
+                            Back to Tests
+                        </button>
+                    </div>
+                </div>
+            </NavLayout>
+        );
+    }
+
     return (
         <NavLayout>
-            <div className="test-creator">
-                <h2>Create a new test</h2>
+            <div className="edit-test-page">
+                <h2>Edit Test</h2>
 
                 <div className="test-section">
                     <h3>Test Information</h3>
                     <input
                         type="text"
-                        placeholder="Enter a test title"
-                        className="title-input"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Enter test title"
+                        className="title-input"
                     />
                     <textarea
-                        placeholder="Add a description..."
-                        className="description-input"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Enter test description (optional)"
+                        className="description-input"
                     />
-                </div>
-
-                <div className="import-section">
-                    <h3>Import from Flashcards</h3>
-                    <div className="select-set">
-                        <select value={selectedSet} onChange={handleFlashcardSetChange}>
-                            <option value="">None</option>
-                            {flashcardSets.map((set) => (
-                                <option key={set.id} value={set.id}>{set.title}</option>
-                            ))}
-                        </select>
-                    </div>
                 </div>
 
                 <div className="questions-section">
@@ -198,8 +187,14 @@ const CreateTest = () => {
                 </div>
 
                 <div className="action-buttons">
-                    <button onClick={handleSubmit} className="create-test-btn">
-                        Create Test
+                    <button onClick={() => navigate('/tests')} className="cancel-button">
+                        Cancel
+                    </button>
+                    <button onClick={handleSave} className="save-button">
+                        Save Changes
+                    </button>
+                    <button onClick={handleDelete} className="delete-button">
+                        Delete Test
                     </button>
                 </div>
             </div>
@@ -207,4 +202,4 @@ const CreateTest = () => {
     );
 };
 
-export default CreateTest;
+export default EditTest;

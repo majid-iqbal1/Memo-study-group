@@ -64,6 +64,13 @@ const TestMode = () => {
         }
     };
 
+    const handlePreviousQuestion = () => {
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
+            setSelectedAnswer('');
+        }
+    };
+
     const handleTryAgain = () => {
         setScore(0);
         setCurrentQuestionIndex(0);
@@ -113,13 +120,23 @@ const TestMode = () => {
                                 </button>
                             ))}
                         </div>
-                        <button
-                            className="next-button"
-                            onClick={handleNextQuestion}
-                            disabled={!selectedAnswer}
-                        >
-                            {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
-                        </button>
+                        <div className="navigation-buttons">
+                            {currentQuestionIndex > 0 && (
+                                <button
+                                    className="previous-button"
+                                    onClick={handlePreviousQuestion}
+                                >
+                                    Previous
+                                </button>
+                            )}
+                            <button
+                                className="next-button"
+                                onClick={handleNextQuestion}
+                                disabled={!selectedAnswer}
+                            >
+                                {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

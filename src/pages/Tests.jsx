@@ -50,6 +50,11 @@ const Tests = () => {
         navigate(`/test?testId=${test.id}`);
     };
 
+    const handleEditTest = (e, test) => {
+        e.stopPropagation();
+        navigate(`/edit-test/${test.id}`);
+    };
+
     if (loading) {
         return <LoadingSpinner />;
     }
@@ -66,25 +71,32 @@ const Tests = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className="tests-list">
-                        <button onClick={handleCreateTest} className="create-button">
-                            Create New Test
-                        </button>
-                        {tests.map((test) => (
-                            <div key={test.id} className="test-card">
-                                <h3>{test.title}</h3>
-                                <p>{test.questions.length} questions</p>
-                                <div className="test-actions">
-                                    <button
-                                        onClick={() => handleTest(test)}
-                                        className="view-button"
-                                    >
-                                        View Test
-                                    </button>
+                    <>
+                        <div className="tests-list">
+                            {tests.map(test => (
+                                <div key={test.id} className="test-card">
+                                    <h3>{test.title}</h3>
+                                    <p>{test.description}</p>
+                                    <div className="test-info">
+                                        <span>{test.questions.length} questions</span>
+                                        <div className="test-actions">
+                                            <button onClick={() => handleTest(test)} className="view-button">
+                                                Take Test
+                                            </button>
+                                            <button onClick={(e) => handleEditTest(e, test)} className="edit-button">
+                                                Edit Test
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                        <div className="create-test-container">
+                            <button onClick={handleCreateTest} className="create-button">
+                                Create New Test
+                            </button>
+                        </div>
+                    </>
                 )}
             </div>
         </NavLayout>

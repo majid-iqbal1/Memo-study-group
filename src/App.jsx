@@ -21,6 +21,7 @@ import EditFlashcardSet from './pages/EditFlashcardSet';
 import Tests from './pages/Tests';
 import CreateTest from './pages/CreateTest';
 import TestMode from './pages/TestMode';
+import EditTest from './pages/EditTest';
 
 // custom hook and utility function imports
 import useAutoLogout from './hooks/useAutoLogout';
@@ -192,6 +193,18 @@ function App() {
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
                                     <TestMode />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/edit-test/:testId"
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <EditTest />
                                 </AuthenticatedRoute>
                             ) : (
                                 <Navigate to="/" />
