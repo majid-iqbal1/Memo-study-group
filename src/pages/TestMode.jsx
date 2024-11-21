@@ -110,16 +110,20 @@ const TestMode = () => {
                         <h2>Question {currentQuestionIndex + 1}:</h2>
                         <p>{currentQuestion.question}</p>
                         <div className="answers">
-                            {[currentQuestion.correctAnswer, ...currentQuestion.wrongAnswers].sort().map((answer, index) => (
-                                <button
-                                    key={index}
-                                    className={`answer-button ${selectedAnswer === answer ? 'selected' : ''}`}
-                                    onClick={() => handleAnswerSelect(answer)}
-                                >
-                                    {answer}
-                                </button>
-                            ))}
+                            {[currentQuestion.correctAnswer,
+                            ...currentQuestion.wrongAnswers.filter((answer) => answer.trim() !== '')]
+                                .sort()
+                                .map((answer, index) => (
+                                    <button
+                                        key={index}
+                                        className={`answer-button ${selectedAnswer === answer ? 'selected' : ''}`}
+                                        onClick={() => handleAnswerSelect(answer)}
+                                    >
+                                        {answer}
+                                    </button>
+                                ))}
                         </div>
+
                         <div className="navigation-buttons">
                             {currentQuestionIndex > 0 && (
                                 <button
