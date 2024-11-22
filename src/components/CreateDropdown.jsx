@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FileText, Book, CheckSquare, Folder, Users } from 'lucide-react';
-import '../styles/create-dropdown.css';
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { FileText, Book, CheckSquare, Folder, Users } from "lucide-react";
+import "../styles/create-dropdown.css";
 
 const CreateDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,16 +14,13 @@ const CreateDropdown = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <div className="create-dropdown" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="create-button-nav"
-      >
+      <button onClick={() => setIsOpen(!isOpen)} className="create-button-nav">
         <span>+</span>
       </button>
 
@@ -33,8 +30,8 @@ const CreateDropdown = () => {
             <FileText />
             <span>Flashcard set</span>
           </Link>
-          
-          <Link to="/create-study-group" className="dropdown-item">
+
+          <Link to="/create-group" className="dropdown-item">
             <Book />
             <span>Study Group</span>
           </Link>
