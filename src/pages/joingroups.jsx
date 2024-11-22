@@ -2,14 +2,15 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import '../styles/joingroups.css';
 import { collection, query, where, getDocs, doc, updateDoc, arrayUnion} from 'firebase/firestore';
 import { auth, db } from '../firebase.jsx';
 import { useUser } from '../UserContext.jsx';
+import { Link} from 'react-router-dom';
 import NavLayout from '../components/NavLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
-import PopupNotification from '../components/PopupNotification'; // Import the PopupNotification component
+import PopupNotification from '../components/PopupNotification'; 
 
 const JoinGroups = () => {
     const { user, loading } = useUser();
@@ -18,15 +19,10 @@ const JoinGroups = () => {
     const [groupSets, setGroupSets] = useState([]);
     const [filteredGroups, setFilteredGroups] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
-    const navigate = useNavigate(); // Initialize useNavigate hook
-    const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
-    const [popupMessage, setPopupMessage] = useState(''); // Message for the popup
+    const navigate = useNavigate(); 
+    const [showPopup, setShowPopup] = useState(false); 
+    const [popupMessage, setPopupMessage] = useState(''); 
 
-    const quickJoinGroups = [
-        { id: '1', name: 'Math Study Group', owner: 'Alice', users: 5 },
-        { id: '2', name: 'Science Club', owner: 'Bob', users: 8 },
-        { id: '3', name: 'History Discussion', owner: 'Charlie', users: 3 },
-    ];
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -68,13 +64,13 @@ const JoinGroups = () => {
         }
 
         try {
-            const groupRef = doc(db, 'group-placeholder', groupId); // Reference to the group document
+            const groupRef = doc(db, 'group-placeholder', groupId); 
             await updateDoc(groupRef, {
-                'group.users': arrayUnion(user.uid), // Add current user to the users array
+                'group.users': arrayUnion(user.uid), 
             });
 
-            setPopupMessage('You have successfully joined the group!'); // Set the message for the popup
-            setShowPopup(true); // Show the popup notification
+            setPopupMessage('You have successfully joined the group!'); 
+            setShowPopup(true); 
 
             console.log('User added to group!');
         } catch (error) {
@@ -83,65 +79,81 @@ const JoinGroups = () => {
     };
 
     const handleGroupClick = (groupId) => {
-        // Navigate to the placeholder page with the group ID
+        
         window.location.href = `https://www.youtube.com/watch?v=OgZzUJud3Q4&ab_channel=NiteReviews${groupId}`;
-        //navigate(`/group/${groupId}`); // Adjust the path as necessary
+        //navigate(`/group/${groupId}`); 
+    };
+
+    const handleCreateClick = (groupId) => {
+        window.location.href = `https://www.youtube.com/watch?v=OgZzUJud3Q4&ab_channel=NiteReviews${groupId}`;
+        //navigate(`/group/${groupId}`); 
     };
 
     return (
         <NavLayout>
             <div className="join-groups-page">
-                <h1>Join Study Groups</h1>
-                <p>Collaborate and learn with others by joining a study group.</p>
+                <div className = "group-container-box">
+                    <h1>Join Study Groups</h1>
+                    {/* <p>Collaborate and learn with others by joining a study group.</p> */}
 
-                <div className="search-container">
-                    <div className="search-box">
-                        <input
-                            type="text"
-                            placeholder="Search for groups..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="search-input"
-                        />
-                    </div>
+                    <div className="search-container">
+                        <div className="search-box">
+                            <input
+                                type="text"
+                                placeholder="Search for groups..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="search-input"
+                            />
+                        </div>
 
-                    {isSearching && (
-                        <div className="search-results">
-                            <h2>Search Results</h2>
-                            {isLoading ? (
-                                <div className="loading-results">
-                                    <LoadingSpinner />
-                                </div>
-                            ) : filteredGroups.length > 0 ? (
-                                <div className="results-list">
-                                    {filteredGroups.map(group => (
-                                        <div 
-                                            key={group.id} 
-                                            className="result-item"
-                                            onClick={() => handleGroupClick(group.id)} // Add onClick to handle navigation
-                                        >
-                                            <div className="result-info">
-                                                <span className="result-title">{group.group?.name || 'Unnamed Group'}</span>
-                                                <span className="result-creator">
-                                                    Owner: {group.group?.owner || 'Unknown'}
+                        {isSearching && (
+                            <div className="search-results">
+                                <h2>Search Results</h2>
+                                {isLoading ? (
+                                    <div className="loading-results">
+                                        <LoadingSpinner />
+                                    </div>
+                                ) : filteredGroups.length > 0 ? (
+                                    <div className="results-list">
+                                        {filteredGroups.map(group => (
+                                            <div 
+                                                key={group.id} 
+                                                className="result-item"
+                                                onClick={() => handleGroupClick(group.id)} // Add onClick to handle navigation
+                                            >
+                                                <div className="result-info">
+                                                    <span className="result-title">{group.group?.name || 'Unnamed Group'}</span>
+                                                    <span className="result-creator">
+                                                        Owner: {group.group?.owner || 'Unknown'}
+                                                    </span>
+                                                </div>
+                                                <span className="member-count">
+                                                    {group.group?.users?.length || 0} members
                                                 </span>
                                             </div>
-                                            <span className="member-count">
-                                                {group.group?.users?.length || 0} members
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="no-results">
-                                    <p>No groups found matching "{searchTerm}"</p>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="no-results">
+                                        <p>No groups found matching "{searchTerm}"</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 
-
+                    <div className = "create-own-container" >
+                            <h2>or</h2>
+                            <button 
+                                onClick={() => handleCreateClick (1)} 
+                                            className="create-button"
+                                >
+                                    Create Your Own
+                            </button>
+                    </div>
+                
+                </div>
                 <div className="quick-join-container">
                     <h2>Quick Join Groups</h2>
                     <div className="quick-join-boxes">
@@ -165,12 +177,13 @@ const JoinGroups = () => {
                             </div>
                         ))}
                     </div>
+                    
 
                 </div>
                 {showPopup && (
                     <PopupNotification
                         message={popupMessage}
-                        onClose={() => setShowPopup(false)} // Close the popup after it appears
+                        onClose={() => setShowPopup(false)} 
                     />
                 )}
 

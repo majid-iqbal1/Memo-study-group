@@ -3,7 +3,7 @@
 .join-groups-page {
     max-width: 800px;
     margin: 0 auto;
-    padding: 50px 20px;
+    padding: 50px 20px 0;
     text-align: center;
 }
 
@@ -14,15 +14,14 @@
 }
 
 .join-groups-page p {
-    font-size: 1.2em;
+    font-size: 1.2rem;
     color: #555;
     margin-bottom: 30px;
 }
 
-/* Search Container Styles - Matching Homepage */
 .search-container {
-    max-width: 600px;
-    margin: 2rem auto;
+    max-width: 2000px;
+    margin: 1rem auto 0rem auto;
     position: relative;
     z-index: 100;
 }
@@ -33,8 +32,8 @@
 
 .search-input {
     width: 100%;
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
+    padding: 1.5rem 1.5rem;
+    font-size: 1.5rem;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     background-color: white;
@@ -126,6 +125,7 @@
     font-size: 0.9rem;
 }
 
+
 @media (max-width: 768px) {
     .join-groups-page {
         padding: 20px;
@@ -139,6 +139,13 @@
     .result-info {
         gap: 0.15rem;
     }
+}
+
+.join-groups-page {
+    max-width: 800px;
+    margin: -40px auto 0 auto; 
+    padding: 30px 20px; 
+    text-align: center;
 }
 
 .quick-join-container {
@@ -176,7 +183,7 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     height: 250px;
-    text-align: left; /* Align text to the left */
+    text-align: left; 
 }
 
 .quick-join-box:hover {
@@ -189,16 +196,16 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 0.5rem;
-    white-space: nowrap; /* Prevent title from wrapping */
+    white-space: nowrap; 
     overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis if title overflows */
+    text-overflow: ellipsis; 
 }
 
 .quick-join-box .box-details {
     font-size: 1rem;
     color: #666;
     margin-bottom: 1rem;
-    line-height: 1.5; /* Increase line height for better readability */
+    line-height: 1.5;
 }
 
 .quick-join-box .member-count {
@@ -208,7 +215,7 @@
 }
 
 .quick-join-box .join-button {
-    margin-top: auto; /* Push the button to the bottom */
+    margin-top: auto; 
     padding: 0.8rem 1.5rem;
     background-color: #3c91e6;
     color: white;
@@ -226,7 +233,7 @@
     transform: translateY(-4px);
 }
 
-/* Make grid responsive on smaller screens */
+
 @media (max-width: 900px) {
     .quick-join-boxes {
         grid-template-columns: repeat(2, 1fr);
@@ -239,6 +246,62 @@
     }
 
     .quick-join-box {
-        height: auto; /* Allow box height to adjust */
+        height: auto; 
     }
 }
+
+.create-own-container {
+    padding: 10px 
+}
+
+.create-own-container .create-button {
+    margin-top: auto; 
+    margin: 0 auto;
+    padding: 0.8rem 1.5rem;
+    background-color: #3c91e6;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-align: center;
+    width: 50%;
+}
+
+.create-own-container .create-button:hover {
+    background-color: #2a78c4;
+    transform: translateY(-4px);
+}
+
+.create-own-container h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+.group-container-box {
+    background-color: #f8f9fa; 
+    border: 1px solid #ddd; 
+    border-radius: 12px; 
+    padding: 2rem; 
+    margin: 1rem auto; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    max-width: 900px; 
+    text-align: center; 
+}
+
+.group-container-box h1 {
+    margin-bottom: 1.5rem; 
+    font-size: 2.5rem; 
+    color: #3c91e6; 
+}
+
+.group-container-box p
+{
+    font-size: 25px !important;
+}
+
