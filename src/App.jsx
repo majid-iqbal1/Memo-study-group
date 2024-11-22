@@ -15,6 +15,7 @@ import About from './pages/about';
 import Contact from './pages/contact';
 import Library from './pages/library';
 import Create from './pages/create';
+import CreateGroup from './pages/create-group';
 import JoinGroups from './pages/joingroups';
 import LearnMode from './pages/LearnMode';
 import EditFlashcardSet from './pages/EditFlashcardSet';
@@ -133,6 +134,18 @@ function App() {
                                 </AuthenticatedRoute>
                             ) : (
                                 <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/create-group"  // Note: Use kebab-case for URLs
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <CreateGroup />
+                                </AuthenticatedRoute>
+                            ) : (
+                            <Navigate to="/" />
                             )
                         } 
                     />
