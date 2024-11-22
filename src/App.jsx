@@ -15,10 +15,11 @@ import About from './pages/about';
 import Contact from './pages/contact';
 import Library from './pages/library';
 import Create from './pages/create';
+import CreateGroup from './pages/create-group';
 import JoinGroups from './pages/joingroups';
 import LearnMode from './pages/LearnMode';
 import EditFlashcardSet from './pages/EditFlashcardSet';
-import Tests from './pages/Tests';
+import Test from './pages/Test';
 import CreateTest from './pages/CreateTest';
 import TestMode from './pages/TestMode';
 import EditTest from './pages/EditTest';
@@ -30,8 +31,8 @@ import LoadingSpinner from './components/LoadingSpinner';
 // implement auto logout after 10 minutes of inactivity
 // wraps all authenticated routes
 const AuthenticatedRoute = ({ children }) => {
-    const { WarningComponent } = useAutoLogout(10);
-
+    const { WarningComponent } = useAutoLogout(10); 
+    
     return (
         <>
             {children}
@@ -56,19 +57,19 @@ function App() {
     }, []);
 
     if (loading) {
-        return <LoadingSpinner />;
-    }
+      return <LoadingSpinner />;
+  }
 
     return (
         <Router>
             <div className="App">
                 <Routes>
-                    <Route
-                        path="/"
-                        element={isAuthenticated ? <Navigate to="/homepage" /> : <Auth />}
+                    <Route 
+                        path="/" 
+                        element={isAuthenticated ? <Navigate to="/homepage" /> : <Auth />} 
                     />
-                    <Route
-                        path="/homepage"
+                    <Route 
+                        path="/homepage" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -77,10 +78,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/about"
+                    <Route 
+                        path="/about" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -89,10 +90,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/contact"
+                    <Route 
+                        path="/contact" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -101,10 +102,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/library"
+                    <Route 
+                        path="/library" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -113,10 +114,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/create"
+                    <Route 
+                        path="/create" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -125,10 +126,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/join"
+                    <Route 
+                        path="/join" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -137,10 +138,22 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/learn"
+                    <Route 
+                        path="/create-group"  // Note: Use kebab-case for URLs
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <CreateGroup />
+                                </AuthenticatedRoute>
+                            ) : (
+                            <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/learn" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -149,10 +162,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/edit/:setId"
+                    <Route 
+                        path="/edit/:setId" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -161,10 +174,22 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/tests"
+                    <Route 
+                        path="/test" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <Test />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/tests" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -173,10 +198,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/create-test"
+                    <Route 
+                        path="/create-test" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -185,10 +210,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/test"
+                    <Route 
+                        path="/test-mode" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -197,10 +222,10 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
-                    <Route
-                        path="/edit-test/:testId"
+                    <Route 
+                        path="/edit-test/:testId" 
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
@@ -209,7 +234,7 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
-                        }
+                        } 
                     />
                 </Routes>
             </div>
