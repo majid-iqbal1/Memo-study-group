@@ -23,11 +23,12 @@
     max-width: 2000px;
     margin: 1rem auto 0rem auto;
     position: relative;
-    z-index: 100;
+    z-index: 99;
 }
 
 .search-box {
     position: relative;
+    z-index: 99;
 }
 
 .search-input {
@@ -166,6 +167,7 @@
 
 .quick-join-boxes {
     display: grid;
+    justify-content: center;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, auto);
     gap: 2rem;
@@ -183,7 +185,7 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     height: 250px;
-    text-align: left; 
+    text-align: center; 
 }
 
 .quick-join-box:hover {
