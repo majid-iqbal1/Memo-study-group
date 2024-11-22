@@ -201,7 +201,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/test-mode"
+                        path="/test"
                         element={
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
