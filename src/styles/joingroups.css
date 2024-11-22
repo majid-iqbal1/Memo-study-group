@@ -23,11 +23,12 @@
     max-width: 2000px;
     margin: 1rem auto 0rem auto;
     position: relative;
-    z-index: 100;
+    z-index: 99;
 }
 
 .search-box {
     position: relative;
+    z-index: 99;
 }
 
 .search-input {
