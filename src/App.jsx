@@ -20,6 +20,9 @@ import JoinGroups from './pages/joingroups';
 import LearnMode from './pages/LearnMode';
 import EditFlashcardSet from './pages/EditFlashcardSet';
 import Test from './pages/Test';
+import CreateTest from './pages/CreateTest';
+import TestMode from './pages/TestMode';
+import EditTest from './pages/EditTest';
 
 // custom hook and utility function imports
 import useAutoLogout from './hooks/useAutoLogout';
@@ -179,6 +182,54 @@ function App() {
                             isAuthenticated ? (
                                 <AuthenticatedRoute>
                                     <Test />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/tests" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <Tests />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/create-test" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <CreateTest />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/test-mode" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <TestMode />
+                                </AuthenticatedRoute>
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        } 
+                    />
+                    <Route 
+                        path="/edit-test/:testId" 
+                        element={
+                            isAuthenticated ? (
+                                <AuthenticatedRoute>
+                                    <EditTest />
                                 </AuthenticatedRoute>
                             ) : (
                                 <Navigate to="/" />

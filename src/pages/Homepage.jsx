@@ -10,13 +10,13 @@ import { Link, useLocation } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Homepage = () => {
-    const { user, loading } = useUser(); 
+    const { user, loading } = useUser();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [flashcardSets, setFlashcardSets] = useState([]);
     const [filteredSets, setFilteredSets] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
-    const [searchMode, setSearchMode] = useState('all'); 
+    const [searchMode, setSearchMode] = useState('all');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
@@ -136,13 +136,13 @@ const Homepage = () => {
                 <div className="search-container">
                     <div className="search-header">
                         <div className="search-mode-toggle">
-                            <button 
+                            <button
                                 className={`mode-btn ${searchMode === 'all' ? 'active' : ''}`}
                                 onClick={() => setSearchMode('all')}
                             >
                                 All Sets
                             </button>
-                            <button 
+                            <button
                                 className={`mode-btn ${searchMode === 'my' ? 'active' : ''}`}
                                 onClick={() => setSearchMode('my')}
                             >
@@ -170,8 +170,8 @@ const Homepage = () => {
                             ) : filteredSets.length > 0 ? (
                                 <div className="results-list">
                                     {filteredSets.map(set => (
-                                        <div 
-                                            key={set.id} 
+                                        <div
+                                            key={set.id}
                                             className="result-item"
                                             onClick={() => navigate(`/learn?setId=${set.id}`)}
                                         >
@@ -208,7 +208,7 @@ const Homepage = () => {
                         <h3>Learn Mode</h3>
                         <p>An adaptive learning feature. Tracks what terms you know well and which terms need a little more work.</p>
                     </Link>
-                    <Link to="/test" className="guide-item">
+                    <Link to="/tests" className="guide-item">
                         <img src={`${process.env.PUBLIC_URL}/test.png`} alt="Test Logo" className="logo-image" />
                         <h3>Tests</h3>
                         <p>Test yourself in a stress-free environment before the real thing.</p>
@@ -219,7 +219,7 @@ const Homepage = () => {
             <footer>
                 <p>&copy; 2024 Memo+</p>
             </footer>
-    
+
             {isSidebarOpen && <ProfileSidebar onClose={closeSidebar} />}
         </div>
     );
