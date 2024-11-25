@@ -168,21 +168,6 @@ main:not(.homepage-content) p {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.guide-item h3 {
-    font-size: 1.5em;
-    color: #2c3e50;
-    margin: 15px 0;
-}
-
-.guide-item p {
-    color: #6c757d;
-    line-height: 1.6;
-    font-size: 0.9em;
-    animation: none;
-    opacity: 1;
-    white-space: normal;
-}
-
 .logo-image {
     width: 50px;
     height: auto;
@@ -246,10 +231,9 @@ main:not(.homepage-content) p {
     transform: scale(0.95);
 }
 
-/* Footer */
 footer {
     background-color: #3c91e6;
-    color: #f4f4f9;
+    color: #fff;
     padding: 15px 0;
     text-align: center;
     font-size: 0.9em;
@@ -464,4 +448,25 @@ footer {
     .result-info {
         gap: 0.15rem;
     }
+}
+
+.guide-item h3 {
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin: 15px 0;
+    text-align: center;
+}
+
+main:not(.homepage-content) p {
+    font-size: 2em;
+    color: #555;
+}
+
+main .guide-item p {
+    color: #6c757d;
+    line-height: 1.6;
+    font-size: 1.1em;
+    animation: none;
+    opacity: 1;
+    white-space: normal;
 }

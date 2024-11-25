@@ -219,7 +219,7 @@ const JoinGroups = () => {
 
         {/* Quick Join Groups Section */}
         <div className="quick-join-container">
-          <h2>Available Groups</h2>
+          <h2>Featured Study Groups</h2>
           <div className="quick-join-boxes">
             {groupSets.map((group) => (
               <div className="quick-join-box" key={group.id}>

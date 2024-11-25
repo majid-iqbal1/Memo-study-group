@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { auth, db } from '../firebase.jsx';
+import { db } from '../firebase.jsx';
 import '../styles/homepage.css';
-import ProfileSidebar from '../components/profilesildebar.jsx';
 import { useUser } from '../UserContext.jsx';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
+import NavLayout from '../components/NavLayout';
 
 const Homepage = () => {
     const { user, loading } = useUser();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [flashcardSets, setFlashcardSets] = useState([]);
     const [filteredSets, setFilteredSets] = useState([]);
@@ -19,11 +17,6 @@ const Homepage = () => {
     const [searchMode, setSearchMode] = useState('all');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const isActive = (path) => {
-        return location.pathname === path ? 'active' : '';
-    };
 
     useEffect(() => {
         const fetchFlashcardSets = async () => {
@@ -75,61 +68,13 @@ const Homepage = () => {
         }
     }, [searchTerm, flashcardSets]);
 
-    const getInitials = (name) => {
-        if (!name) return "";
-        const names = name.split(" ");
-        return names.length > 1 ? `${names[0][0]}${names[1][0]}`.toUpperCase() : names[0][0].toUpperCase();
-    };
-
-    const handleSignOut = async () => {
-        try {
-            await signOut(auth);
-            navigate('/');
-        } catch (error) {
-            console.error("Error signing out:", error);
-        }
-    };
-
-    const openSidebar = () => {
-        setIsSidebarOpen(true);
-    };
-
-    const closeSidebar = () => {
-        setIsSidebarOpen(false);
-    };
-
     if (loading) {
         return <LoadingSpinner />;
     }
 
     return (
-        <div className="nav-container">
-            <header>
-                <nav>
-                    <div className="logo">
-                        <img src="/logo.png" alt="Memo+ Logo" className="home-logo-image" />
-                    </div>
-                    <ul className="nav-links">
-                        <li><Link to="/homepage" className={isActive('/homepage')}>Home</Link></li>
-                        <li><Link to="/library" className={isActive('/library')}>Your Library</Link></li>
-                        <li><Link to="/create" className={isActive('/create')}>Create</Link></li>
-                        <li><Link to="/join" className={isActive('/join')}>Join Groups</Link></li>
-                        <li><Link to="/about" className={isActive('/about')}>About Us</Link></li>
-                        <li><Link to="/contact" className={isActive('/contact')}>Contact</Link></li>
-                    </ul>
-                </nav>
-                <div className="profile-container">
-                    <span className="profile-name">{user ? user.name : 'User'}</span>
-                    <button className="profile-icon" onClick={openSidebar}>
-                        {user?.profilePictureURL ? (
-                            <img src={user.profilePictureURL} alt="Profile" className="profile-icon-image" />
-                        ) : (
-                            <div className="initials-placeholder">{getInitials(user?.name)}</div>
-                        )}
-                    </button>
-                </div>
-            </header>
-            <main className="homepage-content">
+        <NavLayout>
+            <div className="homepage-content">
                 <h1>Memo+</h1>
                 <p>Learn Faster Using Only the Essentials</p>
 
@@ -193,7 +138,7 @@ const Homepage = () => {
                         </div>
                     )}
                 </div>
-            </main>
+            </div>
 
             <section className="guide">
                 <h2>Guide</h2>
@@ -219,9 +164,7 @@ const Homepage = () => {
             <footer>
                 <p>&copy; 2024 Memo+</p>
             </footer>
-
-            {isSidebarOpen && <ProfileSidebar onClose={closeSidebar} />}
-        </div>
+        </NavLayout>
     );
 };
 
