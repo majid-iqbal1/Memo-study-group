@@ -1,20 +1,17 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/joingroups.css";
 import {
   collection,
   query,
-  where,
   getDocs,
   doc,
   updateDoc,
   arrayUnion,
-  increment
+  increment,
+  where
 } from "firebase/firestore";
-import { auth, db } from "../firebase.jsx";
+import { db } from "../firebase.jsx";
 import { useUser } from "../UserContext.jsx";
 import { Link } from "react-router-dom";
 import NavLayout from "../components/NavLayout";
@@ -26,37 +23,57 @@ const JoinGroups = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [groupSets, setGroupSets] = useState([]);
+  const [joinedGroups, setJoinedGroups] = useState([]);
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-  const [joinedGroups, setJoinedGroups] = useState({});
+  const [joinedGroupIds, setJoinedGroupIds] = useState({});
 
   useEffect(() => {
     const fetchGroups = async () => {
       if (!user?.uid) return;
       setIsLoading(true);
       try {
-        const q = query(collection(db, "group-database"));
-        const querySnapshot = await getDocs(q);
-        const sets = querySnapshot.docs.map((doc) => ({
+        // Fetch all groups
+        const allGroupsQuery = query(collection(db, "group-database"));
+        const querySnapshot = await getDocs(allGroupsQuery);
+        const allGroups = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setGroupSets(sets);
+
+        // Separate joined and available groups
+        const joined = allGroups.filter(group => 
+          group.group?.users?.includes(user.uid)
+        );
+        const available = allGroups.filter(group => 
+          !group.group?.users?.includes(user.uid)
+        );
+
+        setJoinedGroups(joined);
+        setGroupSets(available);
+
+        // Create a map of joined group IDs
+        const joinedIds = {};
+        joined.forEach(group => {
+          joinedIds[group.id] = true;
+        });
+        setJoinedGroupIds(joinedIds);
       } catch (error) {
-        console.error("Error fetching group sets:", error);
+        console.error("Error fetching groups:", error);
       } finally {
         setIsLoading(false);
       }
     };
     fetchGroups();
-  },[user]);
+  }, [user]);
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = groupSets.filter((group) =>
+      const allGroups = [...joinedGroups, ...groupSets];
+      const filtered = allGroups.filter((group) =>
         group.group?.name?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredGroups(filtered);
@@ -76,38 +93,38 @@ const JoinGroups = () => {
       const groupRef = doc(db, "group-database", groupId);
       await updateDoc(groupRef, {
         "group.users": arrayUnion(user.uid),
-        "group.memberCount": increment(1),
+        memberCount: increment(1),
       });
 
-
-      setJoinedGroups((prev) => ({
+      setJoinedGroupIds((prev) => ({
         ...prev,
-        [groupId]: true, // Mark group as joined
+        [groupId]: true,
       }));
 
-      setPopupMessage("Group joined!");
-      setShowPopup(true);
-      
+      // Move group from available to joined
+      const groupToMove = groupSets.find(g => g.id === groupId);
+      if (groupToMove) {
+        setJoinedGroups(prev => [...prev, groupToMove]);
+        setGroupSets(prev => prev.filter(g => g.id !== groupId));
+      }
 
-      console.log("User added to group!");
+      setPopupMessage("Group joined successfully!");
+      setShowPopup(true);
+
     } catch (error) {
       console.error("Error joining group:", error);
     }
   };
 
-  const handleGroupClick = (groupId) => {
-    window.location.href = `https://www.youtube.com/watch?v=OgZzUJud3Q4&ab_channel=NiteReviews${groupId}`;
+  const navigateToChat = (groupId) => {
+    navigate(`/chat/${groupId}`);
   };
-
-
-
-
 
   return (
     <NavLayout>
       <div className="join-groups-page">
         <div className="group-container-box">
-          <h1>Join Study Groups</h1>
+          <h1>Study Groups</h1>
 
           <div className="search-container">
             <div className="search-box">
@@ -133,12 +150,9 @@ const JoinGroups = () => {
                       <div
                         key={group.id}
                         className="result-item"
-                        onClick={() => handleGroupClick(group.id)}
+                        onClick={() => navigateToChat(group.id)}
                       >
                         <div className="result-info">
-                          
-                          
-                          
                           <span className="result-title">
                             {group.group?.name || "Unnamed Group"}
                           </span>
@@ -147,7 +161,8 @@ const JoinGroups = () => {
                           </span>
                         </div>
                         <span className="member-count">
-                          {group.group?.users?.length || 0} {group.group?.users?.length === 1 ? "member" : "members"}
+                          {group.group?.users?.length || 0}{" "}
+                          {group.group?.users?.length === 1 ? "member" : "members"}
                         </span>
                       </div>
                     ))}
@@ -164,44 +179,74 @@ const JoinGroups = () => {
           <div className="create-own-container">
             <h2>or</h2>
             <Link to="/create-group">
-              <button className="create-button">
-                Create Your Own
-              </button>
+              <button className="create-button">Create Your Own</button>
             </Link>
           </div>
         </div>
 
+        {/* Your Groups Section */}
+        {joinedGroups.length > 0 && (
+          <div className="your-groups-container">
+            <h2>Your Groups</h2>
+            <div className="joined-groups-grid">
+              {joinedGroups.map((group) => (
+                <div
+                  key={group.id}
+                  className="joined-group-box"
+                  onClick={() => navigateToChat(group.id)}
+                >
+                  <div className="group-image">
+                    <img
+                      src={group.group.groupImage || '/default-group-image.png'}
+                      alt={group.group?.name}
+                    />
+                  </div>
+                  <div className="group-info">
+                    <h3>{group.group?.name || "Unnamed Group"}</h3>
+                    <p>{group.group?.description}</p>
+                    <span className="member-count">
+                      {group.group?.users?.length || 0} members
+                    </span>
+                  </div>
+                  <button className="enter-chat-button">
+                    Enter Chat
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Quick Join Groups Section */}
         <div className="quick-join-container">
-          <h2>Quick Join Groups</h2>
+          <h2>Available Groups</h2>
           <div className="quick-join-boxes">
             {groupSets.map((group) => (
               <div className="quick-join-box" key={group.id}>
                 <div className="group-image">
-                  
-                  <img 
-                    src={group.group.groupImage}
-                  
-                    alt={group.group?.name || "Group Image"} 
+                  <img
+                    src={group.group.groupImage || '/default-group-image.png'}
+                    alt={group.group?.name}
                   />
                 </div>
                 <div className="box-title">
                   {group.group?.name || "Unnamed Group"}
                 </div>
                 <div className="member-count">
-                  {group.group?.users?.length || 0} {group.group?.users?.length === 1 ? "member" : "members"}
+                  {group.group?.users?.length || 0} members
                 </div>
                 <button
-                  onClick={() => handleJoinGroup(group.id)} 
-              
+                  onClick={() => handleJoinGroup(group.id)}
                   className="join-button"
-                  disabled={joinedGroups[group.id]}
+                  disabled={joinedGroupIds[group.id]}
                 >
-                   {joinedGroups[group.id] ? "✅" : "Join"}
+                  {joinedGroupIds[group.id] ? "✓ Joined" : "Join"}
                 </button>
               </div>
             ))}
           </div>
         </div>
+
         {showPopup && (
           <PopupNotification
             message={popupMessage}

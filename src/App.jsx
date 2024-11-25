@@ -23,6 +23,7 @@ import Tests from './pages/Tests';
 import CreateTest from './pages/CreateTest';
 import TestMode from './pages/TestMode';
 import EditTest from './pages/EditTest';
+import ChatRoom from './pages/ChatRoom';
 
 // custom hook and utility function imports
 import useAutoLogout from './hooks/useAutoLogout';
@@ -224,6 +225,18 @@ function App() {
                             )
                         }
                     />
+                    <Route
+                        path="/chat/:groupId"
+                        element={
+                            isAuthenticated ? (
+                            <AuthenticatedRoute>
+                                <ChatRoom />
+                            </AuthenticatedRoute>
+                            ) : (
+                            <Navigate to="/" />
+                            )
+                        }
+                        />
                 </Routes>
             </div>
         </Router>
