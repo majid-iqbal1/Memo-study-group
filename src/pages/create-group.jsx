@@ -9,8 +9,11 @@ import { useUser } from "../UserContext";
 import NavLayout from "../components/NavLayout";
 import "../styles/create-group.css";
 
+import { v4 as uuidv4 } from 'uuid';
+
 const CreateGroup = () => {
   const [groupData, setGroupData] = useState({
+    id: "",
     name: "",
     description: "",
     meetingDays: "",
@@ -96,13 +99,15 @@ const CreateGroup = () => {
 
     try {
       let imageUrl = null;
+      let groupId = uuidv4();
 
       // Upload image if selected
       if (groupData.groupImage) {
+        
         try {
           const imageRef = ref(
             storage,
-            `groupImages/${user.uid}/${Date.now()}-${groupData.groupImage.name}`
+            `groupImages/${groupId}/${Date.now()}-${groupData.groupImage.name}`
           );
 
           // Upload the image
@@ -123,6 +128,7 @@ const CreateGroup = () => {
       const groupDoc = {
         group: {
           // match structure of group
+          id: groupId,
           name: groupData.name.trim(),
           description: groupData.description.trim(),
           meetingDays: groupData.meetingDays.trim(),
@@ -149,7 +155,7 @@ const CreateGroup = () => {
 
       // Add to Firestore
       const docRef = await addDoc(
-        collection(db, "group-placeholder"),
+        collection(db, "group-database"),
         groupDoc
       );
 

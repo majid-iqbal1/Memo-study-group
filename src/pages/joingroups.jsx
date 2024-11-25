@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/joingroups.css";
@@ -9,6 +12,7 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  increment
 } from "firebase/firestore";
 import { auth, db } from "../firebase.jsx";
 import { useUser } from "../UserContext.jsx";
@@ -27,13 +31,14 @@ const JoinGroups = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+  const [joinedGroups, setJoinedGroups] = useState({});
 
   useEffect(() => {
     const fetchGroups = async () => {
       if (!user?.uid) return;
       setIsLoading(true);
       try {
-        const q = query(collection(db, "group-placeholder"));
+        const q = query(collection(db, "group-database"));
         const querySnapshot = await getDocs(q);
         const sets = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -47,7 +52,7 @@ const JoinGroups = () => {
       }
     };
     fetchGroups();
-  }, [user]);
+  },[user]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -59,7 +64,7 @@ const JoinGroups = () => {
     } else {
       setIsSearching(false);
     }
-  }, [searchTerm, groupSets]);
+  }, [searchTerm, groupSets, joinedGroups]);
 
   const handleJoinGroup = async (groupId) => {
     if (!user?.uid) {
@@ -68,13 +73,21 @@ const JoinGroups = () => {
     }
 
     try {
-      const groupRef = doc(db, "group-placeholder", groupId);
+      const groupRef = doc(db, "group-database", groupId);
       await updateDoc(groupRef, {
         "group.users": arrayUnion(user.uid),
+        "group.memberCount": increment(1),
       });
 
-      setPopupMessage("You have successfully joined the group!");
+
+      setJoinedGroups((prev) => ({
+        ...prev,
+        [groupId]: true, // Mark group as joined
+      }));
+
+      setPopupMessage("Group joined!");
       setShowPopup(true);
+      
 
       console.log("User added to group!");
     } catch (error) {
@@ -84,20 +97,17 @@ const JoinGroups = () => {
 
   const handleGroupClick = (groupId) => {
     window.location.href = `https://www.youtube.com/watch?v=OgZzUJud3Q4&ab_channel=NiteReviews${groupId}`;
-    //navigate(`/group/${groupId}`);
   };
 
-  const handleCreateClick = (groupId) => {
-    window.location.href = `https://www.youtube.com/watch?v=OgZzUJud3Q4&ab_channel=NiteReviews${groupId}`;
-    //navigate(`/group/${groupId}`);
-  };
+
+
+
 
   return (
     <NavLayout>
       <div className="join-groups-page">
         <div className="group-container-box">
           <h1>Join Study Groups</h1>
-          {/* <p>Collaborate and learn with others by joining a study group.</p> */}
 
           <div className="search-container">
             <div className="search-box">
@@ -123,9 +133,12 @@ const JoinGroups = () => {
                       <div
                         key={group.id}
                         className="result-item"
-                        onClick={() => handleGroupClick(group.id)} // Add onClick to handle navigation
+                        onClick={() => handleGroupClick(group.id)}
                       >
                         <div className="result-info">
+                          
+                          
+                          
                           <span className="result-title">
                             {group.group?.name || "Unnamed Group"}
                           </span>
@@ -134,7 +147,7 @@ const JoinGroups = () => {
                           </span>
                         </div>
                         <span className="member-count">
-                          {group.group?.users?.length || 0} members
+                          {group.group?.users?.length || 0} {group.group?.users?.length === 1 ? "member" : "members"}
                         </span>
                       </div>
                     ))}
@@ -150,31 +163,40 @@ const JoinGroups = () => {
 
           <div className="create-own-container">
             <h2>or</h2>
-            <button
-              onClick={() => handleCreateClick(1)}
-              className="create-button"
-            >
-              Create Your Own
-            </button>
+            <Link to="/create-group">
+              <button className="create-button">
+                Create Your Own
+              </button>
+            </Link>
           </div>
         </div>
+
         <div className="quick-join-container">
           <h2>Quick Join Groups</h2>
           <div className="quick-join-boxes">
             {groupSets.map((group) => (
               <div className="quick-join-box" key={group.id}>
-                <div className="box-title">
-                  {group.group?.name ? group.group.name : "No Name Available"}
+                <div className="group-image">
+                  
+                  <img 
+                    src={group.group.groupImage}
+                  
+                    alt={group.group?.name || "Group Image"} 
+                  />
                 </div>
-                <div className="box-details"></div>
+                <div className="box-title">
+                  {group.group?.name || "Unnamed Group"}
+                </div>
                 <div className="member-count">
-                  {group.group?.users?.length || 0} members
+                  {group.group?.users?.length || 0} {group.group?.users?.length === 1 ? "member" : "members"}
                 </div>
                 <button
-                  onClick={() => handleJoinGroup(group.id)}
+                  onClick={() => handleJoinGroup(group.id)} 
+              
                   className="join-button"
+                  disabled={joinedGroups[group.id]}
                 >
-                  Join
+                   {joinedGroups[group.id] ? "✅" : "Join"}
                 </button>
               </div>
             ))}

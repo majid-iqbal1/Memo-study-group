@@ -1,4 +1,4 @@
-
+/* 
 
 .join-groups-page {
     max-width: 800px;
@@ -306,4 +306,362 @@
 {
     font-size: 25px !important;
 }
+ */
+.join-groups-page {
+    max-width: 800px;
+    margin: -40px auto 0 auto;
+    padding: 30px 20px;
+    text-align: center;
+}
 
+.join-groups-page h1 {
+    font-size: 3em;
+    color: #3c91e6;
+    margin-bottom: 15px;
+}
+
+.join-groups-page p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.search-container {
+    max-width: 2000px;
+    margin: 1rem auto 0rem auto;
+    position: relative;
+    z-index: 99;
+}
+
+.search-box {
+    position: relative;
+    z-index: 99;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1.5rem 1.5rem;
+    font-size: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #3c91e6;
+    box-shadow: 0 4px 12px rgba(60, 145, 230, 0.1);
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-results h2 {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.result-item:hover {
+    background-color: #f8f9fa;
+}
+
+
+
+.result-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.result-title {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+    text-align: left;
+}
+
+.result-creator {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: left;
+}
+
+.member-count {
+    font-size: 0.85rem;
+    color: #666;
+    text-align: center;
+}
+
+.loading-results {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Quick Join Section Styles */
+.quick-join-container {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.quick-join-container h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.quick-join-boxes {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 67px;
+    padding: 0 1rem;
+}
+
+.quick-join-box {
+    width: 208px;
+    height: 300px;
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: 300px;
+    text-align: center;
+}
+
+.quick-join-box:hover {
+    background-color: #f1f1f1;
+    transform: translateY(-6px);
+}
+
+.group-image {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: #666;
+    object-fit: cover;
+}
+
+.box-title {
+    display: block; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    width: 100%; 
+    text-align: center; 
+    font-size: 18px; 
+    font-weight: bold; 
+    margin-bottom: 5px; 
+    color: #333; 
+}
+
+.join-button {
+    
+    padding: 0.8rem 1.5rem;
+    background-color: #3c91e6;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-align: center;
+    width: 100%;
+}
+
+.join-button:hover {
+    background-color: #2a78c4;
+    transform: translateY(-4px);
+}
+
+.create-own-container {
+    padding: 10px;
+}
+
+.create-own-container .create-button {
+    margin-top: auto;
+    margin: 0 auto;
+    padding: 0.8rem 1.5rem;
+    background-color: #3c91e6;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-align: center;
+    width: 50%;
+}
+
+.create-own-container .create-button:hover {
+    background-color: #2a78c4;
+    transform: translateY(-4px);
+}
+
+.create-own-container h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.group-container-box {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 1rem auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    text-align: center;
+}
+
+.group-container-box h1 {
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    color: #3c91e6;
+}
+
+.group-container-box p {
+    font-size: 25px !important;
+}
+
+@media (max-width: 900px) {
+    .quick-join-boxes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .join-groups-page {
+        padding: 20px;
+    }
+
+    .join-groups-page h1 {
+        font-size: 2em;
+    }
+
+    .result-info {
+        gap: 0.15rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .quick-join-boxes {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-join-box {
+        height: auto;
+        min-height: 280px;
+    }
+}
+
+.group-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 400px;
+    background-color: #fff;
+  }
+  
+.group-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;  /* Makes the image circular */
+    margin: -20px;
+    
+    clip-path: circle(30%);
+    object-fit: cover;
+}
+  
+
+.content {
+    flex: 1;
+}
+  
+h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+  
+p {
+    margin: 5px 0;
+}
+  
+button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+  
+button:hover {
+    background-color: #0056b3;
+}
+
+.join-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
