@@ -29,10 +29,10 @@ import ChatRoom from './pages/ChatRoom';
 import useAutoLogout from './hooks/useAutoLogout';
 import LoadingSpinner from './components/LoadingSpinner';
 
-// implement auto logout after 10 minutes of inactivity
+// implement auto logout after 30 minutes of inactivity
 // wraps all authenticated routes
 const AuthenticatedRoute = ({ children }) => {
-    const { WarningComponent } = useAutoLogout(10);
+    const { WarningComponent } = useAutoLogout(30);
 
     return (
         <>

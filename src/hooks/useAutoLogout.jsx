@@ -37,6 +37,19 @@ const useAutoLogout = (timeoutMinutes = 30) => {
         setShowWarning(false);
     };
 
+    const WarningComponent = showWarning ? (
+        <div className="timeout-warning">
+            <div className="timeout-warning-content">
+                <h3>Session Timeout Warning</h3>
+                <p>Your session will expire in 1 minute due to inactivity.</p>
+                <div className="timeout-buttons">
+                    <button onClick={handleStayLoggedIn}>Stay Logged In</button>
+                    <button onClick={handleLogout}>Logout</button>
+                </div>
+            </div>
+        </div>
+    ) : null;
+
     useEffect(() => {
         const events = [
             'mousedown',
@@ -78,8 +91,65 @@ const useAutoLogout = (timeoutMinutes = 30) => {
         updateLastActivity,
         handleStayLoggedIn,
         showWarning,
-        handleLogout
+        handleLogout,
+        WarningComponent
     };
 };
+
+/* const styles = `
+.timeout-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.timeout-warning-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.timeout-warning h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.timeout-warning p {
+    margin-bottom: 1.5rem;
+    color: #666;
+}
+
+.timeout-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.timeout-buttons button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.timeout-buttons button:first-child {
+    background: #3c91e6;
+    color: white;
+}
+
+.timeout-buttons button:last-child {
+    background: #f1f1f1;
+    color: #333;
+}
+`; */
 
 export default useAutoLogout;
