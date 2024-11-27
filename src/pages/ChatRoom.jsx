@@ -26,6 +26,7 @@ const ChatRoom = () => {
   const [newResource, setNewResource] = useState({ name: '', file: null });
   const [attachment, setAttachment] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [userProfiles, setUserProfiles] = useState({});
   
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -74,21 +75,26 @@ const ChatRoom = () => {
   }, [groupId]);
 
   useEffect(() => {
-    const fetchUserNames = async () => {
+    const fetchUserProfiles = async () => {
       if (!groupInfo?.users) return;
       
+      const profiles = {};
       const names = {};
+      
       for (const userId of groupInfo.users) {
         const userDoc = await getDoc(doc(db, 'users', userId));
         if (userDoc.exists()) {
-          names[userId] = userDoc.data().name;
+          const userData = userDoc.data();
+          names[userId] = userData.name;
+          profiles[userId] = userData.profilePictureURL || null;
         }
       }
       setUserNames(names);
+      setUserProfiles(profiles);
     };
-
+  
     if (groupInfo?.users) {
-      fetchUserNames();
+      fetchUserProfiles();
     }
   }, [groupInfo]);
 
@@ -179,20 +185,38 @@ const ChatRoom = () => {
 
   const handleAddEvent = async (e) => {
     e.preventDefault();
+    
     try {
-      const groupRef = doc(db, 'group-database', groupId);
+      const groupRef = doc(db, "group-database", groupId);
+      const groupSnapshot = await getDoc(groupRef);
+      
+      if (!groupSnapshot.exists()) {
+        throw new Error('Group not found');
+      }
+  
+      const currentData = groupSnapshot.data();
+      const currentEvents = currentData.group.events || [];
+      
+      const newEventData = {
+        id: Date.now().toString(),
+        title: newEvent.title,
+        date: newEvent.date,
+        time: newEvent.time,
+        createdBy: user.name,
+        createdAt: new Date().toISOString()
+      };
+  
       await updateDoc(groupRef, {
-        'group.events': arrayUnion({
-          ...newEvent,
-          id: Date.now(),
-          createdBy: user.name,
-          createdAt: serverTimestamp()
-        })
+        'group.events': [...currentEvents, newEventData]
       });
-      setShowEventModal(false);
+  
       setNewEvent({ title: '', date: '', time: '' });
+      setShowEventModal(false);
+      console.log('Event added successfully');
+  
     } catch (error) {
       console.error('Error adding event:', error);
+      alert('Failed to add event: ' + error.message);
     }
   };
 
@@ -202,31 +226,44 @@ const ChatRoom = () => {
   
     try {
       setUploadProgress(0);
-      const storageRef = ref(storage, `resources/${groupId}/${Date.now()}-${newResource.file.name}`);
+      const groupRef = doc(db, "group-database", groupId);
+      const groupSnapshot = await getDoc(groupRef);
       
+      if (!groupSnapshot.exists()) {
+        throw new Error('Group not found');
+      }
+  
+      const currentData = groupSnapshot.data();
+      const currentResources = currentData.group.resources || [];
+  
+      // Upload file
+      const storageRef = ref(storage, `resources/${groupId}/${Date.now()}-${newResource.file.name}`);
       const uploadTask = await uploadBytes(storageRef, newResource.file);
       const downloadURL = await getDownloadURL(uploadTask.ref);
   
-      const groupRef = doc(db, 'group-database', groupId);
+      const newResourceData = {
+        id: Date.now().toString(),
+        name: newResource.name || newResource.file.name,
+        url: downloadURL,
+        type: newResource.file.type,
+        addedBy: user.name,
+        addedAt: new Date().toISOString()
+      };
+  
       await updateDoc(groupRef, {
-        'group.resources': arrayUnion({
-          name: newResource.name || newResource.file.name,
-          url: downloadURL,
-          type: newResource.file.type,
-          id: Date.now(),
-          addedBy: user.name,
-          addedAt: serverTimestamp()
-        })
+        'group.resources': [...currentResources, newResourceData]
       });
   
       setShowResourceModal(false);
       setNewResource({ name: '', file: null });
       setUploadProgress(100);
+      console.log('Resource added successfully');
       
       setTimeout(() => setUploadProgress(0), 1000);
+  
     } catch (error) {
-      console.error('Error uploading resource:', error);
-      alert('Failed to upload resource. Please try again.');
+      console.error('Error adding resource:', error);
+      alert('Failed to add resource: ' + error.message);
       setUploadProgress(0);
     }
   };
@@ -287,7 +324,19 @@ const ChatRoom = () => {
               <div className="members-list">
                 {groupInfo?.users?.map((userId) => (
                   <div key={userId} className="member-item">
-                    <div className="member-avatar" />
+                    <div className="member-avatar">
+                      {userProfiles[userId] ? (
+                        <img 
+                          src={userProfiles[userId]} 
+                          alt={userNames[userId]} 
+                          className="avatar-image"
+                        />
+                      ) : (
+                        <div className="avatar-placeholder">
+                          {userNames[userId]?.charAt(0)?.toUpperCase()}
+                        </div>
+                      )}
+                    </div>
                     <span className="member-name">
                       {userNames[userId] || 'Loading...'}
                       {userId === groupInfo.owner && ' (Owner)'}
@@ -326,7 +375,6 @@ const ChatRoom = () => {
           <div className="chat-main">
             <div className="chat-header">
               <h1>{groupInfo?.name}</h1>
-              <p>{groupInfo?.description}</p>
             </div>
   
             <div className="messages-container">
@@ -469,26 +517,37 @@ const ChatRoom = () => {
             </div>
             )}
   
-          {showResourceModal && (
+            {showEventModal && (
             <div className="modal-overlay">
               <div className="modal">
-                <h2>Add New Resource</h2>
-                <form onSubmit={handleAddResource}>
+                <h2>Add New Event</h2>
+                <form onSubmit={handleAddEvent}>
                   <input
                     type="text"
-                    placeholder="Resource Name"
-                    value={newResource.name}
-                    onChange={(e) => setNewResource({...newResource, name: e.target.value})}
+                    placeholder="Event Title"
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
                     required
                   />
                   <input
-                    type="file"
-                    onChange={(e) => setNewResource({...newResource, file: e.target.files[0]})}
+                    type="date"
+                    value={newEvent.date}
+                    onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
+                    required
+                  />
+                  <input
+                    type="time"
+                    value={newEvent.time}
+                    onChange={(e) => setNewEvent({...newEvent, time: e.target.value})}
                     required
                   />
                   <div className="modal-buttons">
-                    <button type="button" onClick={() => setShowResourceModal(false)}>Cancel</button>
-                    <button type="submit">Add Resource</button>
+                    <button type="button" onClick={() => setShowEventModal(false)}>
+                      Cancel
+                    </button>
+                    <button type="submit">
+                      Add Event
+                    </button>
                   </div>
                 </form>
               </div>

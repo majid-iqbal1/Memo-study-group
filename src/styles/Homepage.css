@@ -121,16 +121,6 @@ main {
     flex: 1;
 }
 
-main:not(.homepage-content) h1 {
-    font-size: 5em;
-    color: #3c91e6;
-    font-weight: bold;
-}
-
-main:not(.homepage-content) p {
-    font-size: 2em;
-    color: #555;
-}
 
 /* Guide Section */
 .guide {
@@ -238,6 +228,11 @@ footer {
     text-align: center;
     font-size: 0.9em;
     margin-top: auto;
+}
+
+footer p{
+    color: #fff;
+
 }
 
 /* Animations */
@@ -457,15 +452,11 @@ footer {
     text-align: center;
 }
 
-main:not(.homepage-content) p {
-    font-size: 2em;
-    color: #555;
-}
 
 main .guide-item p {
     color: #6c757d;
     line-height: 1.6;
-    font-size: 1.1em;
+    font-size: 1em;
     animation: none;
     opacity: 1;
     white-space: normal;

@@ -103,7 +103,6 @@ const CreateGroup = () => {
 
       // Upload image if selected
       if (groupData.groupImage) {
-        
         try {
           const imageRef = ref(
             storage,
@@ -119,15 +118,13 @@ const CreateGroup = () => {
           console.log("Image uploaded successfully:", imageUrl);
         } catch (error) {
           console.error("Error uploading image:", error);
-          // Continue without image if upload fails
-          alert("Failed to upload image, but will create group without image.");
+          alert('Failed to upload image, but will create group without image.');
         }
       }
 
       // Create group document
       const groupDoc = {
         group: {
-          // match structure of group
           id: groupId,
           name: groupData.name.trim(),
           description: groupData.description.trim(),
@@ -143,6 +140,8 @@ const CreateGroup = () => {
           groupImage: imageUrl,
           owner: user.name || "Anonymous",
           users: [user.uid],
+          events: [], 
+          resources: [], 
         },
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -154,10 +153,7 @@ const CreateGroup = () => {
       };
 
       // Add to Firestore
-      const docRef = await addDoc(
-        collection(db, "group-database"),
-        groupDoc
-      );
+      const docRef = await addDoc(collection(db, "group-database"), groupDoc);
 
       // Navigate to the group page or groups list
       navigate("/join");
@@ -167,7 +163,7 @@ const CreateGroup = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+};
 
   return (
     <NavLayout>

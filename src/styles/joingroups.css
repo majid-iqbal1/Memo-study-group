@@ -628,7 +628,7 @@
     height: 150px;
     border-radius: 50%;  /* Makes the image circular */
     margin: -20px;
-    
+    overflow: hidden;
     clip-path: circle(30%);
     object-fit: cover;
 }
@@ -705,12 +705,12 @@ button:hover {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   }
   
-  .joined-group-box .group-image {
+ /*  .joined-group-box .group-image {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     overflow: hidden;
-  }
+  } */
   
   .joined-group-box .group-image img {
     width: 100%;
