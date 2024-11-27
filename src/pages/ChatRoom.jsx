@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   doc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, 
-  getDoc, updateDoc, arrayUnion 
+  getDoc, updateDoc, arrayUnion, arrayRemove 
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
 import { useUser } from '../UserContext';
-import { MessageCircle, FileText, Calendar, Clock, Paperclip, Download, Plus } from 'lucide-react';
+import { 
+  FileText, Calendar, Clock, Paperclip, Download, Plus, 
+  Edit, Image, LogOut, MoreVertical 
+} from 'lucide-react';
 import NavLayout from '../components/NavLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
-import '../styles/chatroom.css';
+import '../styles/chatroom.css'
 
 const ChatRoom = () => {
+  const navigate = useNavigate();
   const { groupId } = useParams();
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
@@ -27,6 +31,7 @@ const ChatRoom = () => {
   const [attachment, setAttachment] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [userProfiles, setUserProfiles] = useState({});
+  const [showSettings, setShowSettings] = useState(false);
   
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -314,11 +319,112 @@ const ChatRoom = () => {
       minute: '2-digit'
     });
   };
+
+  const formatMessageDate = (timestamp) => {
+    if (!timestamp) return '';
+    const date = timestamp.toDate();
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
   
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+  
+  const handleUpdateGroup = async (updates) => {
+    try {
+      const groupRef = doc(db, "group-database", groupId);
+      await updateDoc(groupRef, {
+        'group.name': updates.name || groupInfo.name,
+        'group.groupImage': updates.groupImage || groupInfo.groupImage
+      });
+      setShowSettings(false);
+    } catch (error) {
+      console.error('Error updating group:', error);
+      alert('Failed to update group settings');
+    }
+  };
+  
+  const handleLeaveGroup = async () => {
+    if (window.confirm('Are you sure you want to leave this group?')) {
+      try {
+        const groupRef = doc(db, "group-database", groupId);
+        await updateDoc(groupRef, {
+          'group.users': arrayRemove(user.uid)
+        });
+        navigate('/join');
+      } catch (error) {
+        console.error('Error leaving group:', error);
+        alert('Failed to leave group');
+      }
+    }
+  };
+
     return (
       <NavLayout>
         <div className="chat-container">
           <div className="chat-sidebar">
+          <div className="settings-container">
+            <button 
+              className="settings-button"
+              onClick={() => setShowSettings(!showSettings)}
+            >
+              <MoreVertical size={20} />
+            </button>
+            {showSettings && (
+              <div className="settings-dropdown">
+                {user.uid === groupInfo.owner && (
+                  <>
+                    <button 
+                      className="settings-option"
+                      onClick={() => {
+                        const newName = prompt('Enter new group name:', groupInfo.name);
+                        if (newName) handleUpdateGroup({ name: newName });
+                      }}
+                    >
+                      <Edit size={16} />
+                      Change Group Name
+                    </button>
+                    <label className="settings-option" htmlFor="group-image">
+                      <Image size={16} />
+                      Update Group Picture
+                      <input
+                        id="group-image"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const imageRef = ref(storage, `groupImages/${groupId}/${Date.now()}-${file.name}`);
+                            await uploadBytes(imageRef, file);
+                            const url = await getDownloadURL(imageRef);
+                            handleUpdateGroup({ groupImage: url });
+                          }
+                        }}
+                      />
+                    </label>
+                  </>
+                )}
+                <button 
+                  className="settings-option leave-group"
+                  onClick={handleLeaveGroup}
+                >
+                  <LogOut size={16} />
+                  Leave Group
+                </button>
+              </div>
+            )}
+          </div>
             <div className="members-section">
               <h2>Members ({groupInfo?.users?.length || 0})</h2>
               <div className="members-list">
@@ -378,35 +484,64 @@ const ChatRoom = () => {
             </div>
   
             <div className="messages-container">
-              {messages.map((message) => (
-                <div 
-                  key={message.id} 
-                  className={`message ${message.userId === user.uid ? 'own-message' : ''}`}
-                >
-                  <div className="message-content">
-                    <div className="message-header">
-                      <span className="sender-name">{message.senderName}</span>
-                      <span className="timestamp">
-                        {message.timestamp?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
+              {messages.reduce((acc, message, index) => {
+                // Add date separator if needed
+                const currentDate = formatMessageDate(message.timestamp);
+                const previousDate = index > 0 ? formatMessageDate(messages[index - 1].timestamp) : null;
+                
+                if (currentDate !== previousDate) {
+                  acc.push(
+                    <div key={`date-${message.id}`} className="date-separator">
+                      <span>{currentDate}</span>
                     </div>
-                    {message.text && <p>{message.text}</p>}
-                    {message.attachment && (
-                      <div className="attachment-preview">
-                        {message.attachment.type.startsWith('image/') ? (
-                          <img src={message.attachment.url} alt={message.attachment.name} />
-                        ) : (
-                          <a href={message.attachment.url} download className="file-download">
-                            <FileText size={16} />
-                            <span>{message.attachment.name}</span>
-                            <Download size={16} />
-                          </a>
-                        )}
+                  );
+                }
+
+                // Add message
+                acc.push(
+                  <div 
+                    key={message.id} 
+                    className={`message ${message.userId === user.uid ? 'own-message' : ''}`}
+                  >
+                    <div className="message-content">
+                      <div className="message-header">
+                        <span className="sender-name">{message.senderName}</span>
+                        <span className="timestamp">
+                          {message.timestamp?.toDate().toLocaleTimeString([], { 
+                            hour: '2-digit', 
+                            minute: '2-digit'
+                          })}
+                        </span>
                       </div>
-                    )}
+                      {message.text && <p>{message.text}</p>}
+                      {message.attachment && (
+                        <div className="attachment-preview">
+                          {message.attachment.type.startsWith('image/') ? (
+                            <img 
+                              src={message.attachment.url} 
+                              alt={message.attachment.name}
+                              className="attachment-image"
+                            />
+                          ) : (
+                            <a 
+                              href={message.attachment.url} 
+                              download 
+                              className="file-download"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <FileText size={16} />
+                              <span>{message.attachment.name}</span>
+                              <Download size={16} />
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+                return acc;
+              }, [])}
               <div ref={messagesEndRef} />
             </div>
   
