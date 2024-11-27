@@ -95,7 +95,7 @@ const Homepage = () => {
                             </button>
                         </div>
                     </div>
-                    <div className="search-box">
+                    <div className="search-box-home">
                         <input
                             type="text"
                             placeholder={`Search ${searchMode === 'my' ? 'your' : 'all'} flashcard sets...`}
@@ -106,18 +106,18 @@ const Homepage = () => {
                     </div>
 
                     {isSearching && (
-                        <div className="search-results">
+                        <div className="search-results-home">
                             <h2>Search Results</h2>
                             {isLoading ? (
                                 <div className="loading-results">
                                     <LoadingSpinner />
                                 </div>
                             ) : filteredSets.length > 0 ? (
-                                <div className="results-list">
+                                <div className="results-list-home">
                                     {filteredSets.map(set => (
                                         <div
                                             key={set.id}
-                                            className="result-item"
+                                            className="result-item-home"
                                             onClick={() => navigate(`/learn?setId=${set.id}`)}
                                         >
                                             <div className="result-info">
@@ -131,7 +131,7 @@ const Homepage = () => {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="no-results">
+                                <div className="no-results-home">
                                     <p>No flashcard sets found matching "{searchTerm}"</p>
                                 </div>
                             )}
