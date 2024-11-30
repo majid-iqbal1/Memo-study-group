@@ -93,7 +93,7 @@ const JoinGroups = () => {
       const groupRef = doc(db, "group-database", groupId);
       await updateDoc(groupRef, {
         "group.users": arrayUnion(user.uid),
-        memberCount: increment(1),
+        "group.memberCount": increment(1),
       });
 
       setJoinedGroupIds((prev) => ({

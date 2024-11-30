@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, setDoc, doc} from "firebase/firestore";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../firebase";
@@ -100,6 +100,7 @@ const CreateGroup = () => {
     try {
       let imageUrl = null;
       let groupId = uuidv4();
+      
 
       // Upload image if selected
       if (groupData.groupImage) {
@@ -108,6 +109,7 @@ const CreateGroup = () => {
             storage,
             `groupImages/${groupId}/${Date.now()}-${groupData.groupImage.name}`
           );
+          console.log("This is the group id" +  groupData.id);
 
           // Upload the image
           const snapshot = await uploadBytes(imageRef, groupData.groupImage);
@@ -138,10 +140,11 @@ const CreateGroup = () => {
             : [],
           privacy: groupData.privacy,
           groupImage: imageUrl,
-          owner: user.name || "Anonymous",
+          owner: user.uid || "Anonymous",
           users: [user.uid],
           events: [], 
           resources: [], 
+          memberCount: 1
         },
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -149,11 +152,11 @@ const CreateGroup = () => {
           userId: user.uid,
           name: user.name || "Anonymous",
         },
-        memberCount: 1,
+        
       };
 
       // Add to Firestore
-      const docRef = await addDoc(collection(db, "group-database"), groupDoc);
+      await setDoc(doc(db, "group-database", groupDoc.group.id), groupDoc);
 
       // Navigate to the group page or groups list
       navigate("/join");

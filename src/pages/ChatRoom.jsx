@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   doc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, 
-  getDoc, updateDoc, arrayUnion, arrayRemove 
+  getDoc, updateDoc, arrayUnion, arrayRemove, increment, deleteDoc
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
@@ -51,6 +51,7 @@ const ChatRoom = () => {
             data.events.sort((a, b) => new Date(`${a.date} ${a.time}`) - new Date(`${b.date} ${b.time}`));
           }
           setGroupInfo(data);
+          
         }
       } catch (error) {
         console.error("Error fetching group info:", error);
@@ -60,7 +61,7 @@ const ChatRoom = () => {
     };
 
     fetchGroupInfo();
-  }, [groupId]);
+  },[groupId],[]);
 
   useEffect(() => {
     if (!groupId) return;
@@ -343,6 +344,7 @@ const ChatRoom = () => {
   const handleUpdateGroup = async (updates) => {
     try {
       const groupRef = doc(db, "group-database", groupId);
+      
       await updateDoc(groupRef, {
         'group.name': updates.name || groupInfo.name,
         'group.groupImage': updates.groupImage || groupInfo.groupImage
@@ -357,11 +359,30 @@ const ChatRoom = () => {
   const handleLeaveGroup = async () => {
     if (window.confirm('Are you sure you want to leave this group?')) {
       try {
-        const groupRef = doc(db, "group-database", groupId);
-        await updateDoc(groupRef, {
-          'group.users': arrayRemove(user.uid)
+        let groupRef = doc(db, "group-database", groupId);
+        let updatedGroupDoc = await getDoc(groupRef);
+        let currSize = updatedGroupDoc.get("group.memberCount")
+        
+        
+        
+        await updateDoc(groupRef, { 
+          'group.users': arrayRemove(user.uid),
+          'group.memberCount': currSize - 1
         });
+      
+        // Fetch the updated document to check the current member count
+       
+        updatedGroupDoc = await getDoc(groupRef);
+        console.log("This is after: " +  updatedGroupDoc.get("group.memberCount"));
+
+        if (updatedGroupDoc.get("group.memberCount") === 0) {
+          // If member count is zero, delete the entire group document
+          await deleteDoc(groupRef);
+          console.log("Group deleted as no members remain");
+        }
+        
         navigate('/join');
+        
       } catch (error) {
         console.error('Error leaving group:', error);
         alert('Failed to leave group');
