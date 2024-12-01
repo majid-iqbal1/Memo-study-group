@@ -48,9 +48,19 @@ const JoinGroups = () => {
         const joined = allGroups.filter(group => 
           group.group?.users?.includes(user.uid)
         );
-        const available = allGroups.filter(group => 
+        let available = allGroups.filter(group => 
           !group.group?.users?.includes(user.uid)
         );
+        console.log("size of avialble" +  available.length);
+        if(available.length > 6)
+        {
+          let numberToRemove = available.length - 6;
+          
+          console.log("This is how many I should delete" + numberToRemove );
+          available = available.slice(0, 6);
+          console.log(available);
+        }
+        
 
         setJoinedGroups(joined);
         setGroupSets(available);
