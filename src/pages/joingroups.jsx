@@ -14,9 +14,9 @@ import {
 import { db } from "../firebase.jsx";
 import { useUser } from "../UserContext.jsx";
 import { Link } from "react-router-dom";
-import NavLayout from "../components/NavLayout";
-import LoadingSpinner from "../components/LoadingSpinner";
-import PopupNotification from "../components/PopupNotification";
+import NavLayout from "../components/NavLayout.jsx";
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import PopupNotification from "../components/PopupNotification.jsx";
 
 const JoinGroups = () => {
   const { user, loading } = useUser();

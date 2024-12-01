@@ -11,12 +11,12 @@ import { auth } from './firebase';
 // Component imports and pages
 import { Auth } from './components/auth';
 import Homepage from './pages/Homepage';
-import About from './pages/about';
-import Contact from './pages/contact';
-import Library from './pages/library';
-import Create from './pages/create';
-import CreateGroup from './pages/create-group';
-import JoinGroups from './pages/joingroups';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Library from './pages/Library';
+import Create from './pages/Create';
+import CreateGroup from './pages/CreateGroup';
+import JoinGroups from './pages/JoinGroups';
 import LearnMode from './pages/LearnMode';
 import EditFlashcardSet from './pages/EditFlashcardSet';
 import Tests from './pages/Tests';

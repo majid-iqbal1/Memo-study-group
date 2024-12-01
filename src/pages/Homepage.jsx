@@ -7,7 +7,7 @@ import { useUser } from "../UserContext.jsx";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import NavLayout from "../components/NavLayout";
-import groupIcon from "../assets/group-icon.png"; // Adjust path as needed
+import groupIcon from "../assets/group-icon.png";
 
 const Homepage = () => {
   const { user, loading } = useUser();
