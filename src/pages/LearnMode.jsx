@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useUser } from '../UserContext';
 import NavLayout from '../components/NavLayout';
@@ -26,42 +26,34 @@ const LearnMode = () => {
     }, []);
 
     const fetchFlashcardSets = useCallback(async () => {
-        if (!user?.uid) {
-            setLoading(false);
-            setError('Please log in to view your flashcard sets');
-            return;
-        }
-
+        if (!user?.uid) return;
+        setLoading(true);
+    
         try {
-            setLoading(true);
-            setError(null);
-            const q = query(
-                collection(db, 'flashcardSets'),
-                where('userId', '==', user.uid)
-            );
-            const querySnapshot = await getDocs(q);
-            const sets = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                createdAt: doc.data().createdAt?.toDate() || new Date()
-            }));
-            
-            sets.sort((a, b) => b.createdAt - a.createdAt);
-            setFlashcardSets(sets);
-            
             if (setId) {
-                const selectedSet = sets.find(s => s.id === setId);
-                if (selectedSet) {
-                    handleSetClick(selectedSet);
+                const docRef = doc(db, 'flashcardSets', setId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setSelectedSet({ id: docSnap.id, ...docSnap.data() });
                 }
+            } else {
+                const q = query(
+                    collection(db, 'flashcardSets'),
+                    where('userId', '==', user.uid)
+                );
+                const querySnapshot = await getDocs(q);
+                const sets = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setFlashcardSets(sets);
             }
         } catch (error) {
             console.error('Error fetching flashcard sets:', error);
-            setError('Failed to load flashcard sets');
         } finally {
             setLoading(false);
         }
-    }, [user, setId, handleSetClick]);
+    }, [user, setId]);
 
     useEffect(() => {
         fetchFlashcardSets();
@@ -105,9 +97,9 @@ const LearnMode = () => {
         const handleKeyPress = (e) => {
             if (selectedSet) {
                 switch(e.key) {
-                    case ' ':  // Spacebar
+                    case ' ':  
                     case 'Enter':
-                        e.preventDefault(); // Prevent page scroll on spacebar
+                        e.preventDefault(); 
                         handleFlip();
                         break;
                     case 'ArrowRight':
