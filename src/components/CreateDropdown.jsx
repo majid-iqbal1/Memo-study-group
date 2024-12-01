@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FileText, Book, CheckSquare, Folder, Users } from "lucide-react";
+import { FileText, Book, CheckSquare, BookOpenCheck } from "lucide-react";
 import "../styles/create-dropdown.css";
 
 const CreateDropdown = () => {
@@ -34,6 +34,11 @@ const CreateDropdown = () => {
           <Link to="/create-group" className="dropdown-item">
             <Book />
             <span>Study Group</span>
+          </Link>
+
+          <Link to="/create-test" className="dropdown-item">
+            <BookOpenCheck />
+            <span>Create Test</span>
           </Link>
         </div>
       )}

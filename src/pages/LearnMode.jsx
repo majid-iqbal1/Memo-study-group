@@ -98,7 +98,7 @@ const LearnMode = () => {
         setSelectedSet(null);
         setCurrentCardIndex(0);
         setIsFlipped(false);
-        navigate('/learn');
+        navigate('/library');
     }, [navigate]);
 
     useEffect(() => {

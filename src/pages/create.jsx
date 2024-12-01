@@ -139,7 +139,6 @@ const Create = () => {
                   }
                 />
               </div>
-              <button className="image-btn">📷 Image</button>
             </div>
           ))}
 
