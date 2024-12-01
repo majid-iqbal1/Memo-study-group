@@ -68,6 +68,10 @@ const Homepage = () => {
     }
   }, [searchTerm, flashcardSets]);
 
+  const handleStudy = (set) => {
+    navigate(`/learn?setId=${set.id}`);
+  };
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -120,7 +124,7 @@ const Homepage = () => {
                     <div
                       key={set.id}
                       className="result-item-home"
-                      onClick={() => navigate(`/learn?setId=${set.id}`)}
+                      onClick={() => handleStudy(set)}
                     >
                       <div className="result-info">
                         <span className="result-title">{set.title}</span>

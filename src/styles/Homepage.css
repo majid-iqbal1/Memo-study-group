@@ -372,17 +372,16 @@ footer p {
 .search-results-home {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
-  right: 0;
+  left: 50%; /* Center the container */
+  transform: translateX(-50%); /* Center the container */
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   max-height: 400px;
   overflow-y: auto;
-  width: 40%;
-  justify-content: center;
-  margin: 0 auto;
+  width: 100%; /* Make it match parent width */
+  min-width: max-content; /* Ensure it doesn't shrink smaller than content */
 }
 
 .search-results h2 {
@@ -409,6 +408,8 @@ footer p {
   cursor: pointer;
   transition: all 0.2s ease;
   background: white;
+  width: 100%; /* Ensure full width */
+  min-width: max-content; /* Prevent text truncation */
 }
 
 .result-item-home:hover {
@@ -416,23 +417,21 @@ footer p {
 }
 
 .result-title {
-  font-size: 0.95rem;
-  color: #333;
-  font-weight: 500;
+  white-space: nowrap; /* Keep title on one line */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflow */
 }
 
 .card-count {
-  font-size: 0.85rem;
-  color: #666;
+  white-space: nowrap; /* Prevent count from wrapping */
   margin-left: 1rem;
 }
 
-.no-results-home {
-  font-style: bold;
-  text-align: center;
-  padding: 0.05rem;
+.no-results-home p {
+  font-size: 1.5rem;
   color: #666;
-  font-size: 0.7rem;
+  text-align: center;
+  margin: 1rem 0;
 }
 
 @media (max-width: 768px) {
@@ -446,7 +445,11 @@ footer p {
   }
 
   .result-info {
-    gap: 0.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    flex: 0.5;
   }
 }
 
