@@ -165,7 +165,7 @@ const Homepage = () => {
             <p>Create your own digital flashcards that flip with a click</p>
           </Link>
 
-          <Link to="/join-groups" className="guide-item">
+          <Link to="/join" className="guide-item">
             <img src={groupIcon} alt="Join Group Logo" className="logo-image" />
             <h3>Join Groups</h3>
             <p>Join groups to study with friends and classmates</p>
