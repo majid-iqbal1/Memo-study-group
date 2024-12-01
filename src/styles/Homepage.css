@@ -288,7 +288,7 @@ footer p {
     margin-right: 20px;
   }
 }
-
+/* Search Box */
 .search-container {
   max-width: 600px;
   margin: 2rem auto;
@@ -369,19 +369,20 @@ footer p {
   box-shadow: 0 4px 12px rgba(60, 145, 230, 0.1);
 }
 
+/* Search results */
+
 .search-results-home {
   position: absolute;
   top: calc(100% + 8px);
-  left: 50%; /* Center the container */
-  transform: translateX(-50%); /* Center the container */
+  left: 50%; /* centering */
+  transform: translateX(-50%); 
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   max-height: 400px;
   overflow-y: auto;
-  width: 100%; /* Make it match parent width */
-  min-width: max-content; /* Ensure it doesn't shrink smaller than content */
+  width: 50%; /* 75% of parent */
 }
 
 .search-results h2 {
@@ -408,8 +409,8 @@ footer p {
   cursor: pointer;
   transition: all 0.2s ease;
   background: white;
-  width: 100%; /* Ensure full width */
-  min-width: max-content; /* Prevent text truncation */
+  width: 100%; 
+  min-width: max-content; 
 }
 
 .result-item-home:hover {

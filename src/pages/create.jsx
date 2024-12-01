@@ -5,10 +5,11 @@ import { db } from "../firebase";
 import { useUser } from "../UserContext";
 import "../styles/create.css";
 import NavLayout from "../components/NavLayout";
+import { X } from "lucide-react";
 
 const Create = () => {
   const [flashcards, setFlashcards] = useState([
-    { id: 1, term: "", definition: "" },
+    { id: 0, term: "", definition: "" },
   ]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,8 +18,25 @@ const Create = () => {
   const navigate = useNavigate();
 
   const addCard = () => {
-    const newId = flashcards.length + 1;
+    const newId = flashcards.length;
     setFlashcards([...flashcards, { id: newId, term: "", definition: "" }]);
+  };
+
+  const deleteCard = (idToDelete) => {
+    // Prevent deleting if there's only one card
+    if (flashcards.length <= 1) {
+      alert("You must have at least one flashcard.");
+      return;
+    }
+
+    const updatedFlashcards = flashcards
+      .filter((card) => card.id !== idToDelete)
+      .map((card, index) => ({
+        ...card,
+        id: index,
+      }));
+
+    setFlashcards(updatedFlashcards);
   };
 
   const handleTermChange = (id, value) => {
@@ -106,38 +124,37 @@ const Create = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          {/* <div className="tool-buttons">
-                        <button className="tool-btn">
-                            <span>+</span> Import
-                        </button>
-                        <button className="tool-btn">
-                            <span>+</span> Add diagram
-                        </button>
-                        <button className="tool-btn">
-                            <span>→</span> Create from notes
-                        </button>
-                    </div> */}
-
-          {flashcards.map((card) => (
+          {flashcards.map((card, index) => (
             <div key={card.id} className="flashcard-item">
-              <span className="card-number">{card.id}</span>
+              <div className="card-number">{index + 1}</div>
               <div className="card-content">
-                <input
-                  type="text"
-                  placeholder="Enter term"
-                  className="term-input"
-                  value={card.term}
-                  onChange={(e) => handleTermChange(card.id, e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Enter definition"
-                  className="definition-input"
-                  value={card.definition}
-                  onChange={(e) =>
-                    handleDefinitionChange(card.id, e.target.value)
-                  }
-                />
+                <div className="card-inputs">
+                  <input
+                    type="text"
+                    placeholder="Enter term"
+                    className="term-input"
+                    value={card.term}
+                    onChange={(e) => handleTermChange(card.id, e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter definition"
+                    className="definition-input"
+                    value={card.definition}
+                    onChange={(e) =>
+                      handleDefinitionChange(card.id, e.target.value)
+                    }
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="delete-icon"
+                  onClick={() => deleteCard(card.id)}
+                  disabled={flashcards.length <= 1}
+                  aria-label="Delete flashcard"
+                >
+                  <X size={20} />
+                </button>
               </div>
             </div>
           ))}
@@ -147,21 +164,19 @@ const Create = () => {
           </button>
 
           <div className="action-buttons">
-            {/* <button 
-                            onClick={() => navigate('/homepage')} 
-                            className="cancel-button"
-                        >
-                            Cancel 
-                        </button> */}
-
-            <button onClick={handleCreateSet} className="create-btn">
-              Create
+            <button
+              onClick={handleCreateSet}
+              className="create-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Creating..." : "Create"}
             </button>
             <button
               onClick={handleCreateAndPractice}
               className="create-practice-btn"
+              disabled={isSubmitting}
             >
-              Create and practice
+              {isSubmitting ? "Creating..." : "Create and practice"}
             </button>
           </div>
         </div>
