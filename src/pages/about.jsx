@@ -1,8 +1,8 @@
 import React from 'react';
 import '../styles/about.css';
 import NavLayout from '../components/NavLayout';
- import bruceImage from '../assets/bruceImage.jpeg';
-//import ethanImage from '../assets/ethan.jpg'; 
+import bruceImage from '../assets/bruceImage.jpeg';
+import ethanImage from '../assets/ethanImage.jpg'; 
 import sulavImage from '../assets/sulavImage.jpeg'; 
 import majidImage from '../assets/majidImage.jpg';
 
@@ -24,7 +24,7 @@ const About = () => {
                 
                 <div className="profile">
                     <div className="profile-image-container">
-                        <img src={" "}alt="Ethan Humrich" className="profile-image" />
+                        <img src={ethanImage}alt="Ethan Humrich" className="profile-image" />
                     </div>
                     <div className="profile-content">
                         <h2>Ethan Humrich</h2>
