@@ -167,7 +167,7 @@ const JoinGroups = () => {
                             {group.group?.name || "Unnamed Group"}
                           </span>
                           <span className="result-creator">
-                            Owner: {group.group?.owner || "Unknown"}
+                            Owner: {group.createdBy?.name || "Unknown"}
                           </span>
                         </div>
                         <span className="member-count">
