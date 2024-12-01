@@ -7,6 +7,7 @@ import { useUser } from "../UserContext.jsx";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import NavLayout from "../components/NavLayout";
+import groupIcon from "../assets/group-icon.png"; // Adjust path as needed
 
 const Homepage = () => {
   const { user, loading } = useUser();
@@ -163,6 +164,12 @@ const Homepage = () => {
             <h3>Flashcards</h3>
             <p>Create your own digital flashcards that flip with a click</p>
           </Link>
+
+          <Link to="/join-groups" className="guide-item">
+            <img src={groupIcon} alt="Join Group Logo" className="logo-image" />
+            <h3>Join Groups</h3>
+            <p>Join groups to study with friends and classmates</p>
+          </Link>
           {/* <Link to="/learn" className="guide-item">
             <img
               src={`${process.env.PUBLIC_URL}/learn-more.png`}
@@ -175,6 +182,7 @@ const Homepage = () => {
               which terms need a little more work.
             </p>
           </Link> */}
+
           <Link to="/tests" className="guide-item">
             <img
               src={`${process.env.PUBLIC_URL}/test.png`}
