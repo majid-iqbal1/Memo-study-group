@@ -253,3 +253,17 @@ textarea {
     padding: 1.5rem;
   }
 }
+
+
+@media (min-width: 1440px) {
+  .create-group-container {
+      max-width: 1400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .create-group-container {
+      margin: 20px auto;
+      padding: 20px;
+  }
+}

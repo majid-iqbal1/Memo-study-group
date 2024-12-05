@@ -87,3 +87,16 @@
         font-size: 1em;
     }
 }
+
+@media (min-width: 1440px) {
+    .about-page {
+        max-width: 1400px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .about-page {
+        margin: 20px auto;
+        padding: 20px;
+    }
+  } 

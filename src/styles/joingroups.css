@@ -765,12 +765,15 @@ button:hover {
     margin-bottom: 2rem;
   }
 
-  @media (max-width: 768px) {
-    .joined-groups-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .joined-group-box {
-      padding: 1rem;
+  @media (min-width: 1440px) {
+    .join-groups-page {
+        max-width: 1400px;
     }
   }
+  
+  @media (max-width: 768px) {
+    .join-groups-page {
+        margin: 20px auto;
+        padding: 20px;
+    }
+  }  

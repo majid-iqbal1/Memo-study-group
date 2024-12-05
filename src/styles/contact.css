@@ -149,3 +149,16 @@
 .confirmation-message svg {
     flex-shrink: 0;
 }
+
+@media (min-width: 1440px) {
+    .contact-container {
+        max-width: 1400px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .contact-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+  } 
