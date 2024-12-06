@@ -8,10 +8,11 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.flashcard-creator h2 {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 30px;
+.flashcard-creator h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #3c91e6;
+  font-weight: bold;
 }
 
 .creator-form {

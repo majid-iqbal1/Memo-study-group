@@ -179,7 +179,7 @@ const CreateGroup = () => {
         <form onSubmit={handleSubmit} className="group-form">
           <div className="form-card">
             <div className="group-profile">
-              <h2>Group Profile</h2>
+              <h3>Group Profile</h3>
               <div className="image-upload">
                 <div className="image-upload-container">
                   <label htmlFor="groupImage" className="upload-circle">

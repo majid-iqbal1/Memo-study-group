@@ -18,8 +18,17 @@ export const Auth = () => {
     const navigate = useNavigate();
 
     const isValidPassword = (password) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$%^&*-])[A-Za-z\d#?!@$%^&*-]{8,}$/;
-        return regex.test(password);
+        const hasMinLength = password.length >= 8;
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecialChar = /[#?!@$%^&*-]/.test(password);
+
+        return hasMinLength && hasLowerCase && hasUpperCase && hasNumber && hasSpecialChar;
+    };
+
+    const isValidEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
     const createUserProfile = async (user, firstName, lastName, photoURL = '') => {
@@ -84,6 +93,22 @@ export const Auth = () => {
     
     const handleEmailAuth = async () => {
         setError("");
+        
+        if (!email.trim()) {
+            setError("Email is required.");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
+        if (!password) {
+            setError("Password is required.");
+            return;
+        }
+
         try {
             let userCredential;
             if (isSigningUp) {
@@ -91,35 +116,61 @@ export const Auth = () => {
                     setError("Please enter both first and last names.");
                     return;
                 }
+
                 if (!isValidPassword(password)) {
-                    setError("Password must meet the security criteria.");
+                    setError("Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.");
                     return;
                 }
+
                 if (password !== confirmPassword) {
                     setError("Passwords do not match.");
                     return;
                 }
-    
+
                 userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
                 await createUserProfile(user, firstName, lastName);
             } else {
-                userCredential = await signInWithEmailAndPassword(auth, email, password);
+                try {
+                    userCredential = await signInWithEmailAndPassword(auth, email, password);
+                } catch (error) {
+                    if (error.code === 'auth/invalid-credential') {
+                        setError("Invalid email or password.");
+                        return;
+                    }
+                    if (error.code === 'auth/invalid-email') {
+                        setError("Invalid email format.");
+                        return;
+                    }
+                    if (error.code === 'auth/user-not-found') {
+                        setError("No account found with this email.");
+                        return;
+                    }
+                    if (error.code === 'auth/wrong-password') {
+                        setError("Incorrect password.");
+                        return;
+                    }
+                    throw error;
+                }
             }
-    
+
             const user = userCredential.user;
             const userRef = doc(db, 'users', user.uid);
             const userSnap = await getDoc(userRef);
-    
+
             if (userSnap.exists()) {
                 setUser({ uid: user.uid, ...userSnap.data() });
-                await updateStreak(user); 
+                await updateStreak(user);
             }
-    
+
             navigate('/homepage');
         } catch (error) {
-            setError("An error occurred. Please try again.");
-            console.error(error);
+            if (error.code === 'auth/email-already-in-use') {
+                setError("An account with this email already exists.");
+            } else {
+                setError("An error occurred. Please try again.");
+                console.error(error);
+            }
         }
     };
     
@@ -182,55 +233,70 @@ export const Auth = () => {
                 </div>
 
                 <div className="rightColumn">
-                <div className="form">
-                    <h2 className="heading">{isSigningUp ? "Sign Up" : "Sign In"}</h2>
+                    <div className="form">
+                        <h2 className="heading">{isSigningUp ? "Sign Up" : "Sign In"}</h2>
     
-                    {error && <p className="error">{error}</p>}
+                        {error && <p className="error">{error}</p>}
     
-                    {isSigningUp && (
-                        <>
-                            <input
-                                className="input"
-                                type="text"
-                                placeholder="First Name"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                            />
-                            <input
-                                className="input"
-                                type="text"
-                                placeholder="Last Name"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                            />
-                        </>
-                    )}
+                        {isSigningUp && (
+                            <>
+                                <input
+                                    className="input"
+                                    type="text"
+                                    placeholder="First Name"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                />
+                                <input
+                                    className="input"
+                                    type="text"
+                                    placeholder="Last Name"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                />
+                            </>
+                        )}
     
-                    <input
-                        className="input"
-                        type="email"
-                        placeholder="Email"
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        className="input"
-                        type="password"
-                        placeholder="Password"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-    
-                    {isSigningUp && (
+                        <input
+                            className="input"
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                         <input
                             className="input"
                             type="password"
-                            placeholder="Confirm Password"
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
-                    )}
     
-                    <button className="primaryButton" onClick={handleEmailAuth}>
-                        {isSigningUp ? "Sign Up" : "Sign In"}
-                    </button>
+                        {isSigningUp && (
+                            <>
+                                <input
+                                    className="input"
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                <div className="password-criteria">
+                                    <p>Password must contain:</p>
+                                    <ul>
+                                        <li>At least 8 characters</li>
+                                        <li>One uppercase letter</li>
+                                        <li>One lowercase letter</li>
+                                        <li>One number</li>
+                                        <li>One special character (#?!@$%^&*-)</li>
+                                    </ul>
+                                </div>
+                            </>
+                        )}
+    
+                        <button className="primaryButton" onClick={handleEmailAuth}>
+                            {isSigningUp ? "Sign Up" : "Sign In"}
+                        </button>
     
                     <p className="toggleText">
                         {isSigningUp ? "Already have an account? " : "Don’t have an account? "}

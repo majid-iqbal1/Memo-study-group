@@ -22,7 +22,7 @@
 
 .contact-header p {
     color: #666;
-    font-size: 1.1rem;
+    font-size: 1.rem;
     line-height: 1.5;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .form-group label {
-    font-size: 0.875rem;
+    font-size: 1.2rem;
     font-weight: 500;
     color: #333;
     margin-bottom: 8px;

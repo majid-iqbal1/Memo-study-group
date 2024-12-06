@@ -125,10 +125,13 @@ const CreateTest = () => {
     return (
         <NavLayout>
             <div className="test-creator">
-                <h2>Create a new test</h2>
+                <h1>Create a New test</h1>
+                <p className="subtitle">
+                Fill in the details below to create a test
+                </p>
 
                 <div className="test-section">
-                    <h3>Test Information</h3>
+                    <h4>Test Information</h4>
                     <input
                         type="text"
                         placeholder="Enter a test title"
@@ -145,7 +148,7 @@ const CreateTest = () => {
                 </div>
 
                 <div className="import-section">
-                    <h3>Import from Flashcards</h3>
+                    <h4>Import from Flashcards</h4>
                     <div className="select-set">
                         <select value={selectedSet} onChange={handleFlashcardSetChange}>
                             <option value="">None</option>
@@ -157,7 +160,7 @@ const CreateTest = () => {
                 </div>
 
                 <div className="questions-section">
-                    <h3>Test Questions</h3>
+                    <h4>Test Questions</h4>
                     {questions.map((q, index) => (
                         <div key={index} className="question-item">
                             <div className="question-number">Question {index + 1}</div>

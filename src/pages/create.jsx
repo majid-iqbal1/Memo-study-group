@@ -106,7 +106,10 @@ const Create = () => {
   return (
     <NavLayout>
       <div className="flashcard-creator">
-        <h2>Create a new flashcard set</h2>
+        <h1>Create a New Flashcard Set</h1>
+        <p className="subtitle">
+          Fill in the details below to create a flashcard set
+        </p>
 
         <div className="creator-form">
           <input

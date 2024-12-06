@@ -8,10 +8,11 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.test-creator h2 {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 30px;
+.test-creator h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #3c91e6;
+    font-weight: bold;
 }
 
 .creator-form {
@@ -27,10 +28,10 @@
     border-radius: 8px;
 }
 
-.test-section h3 {
+.test-section h4 {
     font-size: 1.5rem;
+    margin-bottom: 0.5rem;
     color: #333;
-    margin-bottom: 15px;
 }
 
 .title-input,
@@ -54,10 +55,10 @@
     border-radius: 8px;
 }
 
-.import-section h3 {
+.import-section h4 {
     font-size: 1.5rem;
+    margin-bottom: 0.5rem;
     color: #333;
-    margin-bottom: 15px;
 }
 
 .select-set {
@@ -82,10 +83,10 @@
     border-radius: 8px;
 }
 
-.questions-section h3 {
+.questions-section h4 {
     font-size: 1.5rem;
+    margin-bottom: 0.5rem;
     color: #333;
-    margin-bottom: 15px;
 }
 
 .question-item {
