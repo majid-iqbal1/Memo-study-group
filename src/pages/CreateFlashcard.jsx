@@ -1,3 +1,49 @@
+/******************************************************************************
+ *                        Create Flashcard Component                          *
+ ******************************************************************************/
+
+/*************************** Component Information ****************************
+ *                                                                            *
+ *  Purpose: Create and manage flashcard sets for study                       *
+ *  Version: 1.6.0                                                            *
+ *  Created: November 2024                                                    *
+ *  Updated: December 2024                                                    *
+ *  Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich            *
+ *                                                                            *
+ *****************************************************************************/
+
+/******************************** Features ************************************
+ *                                                                            *
+ *  FLASHCARD MANAGEMENT         |   USER INTERACTIONS                        *
+ *  -------------------------    |   --------------------------------         *
+ *  - Add/Remove cards           |   - Term input                             *
+ *  - Set title                  |   - Definition input                       *
+ *  - Set description            |   - Create set                             *
+ *  - Card numbering             |   - Create and practice                    *
+ *                                                                            *
+ *  DATA HANDLING                |   VALIDATION                               *
+ *  -------------------------    |   --------------------------------         *
+ *  - Firebase storage           |   - Required fields check                  *
+ *  - Timestamp tracking         |   - Empty card prevention                  *
+ *  - User association           |   - Minimum card requirement               *
+ *                                                                            *
+ *****************************************************************************/
+
+/****************************** Dependencies **********************************
+ *                                                                            *
+ *  REACT & ROUTING              |   FIREBASE                                 *
+ *  -------------------------    |   --------------------------------         *
+ *  - useState                   |   - Firestore                              *
+ *  - useNavigate                |   - serverTimestamp                        *
+ *  - useUser                    |   - collection/addDoc                      *
+ *                               |                                            *
+ *  COMPONENTS                   |   STYLES & ICONS                           *
+ *  -------------------------    |   --------------------------------         *
+ *  - NavLayout                  |   - create.css                             *
+ *  - X (Lucide)                 |   - Lucide React                           *
+ *                                                                            *
+ *****************************************************************************/
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -23,7 +69,6 @@ const Create = () => {
   };
 
   const deleteCard = (idToDelete) => {
-    // Prevent deleting if there's only one card
     if (flashcards.length <= 1) {
       alert("You must have at least one flashcard.");
       return;

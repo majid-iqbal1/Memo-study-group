@@ -1,15 +1,70 @@
+/*******************************************************************************
+ *             ChatRoom Component - Group Communication Interface              *
+ ******************************************************************************/
+
+/**************************** Component Information ****************************
+ *                                                                             *
+ *  Purpose: Real-time group chat interface with resource and event mgmt       *
+ *  Version: 1.9.0                                                             *
+ *  Created: November 2024                                                     *
+ *  Updated: December 2024                                                     *
+ *  Author:  Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich           *                                         *
+ *                                                                             *
+ ******************************************************************************/
+
+/*************************** Web Design & Features *****************************
+ *                                                                             *
+ *  LEFT PANEL                       |   RIGHT PANEL                           *
+ *  -------------------------        |   -------------------------             *
+ *  - Member Management              |   - Event Scheduling                    *
+ *  - Resource Sharing               |   - Event Management                    *
+ *  - File Upload/Download           |   - Calendar Integration                *
+ *                                   |                                         *
+ *  CENTRAL PANEL                    |   GENERAL FEATURES                      *
+ *  -------------------------        |   -------------------------             *
+ *  - Real-time Messaging            |   - User Authentication                 *
+ *  - File Attachments               |   - Profile Management                  *
+ *  - Message History                |   - Group Settings                      *
+ *                                                                             *
+ ******************************************************************************/
+
+/****************************** Dependencies ***********************************
+ *                                                                             *
+ *  REACT                            |   FIREBASE                              *
+ *  -------------------------        |   -------------------------             *
+ *  - useState                       |   - Firestore                           *
+ *  - useEffect                      |   - Storage                             *
+ *  - useRef                         |   - Authentication                      *
+ *                                   |                                         *
+ *  COMPONENTS                       |   UTILITIES                             *
+ *  -------------------------        |   -------------------------             *
+ *  - NavLayout                      |   - Lucide Icons                        *
+ *  - LoadingSpinner                 |   - Date Formatting                     *
+ *                                                                             *
+ ******************************************************************************/
+
+/******************************** Notes ****************************************
+ *                                                                             *
+ *  - All file uploads limited to 5MB                                          *
+ *  - Supports image, PDF, DOC, and TXT files                                  *
+ *  - Events auto-delete after expiration                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   doc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, 
-  getDoc, updateDoc, arrayUnion, arrayRemove, increment, deleteDoc
+  getDoc, updateDoc, arrayUnion, arrayRemove, deleteDoc
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
 import { useUser } from '../UserContext';
 import { 
   FileText, Calendar, Clock, Paperclip, Download, Plus, 
-  Edit, Image, LogOut, MoreVertical 
+  Edit, Image, LogOut, MoreVertical, Trash2, File, 
+  Crown
 } from 'lucide-react';
 import NavLayout from '../components/NavLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -32,10 +87,17 @@ const ChatRoom = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [userProfiles, setUserProfiles] = useState({});
   const [showSettings, setShowSettings] = useState(false);
+  const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, resourceId: null });
   
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  const resourceFileInputRef = useRef(null);
+
+  const [eventContextMenu, setEventContextMenu] = useState({ 
+    show: false, 
+    x: 0, 
+    y: 0, 
+    eventId: null 
+});
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -104,6 +166,110 @@ const ChatRoom = () => {
     }
   }, [groupInfo]);
 
+  useEffect(() => {
+    const handleClickOutside = () => {
+    
+        if (contextMenu.show) {
+            setContextMenu({ show: false, x: 0, y: 0, resourceId: null });
+        }
+  
+        if (eventContextMenu.show) {
+            setEventContextMenu({ show: false, x: 0, y: 0, eventId: null });
+        }
+    };
+
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            setContextMenu({ show: false, x: 0, y: 0, resourceId: null });
+            setEventContextMenu({ show: false, x: 0, y: 0, eventId: null });
+        }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+        document.removeEventListener('click', handleClickOutside);
+        document.removeEventListener('keydown', handleEscape);
+    };
+}, [contextMenu.show, eventContextMenu.show]);
+
+
+  useEffect(() => {
+    const checkExpiredEvents = async () => {
+        if (!groupInfo?.events?.length) return;
+
+        const now = new Date();
+        const expiredEvents = groupInfo.events.filter(event => {
+            const eventDate = new Date(`${event.date} ${event.time}`);
+            return eventDate < now;
+        });
+
+        if (expiredEvents.length > 0) {
+            try {
+                const groupRef = doc(db, "group-database", groupId);
+                const updatedEvents = groupInfo.events.filter(event => {
+                    const eventDate = new Date(`${event.date} ${event.time}`);
+                    return eventDate >= now;
+                });
+
+                await updateDoc(groupRef, {
+                    'group.events': updatedEvents
+                });
+            } catch (error) {
+                console.error('Error removing expired events:', error);
+            }
+        }
+    };
+
+    checkExpiredEvents();
+  }, [groupInfo?.events, groupId]);
+
+
+const handleEditEvent = async (eventId) => {
+  const event = groupInfo.events.find(e => e.id === eventId);
+  if (!event) return;
+
+  try {
+      const newDate = prompt('Enter new date (YYYY-MM-DD):', event.date);
+      const newTime = prompt('Enter new time (HH:MM):', event.time);
+      
+      if (!newDate || !newTime) return;
+
+      const groupRef = doc(db, "group-database", groupId);
+      const updatedEvents = groupInfo.events.map(e => {
+          if (e.id === eventId) {
+              return { ...e, date: newDate, time: newTime };
+          }
+          return e;
+      });
+
+      await updateDoc(groupRef, {
+          'group.events': updatedEvents
+      });
+  } catch (error) {
+      console.error('Error updating event:', error);
+      alert('Failed to update event');
+  }
+};
+
+const handleDeleteEvent = async (eventId) => {
+  if (!window.confirm('Are you sure you want to delete this event?')) return;
+
+  try {
+      const groupRef = doc(db, "group-database", groupId);
+      const updatedEvents = groupInfo.events.filter(e => e.id !== eventId);
+      
+      await updateDoc(groupRef, {
+          'group.events': updatedEvents
+      });
+  } catch (error) {
+      console.error('Error deleting event:', error);
+      alert('Failed to delete event');
+  }
+};
+
+
   const handleFileUpload = async (file, type = 'message') => {
     if (!file) return;
     
@@ -157,6 +323,29 @@ const ChatRoom = () => {
       setUploadProgress(0);
     }
   };
+
+  const handleDeleteResource = async (resourceId) => {
+    if (!window.confirm('Are you sure you want to delete this resource?')) return;
+
+    try {
+        const groupRef = doc(db, "group-database", groupId);
+        const groupDoc = await getDoc(groupRef);
+        const currentResources = groupDoc.data().group.resources || [];
+        
+        const updatedResources = currentResources.filter(resource => 
+            resource.id !== resourceId
+        );
+
+        await updateDoc(groupRef, {
+            'group.resources': updatedResources
+        });
+
+        setContextMenu({ show: false, x: 0, y: 0, resourceId: null });
+    } catch (error) {
+        console.error('Error deleting resource:', error);
+        alert('Failed to delete resource');
+    }
+};
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -228,67 +417,67 @@ const ChatRoom = () => {
 
   const handleAddResource = async (e) => {
     e.preventDefault();
-    if (!newResource.file) return;
-  
-    try {
-      setUploadProgress(0);
-      const groupRef = doc(db, "group-database", groupId);
-      const groupSnapshot = await getDoc(groupRef);
-      
-      if (!groupSnapshot.exists()) {
-        throw new Error('Group not found');
-      }
-  
-      const currentData = groupSnapshot.data();
-      const currentResources = currentData.group.resources || [];
-  
-      // Upload file
-      const storageRef = ref(storage, `resources/${groupId}/${Date.now()}-${newResource.file.name}`);
-      const uploadTask = await uploadBytes(storageRef, newResource.file);
-      const downloadURL = await getDownloadURL(uploadTask.ref);
-  
-      const newResourceData = {
-        id: Date.now().toString(),
-        name: newResource.name || newResource.file.name,
-        url: downloadURL,
-        type: newResource.file.type,
-        addedBy: user.name,
-        addedAt: new Date().toISOString()
-      };
-  
-      await updateDoc(groupRef, {
-        'group.resources': [...currentResources, newResourceData]
-      });
-  
-      setShowResourceModal(false);
-      setNewResource({ name: '', file: null });
-      setUploadProgress(100);
-      console.log('Resource added successfully');
-      
-      setTimeout(() => setUploadProgress(0), 1000);
-  
-    } catch (error) {
-      console.error('Error adding resource:', error);
-      alert('Failed to add resource: ' + error.message);
-      setUploadProgress(0);
+    if (!newResource.file || !newResource.name.trim()) {
+        alert('Please provide a name for the resource');
+        return;
     }
-  };
+
+    try {
+        setUploadProgress(0);
+        const groupRef = doc(db, "group-database", groupId);
+        const groupSnapshot = await getDoc(groupRef);
+        
+        if (!groupSnapshot.exists()) {
+            throw new Error('Group not found');
+        }
+
+        const currentData = groupSnapshot.data();
+        const currentResources = currentData.group.resources || [];
+
+        const storageRef = ref(storage, `resources/${groupId}/${Date.now()}-${newResource.name}`);
+        const uploadTask = await uploadBytes(storageRef, newResource.file);
+        const downloadURL = await getDownloadURL(uploadTask.ref);
+
+        const newResourceData = {
+            id: Date.now().toString(),
+            name: newResource.name.trim(),
+            url: downloadURL,
+            type: newResource.file.type,
+            addedBy: user.name,
+            addedAt: new Date().toISOString()
+        };
+
+        await updateDoc(groupRef, {
+            'group.resources': [...currentResources, newResourceData]
+        });
+
+        setShowResourceModal(false);
+        setNewResource({ name: '', file: null });
+        setUploadProgress(100);
+        setTimeout(() => setUploadProgress(0), 1000);
+
+    } catch (error) {
+        console.error('Error adding resource:', error);
+        alert('Failed to add resource: ' + error.message);
+        setUploadProgress(0);
+    }
+};
   
   const handleResourceFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size <= 5 * 1024 * 1024) {
-        setNewResource(prev => ({
-          ...prev,
-          file: file,
-          name: file.name
-        }));
-      } else {
-        alert('File size should be less than 5MB');
-        e.target.value = '';
-      }
+        if (file.size <= 5 * 1024 * 1024) {
+            setNewResource(prev => ({
+                ...prev,
+                file: file,
+                name: ''
+            }));
+        } else {
+            alert('File size should be less than 5MB');
+            e.target.value = '';
+        }
     }
-  };
+};
 
   const handleAttachmentChange = (e) => {
     const file = e.target.files[0];
@@ -301,14 +490,6 @@ const ChatRoom = () => {
       }
     }
   };
-  const handleAttachmentClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  if (loading) return <NavLayout><LoadingSpinner /></NavLayout>;
-  if (!groupInfo) return <NavLayout><div className="error-message">Group not found</div></NavLayout>;
 
   const formatEventDateTime = (date, time) => {
     const eventDate = new Date(`${date} ${time}`);
@@ -369,14 +550,11 @@ const ChatRoom = () => {
           'group.users': arrayRemove(user.uid),
           'group.memberCount': currSize - 1
         });
-      
-        // Fetch the updated document to check the current member count
        
         updatedGroupDoc = await getDoc(groupRef);
         console.log("This is after: " +  updatedGroupDoc.get("group.memberCount"));
 
         if (updatedGroupDoc.get("group.memberCount") === 0) {
-          // If member count is zero, delete the entire group document
           await deleteDoc(groupRef);
           console.log("Group deleted as no members remain");
         }
@@ -389,6 +567,9 @@ const ChatRoom = () => {
       }
     }
   };
+
+  if (loading) return <NavLayout><LoadingSpinner /></NavLayout>;
+  if (!groupInfo) return <NavLayout><div className="error-message">Group not found</div></NavLayout>;
 
     return (
       <NavLayout>
@@ -450,27 +631,29 @@ const ChatRoom = () => {
               <h2>Members ({groupInfo?.users?.length || 0})</h2>
               <div className="members-list">
                 {groupInfo?.users?.map((userId) => (
-                  <div key={userId} className="member-item">
-                    <div className="member-avatar">
-                      {userProfiles[userId] ? (
-                        <img 
-                          src={userProfiles[userId]} 
-                          alt={userNames[userId]} 
-                          className="avatar-image"
-                        />
-                      ) : (
-                        <div className="avatar-placeholder">
-                          {userNames[userId]?.charAt(0)?.toUpperCase()}
+                    <div key={userId} className="member-item">
+                        <div className="member-avatar">
+                            {userProfiles[userId] ? (
+                                <img 
+                                    src={userProfiles[userId]} 
+                                    alt={userNames[userId]} 
+                                    className="avatar-image"
+                                />
+                            ) : (
+                                <div className="avatar-placeholder">
+                                    {userNames[userId]?.charAt(0)?.toUpperCase()}
+                                </div>
+                            )}
                         </div>
-                      )}
+                        <span className="member-name">
+                            {userNames[userId] || 'Loading...'}
+                            {userId === groupInfo.owner && (
+                                <Crown size={16} className="owner-crown" />
+                            )}
+                        </span>
                     </div>
-                    <span className="member-name">
-                      {userNames[userId] || 'Loading...'}
-                      {userId === groupInfo.owner && ' (Owner)'}
-                    </span>
-                  </div>
                 ))}
-              </div>
+            </div>
             </div>
   
             <div className="resources-section">
@@ -482,31 +665,73 @@ const ChatRoom = () => {
               </div>
               <div className="resources-list">
                 {groupInfo?.resources?.map((resource) => (
-                  <a 
-                    href={resource.url} 
-                    key={resource.id} 
-                    className="resource-item"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
-                  >
-                    <FileText size={18} />
-                    <span>{resource.name}</span>
-                    <Download size={16} className="download-icon" />
-                  </a>
+                    <div 
+                        key={resource.id} 
+                        className="resource-item"
+                        onClick={() => window.open(resource.url, '_blank')}
+                        onContextMenu={(e) => {
+                            e.preventDefault();
+                            if (resource.addedBy === user.name) {
+                                setContextMenu({
+                                    show: true,
+                                    x: e.clientX,
+                                    y: e.clientY,
+                                    resourceId: resource.id,
+                                });
+                            }
+                        }}
+                    >
+                        <div className="resource-icon">
+                            {resource.type.includes('image') ? (
+                                <Image size={20} color="#3c91e6" />
+                            ) : resource.type.includes('pdf') ? (
+                                <FileText size={20} color="#3c91e6" />
+                            ) : (
+                                <File size={20} color="#3c91e6" />
+                            )}
+                        </div>
+                        <div className="resource-info">
+                            <span className="resource-name">
+                                {resource.name || 'Unnamed File'}
+                            </span>
+                        </div>
+                    </div>
                 ))}
+
+                  {contextMenu.show && (
+                      <div 
+                          className="context-menu"
+                          style={{ 
+                              top: contextMenu.y,
+                              left: contextMenu.x
+                          }}
+                      >
+                          {contextMenu.isOwner && (
+                              <button 
+                                  className="context-menu-item delete-option"
+                                  onClick={() => {
+                                      if (window.confirm('Are you sure you want to delete this resource?')) {
+                                          handleDeleteResource(contextMenu.resourceId);
+                                      }
+                                  }}
+                              >
+                                  <Trash2 size={16} />
+                                  Delete
+                              </button>
+                          )}
+                      </div>
+                  )}
               </div>
-            </div>
-          </div>
-  
-          <div className="chat-main">
-            <div className="chat-header">
-              <h1>{groupInfo?.name}</h1>
-            </div>
+                </div>
+              </div>
+      
+              <div className="chat-main">
+                <div className="chat-header">
+                  <h1>{groupInfo?.name}</h1>
+                </div>
   
             <div className="messages-container">
               {messages.reduce((acc, message, index) => {
-                // Add date separator if needed
                 const currentDate = formatMessageDate(message.timestamp);
                 const previousDate = index > 0 ? formatMessageDate(messages[index - 1].timestamp) : null;
                 
@@ -518,7 +743,6 @@ const ChatRoom = () => {
                   );
                 }
 
-                // Add message
                 acc.push(
                   <div 
                     key={message.id} 
@@ -619,59 +843,111 @@ const ChatRoom = () => {
                 </button>
               </div>
               <div className="events-list">
-                {groupInfo?.events?.map((event) => (
-                <div key={event.id} className="event-item">
-                    <div className="event-header">
-                    <Calendar size={16} />
-                    <span className="event-title">{event.title}</span>
-                    </div>
-                    <div className="event-time">
-                    <Clock size={16} />
-                    <span>{formatEventDateTime(event.date, event.time)}</span>
-                    </div>
-                </div>
-                ))}
+    {groupInfo?.events?.map((event) => (
+        <div 
+            key={event.id} 
+            className="event-item"
+            onContextMenu={(e) => {
+                e.preventDefault();
+                setEventContextMenu({
+                    show: true,
+                    x: e.clientX,
+                    y: e.clientY,
+                    eventId: event.id
+                });
+            }}
+        >
+            <div className="event-header">
+                <Calendar size={16} />
+                <span className="event-title">{event.title}</span>
             </div>
+            <div className="event-time">
+                <Clock size={16} />
+                <span>{formatEventDateTime(event.date, event.time)}</span>
+            </div>
+        </div>
+    ))}
+
+            {eventContextMenu.show && (
+                <div 
+                    className="event-context-menu"
+                    style={{ 
+                        top: eventContextMenu.y,
+                        left: eventContextMenu.x 
+                    }}
+                >
+                    <button 
+                        className="context-menu-item"
+                        onClick={() => {
+                            handleEditEvent(eventContextMenu.eventId);
+                            setEventContextMenu({ show: false, x: 0, y: 0, eventId: null });
+                        }}
+                    >
+                        <Edit size={16} />
+                        Edit Date/Time
+                    </button>
+                    <button 
+                        className="context-menu-item delete-option"
+                        onClick={() => {
+                            handleDeleteEvent(eventContextMenu.eventId);
+                            setEventContextMenu({ show: false, x: 0, y: 0, eventId: null });
+                        }}
+                    >
+                        <Trash2 size={16} />
+                        Delete Event
+                    </button>
+                </div>
+            )}
+        </div>
             </div>
           </div>
   
           {showResourceModal && (
             <div className="modal-overlay">
                 <div className="modal">
-                <h2>Add New Resource</h2>
-                <form onSubmit={handleAddResource}>
-                    <input
-                    type="text"
-                    placeholder="Resource Name (optional)"
-                    value={newResource.name}
-                    onChange={(e) => setNewResource({...newResource, name: e.target.value})}
-                    />
-                    <input
-                        type="file"
-                        onChange={handleResourceFileChange}
-                        accept="image/*,.pdf,.doc,.docx,.txt"
-                        required
-                    />
-                                        {uploadProgress > 0 && (
-                    <div className="upload-progress">
-                        <div 
-                        className="progress-bar" 
-                        style={{width: `${uploadProgress}%`}}
+                    <h2>Add New Resource</h2>
+                    <form onSubmit={handleAddResource}>
+                        <input
+                            type="text"
+                            placeholder="Enter resource name (required)"
+                            value={newResource.name}
+                            onChange={(e) => {
+                                const value = e.target.value.slice(0, 10);
+                                setNewResource({...newResource, name: value});
+                            }}
+                            maxLength={10}
+                            required
                         />
-                    </div>
-                    )}
-                    <div className="modal-buttons">
-                    <button type="button" onClick={() => setShowResourceModal(false)}>
-                        Cancel
-                    </button>
-                    <button type="submit" disabled={!newResource.file}>
-                        Add Resource
-                    </button>
-                    </div>
-                </form>
+                        <input
+                            type="file"
+                            onChange={handleResourceFileChange}
+                            accept="image/*,.pdf,.doc,.docx,.txt"
+                            required
+                        />
+                        {uploadProgress > 0 && (
+                            <div className="upload-progress">
+                                <div 
+                                    className="progress-bar" 
+                                    style={{width: `${uploadProgress}%`}}
+                                />
+                            </div>
+                        )}
+                        <div className="modal-buttons">
+                            <button type="button" onClick={() => setShowResourceModal(false)}>
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit" 
+                                disabled={!newResource.file || !newResource.name.trim()}
+                            >
+                                Add Resource
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            )}
+        )}
+          
   
             {showEventModal && (
             <div className="modal-overlay">

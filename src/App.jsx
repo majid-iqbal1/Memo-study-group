@@ -14,14 +14,14 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 
 // Component imports and pages
-import { Auth } from "./components/auth";
+import { Auth } from "./components/Auth";
 import Homepage from "./pages/Homepage";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Library from "./pages/Library";
-import Create from "./pages/Create";
+import Create from "./pages/CreateFlashcard";
 import CreateGroup from "./pages/CreateGroup";
-import JoinGroups from "./pages/joingroups";
+import JoinGroups from "./pages/JoinGroups";
 import LearnMode from "./pages/LearnMode";
 import EditFlashcardSet from "./pages/EditFlashcardSet";
 import Tests from "./pages/Tests";

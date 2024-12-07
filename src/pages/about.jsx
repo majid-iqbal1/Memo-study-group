@@ -1,3 +1,37 @@
+/******************************************************************************
+ *                           About Page Component                             *
+ *****************************************************************************/
+
+/*************************** Component Information ****************************
+ *                                                                            *
+ *  Purpose: Team member profiles and information display                     *
+ *  Version: 1.2.0                                                            *
+ *  Created: November 2024                                                    *
+ *  Updated: December 2024                                                    *
+ *  Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich            *
+ *                                                                            *
+ *****************************************************************************/
+
+/******************************** Features ************************************
+ *                                                                            *
+ *  - Team member profiles with images                                        *
+ *  - Professional background information                                     *
+ *  - Technical skills and experience                                         *
+ *  - Responsive layout design                                                *
+ *                                                                            *
+ *****************************************************************************/
+
+/****************************** Dependencies **********************************
+ *                                                                            *
+ *  COMPONENTS              |   ASSETS                                        *
+ *  ----------------------  |   ----------------------------------------      *
+ *  - NavLayout             |   - bruceImage.jpeg                             *
+ *  - About.css             |   - ethanImage.jpg                              *
+ *                          |   - sulavImage.jpeg                             *
+ *                          |   - majidImage.jpg                              *
+ *                                                                            *
+ *****************************************************************************/
+
 import React from 'react';
 import '../styles/about.css';
 import NavLayout from '../components/NavLayout';

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, serverTimestamp, setDoc, doc} from "firebase/firestore";
+import { serverTimestamp, setDoc, doc} from "firebase/firestore";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../firebase";

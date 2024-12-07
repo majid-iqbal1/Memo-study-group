@@ -1,6 +1,44 @@
+/******************************************************************************
+ *                           Contact Page Component                           *
+ ******************************************************************************/
+
+/*************************** Component Information ****************************
+ *                                                                            *
+ *  Purpose: Contact form for user inquiries and feedback                     *
+ *  Version: 1.2.0                                                            *
+ *  Created: November 2024                                                    *
+ *  Updated: December 2024                                                    *
+ *  Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich            *
+ *                                                                            *
+ *****************************************************************************/
+
+/******************************** Features ************************************
+ *                                                                            *
+ *  FORM FEATURES              |   FUNCTIONALITY                              *
+ *  -------------------------  |   --------------------------------------     *
+ *  - Name input               |   - Email validation                         *
+ *  - Email input              |   - Form submission handling                 *
+ *  - Message textarea         |   - Success confirmation                     *
+ *  - Submit button            |   - Loading state management                 *
+ *                                                                            *
+ *****************************************************************************/
+
+/****************************** Dependencies **********************************
+ *                                                                            *
+ *  REACT IMPORTS              |   EXTERNAL LIBRARIES                         *
+ *  -------------------------  |   --------------------------------------     *
+ *  - useState                 |   - emailjs/browser                          *
+ *  - useRef                   |   - lucide-react icons                       *
+ *                             |                                              *
+ *  COMPONENTS                 |   STYLES                                     *
+ *  -------------------------  |   --------------------------------------     *
+ *  - NavLayout                |   - contact.css                              *
+ *                                                                            *
+ *****************************************************************************/
+
 import React, { useState, useRef } from 'react';
 import NavLayout from '../components/NavLayout';
-import { Send, Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
+import { Send, CheckCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import '../styles/contact.css';
 

@@ -1,3 +1,29 @@
+/*******************************************************************************
+ * ChatRoom Component Styles
+ * 
+ * Layout Structure:
+ * - Three-column grid layout (250px 1fr 250px)
+ * - Left panel: Members & Resources
+ * - Center panel: Chat Messages
+ * - Right panel: Events
+ * 
+ * Main Sections:
+ * - chat-container: Main grid container
+ * - chat-sidebar: Left and right panels
+ * - chat-main: Center messaging area
+ * - message-input: Message input section
+ * 
+ * Features:
+ * - Responsive design (breakpoints at 1024px and 768px)
+ * - Custom scrollbars
+ * - Modal overlays
+ * - Context menus
+ * 
+ * Author: Author: Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich 
+ * Created: November 2024
+ * Updated: December 2024
+ ******************************************************************************/
+
 .chat-container {
     display: grid;
     grid-template-columns: 250px 1fr 250px;
@@ -18,7 +44,7 @@
   }
   
   .chat-header {
-    padding: 1rem 1rem;
+    padding: 1rem;
     border-bottom: 1px solid #e9ecef;
     flex-shrink: 0;
     margin-top: 20px;
@@ -96,8 +122,7 @@
     font-weight: 600;
   }
   
-  .member-item,
-  .resource-item {
+  .member-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -105,9 +130,47 @@
     border-radius: 6px;
     transition: background-color 0.2s;
   }
+
+  .resource-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid #edf2f7;
+    cursor: context-menu;
+}
+
+.resource-item:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.resource-icon {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.resource-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resource-name {
+  font-size: 0.9rem;
+  color: #2d3748;
+}
   
-  .member-item:hover,
-  .resource-item:hover {
+  .member-item:hover {
     background-color: #f8f9fa;
   }
   
@@ -142,6 +205,13 @@
   .member-name {
     font-size: 0.9rem;
     color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .owner-crown {
+      color: #fbbf24;
   }
   
   .chat-header h1 {
@@ -344,6 +414,20 @@
     text-decoration: none;
     transition: background-color 0.2s;
   }
+
+  .download-btn {
+    padding: 0.5rem;
+    border-radius: 6px;
+    background: none;
+    border: none;
+    color: #3c91e6;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.download-btn:hover {
+    background: rgba(60, 145, 230, 0.1);
+}
   
   .file-download:hover {
     background-color: rgba(255, 255, 255, 0.9);
@@ -545,3 +629,40 @@
   .hidden {
     display: none;
   }
+
+  .context-menu, .event-context-menu {
+    position: fixed;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem;
+    z-index: 1000;
+    min-width: 150px;
+}
+
+.event-context-menu .context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.event-context-menu .context-menu-item:hover {
+  background: #f5f5f5;
+}
+
+.event-context-menu .context-menu-item.delete-option {
+  color: #dc2626;
+}
+
+.event-context-menu .context-menu-item.delete-option:hover {
+  background: #fee2e2;
+}

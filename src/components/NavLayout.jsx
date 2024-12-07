@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '../UserContext';
-import ProfileSidebar from './profilesildebar';
+import ProfileSidebar from './ProfileSildebar';
 import CreateDropdown from './CreateDropdown';
 
 const NavLayout = ({ children }) => {
