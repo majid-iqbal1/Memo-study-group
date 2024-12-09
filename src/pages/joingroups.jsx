@@ -10,7 +10,7 @@ import {
   arrayUnion,
   increment
 } from "firebase/firestore";
-import { db } from "../firebase.jsx";
+import { db } from "../Firebase.jsx";
 import { useUser } from "../UserContext.jsx";
 import { Link } from "react-router-dom";
 import NavLayout from "../components/NavLayout.jsx";

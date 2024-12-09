@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../Firebase';
 import NavLayout from '../components/NavLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/edit-test.css';

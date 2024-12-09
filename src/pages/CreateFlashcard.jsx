@@ -47,7 +47,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../Firebase";
 import { useUser } from "../UserContext";
 import "../styles/create.css";
 import NavLayout from "../components/NavLayout";

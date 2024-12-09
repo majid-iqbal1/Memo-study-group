@@ -59,7 +59,7 @@ import {
   getDoc, updateDoc, arrayUnion, arrayRemove, deleteDoc
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../firebase';
+import { db, storage } from '../Firebase';
 import { useUser } from '../UserContext';
 import { 
   FileText, Calendar, Clock, Paperclip, Download, Plus, 

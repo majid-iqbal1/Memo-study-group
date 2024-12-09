@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 // Firebase imports
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth } from "./Firebase";
 
 // Component imports and pages
 import { Auth } from "./components/Auth";

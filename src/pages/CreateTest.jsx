@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../Firebase";
 import { useUser } from '../UserContext';
 import { useNavigate } from "react-router-dom";
 import NavLayout from '../components/NavLayout';

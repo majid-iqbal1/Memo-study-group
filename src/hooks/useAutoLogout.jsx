@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth } from '../Firebase';
 
 const useAutoLogout = (timeoutMinutes = 30) => {
     const navigate = useNavigate();
