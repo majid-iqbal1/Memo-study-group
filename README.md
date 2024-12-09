@@ -97,8 +97,9 @@ Development Dependencies:
 
 2. **Join Group**
    - Go to "Join Groups"
-   - Search for groups
+   - Search for groups at the bottom
    - Click "Join" on desired group
+   - Joined groups are at the top
    
    ![Join Groups](./screenshots/join-groups.png)
 
