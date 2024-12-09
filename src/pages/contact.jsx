@@ -58,10 +58,10 @@ const Contact = () => {
 
         try {
             await emailjs.sendForm(
-                'service_6d3cl35', 
-                'template_8bvdssg', 
+                process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
                 form.current,
-                'ht3FVZBBhxpsUg1Lw' 
+                process.env.REACT_APP_EMAILJS_PUBLIC_KEY
             );
 
             setShowConfirmation(true);
