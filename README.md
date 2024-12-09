@@ -61,12 +61,14 @@ Development Dependencies:
    - Click "Sign Up" on the landing page
    - Enter your name, email, and password
    - Or use Google Sign-in
+
    ![Signup Page](./screenshots/signup.png)
 
 2. **Sign In**
    - Enter your email and password
    - Or use Google Sign-in
-   [Add screenshot]
+
+   ![Signin Page](./screenshots/signin.png)
 
 ### Flashcards
 1. **Create Flashcard Set**
@@ -74,13 +76,15 @@ Development Dependencies:
    - Enter title and description
    - Add terms and definitions
    - Click "Create" or "Create and practice"
-   [Add screenshot]
+   
+   ![Create Flashcard](./screenshots/create-flashcard.png)
 
 2. **Study Flashcards**
    - Navigate to "Your Library"
    - Select a flashcard set
    - Click "Study" to begin
-   [Add screenshot]
+   
+   ![Study Flashcards](./screenshots/study-flashcards.png)
 
 ### Study Groups
 1. **Create Group**
@@ -88,32 +92,37 @@ Development Dependencies:
    - Fill in group details
    - Add group image (optional)
    - Set privacy settings
-   [Add screenshot]
+   
+   ![Create Group](./screenshots/create-group.png)
 
 2. **Join Group**
    - Go to "Join Groups"
    - Search for groups
    - Click "Join" on desired group
-   [Add screenshot]
+   
+   ![Join Groups](./screenshots/join-groups.png)
 
 ### Tests
 1. **Create Test**
    - Click "+" > "Test"
    - Add questions and answers
    - Import from flashcards (optional)
-   [Add screenshot]
+   
+   ![Create Test](./screenshots/create-test.png)
 
 2. **Take Test**
    - Select test from Tests page
    - Answer questions
    - View results
-   [Add screenshot]
+   
+   ![Take Test](./screenshots/take-test.png)
 
 ### Group Chat
 - Access group chat from group page
 - Share resources and files
 - Schedule events
-[Add screenshot]
+
+![Group Chat](./screenshots/group-chat.png)
 
 ## Contributing
 
