@@ -31,7 +31,7 @@ import EditTest from "./pages/EditTest";
 import ChatRoom from "./pages/ChatRoom";
 
 // custom hook and utility function imports
-import useAutoLogout from "./hooks/useAutoLogout";
+import useAutoLogout from "./hooks/AutoLogout";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 // implement auto logout after 30 minutes of inactivity
