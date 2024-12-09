@@ -97,9 +97,9 @@ Development Dependencies:
 
 2. **Join Group**
    - Go to "Join Groups"
-   - Search for groups at the bottom
+   - Search for groups
    - Click "Join" on desired group
-   - Joined groups are at the top
+   - Your groups will appear at the top
    
    ![Join Groups](./screenshots/join-groups.png)
 
@@ -125,17 +125,12 @@ Development Dependencies:
 
 ![Group Chat](./screenshots/group-chat.png)
 
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## License
 
-All right reserved
+Copyright (c) 2024 Memo+. All Rights Reserved.
+
+This project and its contents are protected under copyright law. No part of this project may be reproduced, distributed, or transmitted in any form or by any means without the prior written permission of the copyright holders.
 
 ## Authors
 - Majid Iqbal
