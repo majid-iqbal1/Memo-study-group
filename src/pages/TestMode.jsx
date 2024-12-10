@@ -15,6 +15,7 @@ const TestMode = () => {
   const [testTitle, setTestTitle] = useState("");
   const [showScore, setShowScore] = useState(false);
   const [answeredCorrectly, setAnsweredCorrectly] = useState([]);
+  const [shuffledAnswers, setShuffledAnswers] = useState([]);
   const [searchParams] = useSearchParams();
   const testId = searchParams.get("testId");
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const TestMode = () => {
         setTestTitle(data.title);
         setQuestions(data.questions);
         setAnsweredCorrectly(new Array(data.questions.length).fill(false));
+        setShuffledAnswers(shuffleAnswers(data.questions[0]));
       } else {
         alert("Test not found.");
         navigate("/tests");
@@ -41,6 +43,18 @@ const TestMode = () => {
     }
   }, [testId, navigate]);
 
+  const shuffleAnswers = (question) => {
+    const answers = [
+      question.correctAnswer,
+      ...question.wrongAnswers.filter((answer) => answer.trim() !== ""),
+    ].sort();
+    for (let i = answers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [answers[i], answers[j]] = [answers[j], answers[i]];
+    }
+    return answers;
+  }
+
   useEffect(() => {
     if (testId) {
       fetchTest();
@@ -48,6 +62,12 @@ const TestMode = () => {
       navigate("/tests");
     }
   }, [fetchTest, testId, navigate]);
+
+  useEffect(() => {
+    if (questions.length > 0) {
+      setShuffledAnswers(shuffleAnswers(questions[currentQuestionIndex]));
+    }
+  }, [questions, currentQuestionIndex]);
 
   const handleAnswerSelect = (answer) => {
     setSelectedAnswer(answer);
@@ -87,6 +107,9 @@ const TestMode = () => {
     setShowScore(false);
     setSelectedAnswer("");
     setAnsweredCorrectly(new Array(questions.length).fill(false));
+    if (questions.length > 0) {
+      setShuffledAnswers(shuffleAnswers(questions[0]));
+    }
   };
 
   if (loading) {
@@ -123,24 +146,16 @@ const TestMode = () => {
             <h2>Question {currentQuestionIndex + 1}:</h2>
             <p>{currentQuestion.question}</p>
             <div className="answers">
-              {[
-                currentQuestion.correctAnswer,
-                ...currentQuestion.wrongAnswers.filter(
-                  (answer) => answer.trim() !== ""
-                ),
-              ]
-                .sort()
-                .map((answer, index) => (
-                  <button
-                    key={index}
-                    className={`answer-button ${
-                      selectedAnswer === answer ? "selected" : ""
+              {shuffledAnswers.map((answer, index) => (
+                <button
+                  key={index}
+                  className={`answer-button ${selectedAnswer === answer ? "selected" : ""
                     }`}
-                    onClick={() => handleAnswerSelect(answer)}
-                  >
-                    {answer}
-                  </button>
-                ))}
+                  onClick={() => handleAnswerSelect(answer)}
+                >
+                  {answer}
+                </button>
+              ))}
             </div>
             <div className="navigation-buttons">
               {currentQuestionIndex > 0 && (
