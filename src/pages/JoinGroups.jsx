@@ -1,3 +1,27 @@
+/******************************************************************************
+*                          JoinGroups Component                               *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Interface for discovering and joining study groups                 *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* GROUP MANAGEMENT          |   USER INTERACTIONS                             *
+* ------------------------- |   ----------------------------------            *
+* - Search groups           |   - Join/leave groups                           *
+* - View joined groups      |   - Enter group chats                           *
+* - Group details           |   - Create new groups                           *
+* - Member tracking         |   - Success notifications                       *
+*                                                                             *
+******************************************************************************/
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/joingroups.css";

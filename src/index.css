@@ -70,14 +70,3 @@ header {
 .nav-links a.active::after {
     transform: scaleX(1);
 }
-
-/* .page-content {
-    flex: 1;
-    padding: 2rem;
-}
-  
-  * {
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
- */

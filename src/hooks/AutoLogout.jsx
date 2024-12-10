@@ -1,3 +1,26 @@
+/******************************************************************************
+*                         useAutoLogout Hook                                  *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Auto logout users after period of inactivity                       *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+******************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* ACTIVITY TRACKING         |   LOGOUT BEHAVIOR                               *
+* ------------------------- |   ----------------------------------            *
+* - Mouse movements         |   - Auto logout after timeout                   *
+* - Keyboard input          |   - Redirect to login                           *
+* - Touch events            |   - Clear user session                          *
+*                                                                             *
+******************************************************************************/
+
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';

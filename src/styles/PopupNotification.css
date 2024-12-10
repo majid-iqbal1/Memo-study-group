@@ -1,7 +1,6 @@
-/* PopupNotification.css */
 .popup-notification {
   position: fixed;
-  bottom: -100px; /* Start completely outside the viewport */
+  bottom: -100px; 
   left: 50%;
   transform: translateX(-50%);
   background-color: #3c91e6;
@@ -11,25 +10,24 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
   z-index: 9999;
-  animation: slideInOut 4s linear forwards; /* Add "forwards" to retain the end state */
+  animation: slideInOut 4s linear forwards; 
 }
 
-/* Animation for sliding up, staying visible, and sliding back down */
 @keyframes slideInOut {
   0% { 
       opacity: 0; 
-      bottom: -100px; /* Start below the viewport */
+      bottom: -100px;
   }
   20% { 
       opacity: 1; 
-      bottom: 20px; /* Slide up to be fully visible */
+      bottom: 20px;
   }
   80% { 
       opacity: 1; 
-      bottom: 20px; /* Stay visible at the final position */
+      bottom: 20px; 
   }
   100% { 
       opacity: 0; 
-      bottom: -100px; /* Slide back down and become invisible */
+      bottom: -100px; 
   }
 }

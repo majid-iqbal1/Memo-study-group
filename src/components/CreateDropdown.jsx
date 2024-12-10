@@ -1,3 +1,26 @@
+/**************************************************************************************** *
+*                      CreateDropdown - Navigation Menu Component                         *
+******************************************************************************************/
+
+/********************************* Component Information **********************************
+*                                                                                         *
+* Purpose: Create dropdown menu for quick navigation to content creation pages            *
+* Created: November 2024                                                                  *
+* Updated: December 2024                                                                  *
+* Author:  Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich                        *
+*                                                                                         *
+******************************************************************************************/
+
+/*********************************** Menu Features ************************************* *
+*                                                                                        *
+* NAVIGATION                               | FUNCTIONALITY                               *
+* ---------------------------------------- | ------------------------------------------- *
+* - Create Flashcard Sets                  | - Toggle Dropdown                           *
+* - Create Study Groups                    | - Click Outside Detection                   *
+* - Create Tests                           | - Icon Integration                          *
+*                                          |                                             *
+******************************************************************************************/
+
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FileText, Book, CheckSquare, BookOpenCheck } from "lucide-react";

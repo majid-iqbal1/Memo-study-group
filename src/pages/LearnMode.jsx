@@ -1,3 +1,27 @@
+/******************************************************************************
+*                          LearnMode Component                                *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Interactive flashcard study interface with card flipping           *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* STUDY INTERFACE           |   CARD CONTROLS                                 *
+* ------------------------- |   ----------------------------------            *
+* - Flashcard display       |   - Flip cards                                  *
+* - Progress tracking       |   - Navigate cards                              *
+* - Set selection           |   - Keyboard shortcuts                          *
+* - Card navigation         |   - Study progress                              *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';

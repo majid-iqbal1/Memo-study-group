@@ -28,21 +28,6 @@
  *                                                                            *
  *****************************************************************************/
 
-/****************************** Dependencies **********************************
- *                                                                            *
- *  REACT & ROUTING              |   FIREBASE                                 *
- *  -------------------------    |   --------------------------------         *
- *  - useState                   |   - Firestore                              *
- *  - useNavigate                |   - serverTimestamp                        *
- *  - useUser                    |   - collection/addDoc                      *
- *                               |                                            *
- *  COMPONENTS                   |   STYLES & ICONS                           *
- *  -------------------------    |   --------------------------------         *
- *  - NavLayout                  |   - create.css                             *
- *  - X (Lucide)                 |   - Lucide React                           *
- *                                                                            *
- *****************************************************************************/
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";

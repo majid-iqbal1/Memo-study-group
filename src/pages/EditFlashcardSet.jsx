@@ -1,3 +1,27 @@
+/******************************************************************************
+*                      EditFlashcardSet Component                             *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Interface for editing and managing existing flashcard sets         *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* EDIT OPTIONS              |   CARD MANAGEMENT                               *
+* ------------------------- |   ----------------------------------            *
+* - Update title/desc       |   - Add/remove cards                            *
+* - Save changes            |   - Edit terms/definitions                      *
+* - Delete set              |   - Card validation                             *
+* - Cancel edits            |   - Error handling                              *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";

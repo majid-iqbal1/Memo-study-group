@@ -22,19 +22,6 @@
  *                                                                            *
  *****************************************************************************/
 
-/****************************** Dependencies **********************************
- *                                                                            *
- *  REACT IMPORTS              |   EXTERNAL LIBRARIES                         *
- *  -------------------------  |   --------------------------------------     *
- *  - useState                 |   - emailjs/browser                          *
- *  - useRef                   |   - lucide-react icons                       *
- *                             |                                              *
- *  COMPONENTS                 |   STYLES                                     *
- *  -------------------------  |   --------------------------------------     *
- *  - NavLayout                |   - contact.css                              *
- *                                                                            *
- *****************************************************************************/
-
 import React, { useState, useRef } from 'react';
 import NavLayout from '../components/NavLayout';
 import { Send, CheckCircle } from 'lucide-react';

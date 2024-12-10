@@ -1,3 +1,27 @@
+/******************************************************************************
+*                         CreateTest Component                                *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Form interface for creating tests from flashcards or manually      *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+******************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* TEST CREATION             |   QUESTION HANDLING                             *
+* ------------------------- |   ----------------------------------            *
+* - Basic test info         |   - Add/remove questions                        *
+* - Import from flashcards  |   - Multiple choice answers                     *
+* - Test description        |   - Question validation                         *
+* - Progress tracking       |   - Form submission                             *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useEffect } from "react";
 import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../Firebase";

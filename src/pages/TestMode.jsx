@@ -1,3 +1,27 @@
+/******************************************************************************
+*                          TestMode Component                                 *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Interactive test interface with multiple choice questions          *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+******************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* TEST INTERFACE            |   QUESTION HANDLING                             *
+* ------------------------- |   ----------------------------------            *
+* - Multiple choice display |   - Answer selection                            *
+* - Score tracking          |   - Answer shuffling                            *
+* - Navigation controls     |   - Progress tracking                           *
+* - Test completion         |   - Score calculation                           *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { collection, doc, getDoc } from "firebase/firestore";

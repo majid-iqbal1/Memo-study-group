@@ -1,3 +1,22 @@
+/*****************************************************************************
+*                   React Context for User Management                        *
+******************************************************************************
+*                                                                            *
+* Purpose: Provide a central user context for managing authenticated         *
+*          user data and state across the application.                       *
+*                                                                            *
+* Created: November 2024                                                     *
+* Updated: December 2024                                                               *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich                                    *
+*                                                                            *
+* Features:                                                                  *
+*   - User authentication state tracking                                     *
+*   - Retrieval of user data from Firestore                                  *
+*   - React Context API for user data access                                 *
+*   - Hooks for working with user context                                    *
+*                                                                            *
+*****************************************************************************/
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from './Firebase';
 import { doc, getDoc } from 'firebase/firestore';

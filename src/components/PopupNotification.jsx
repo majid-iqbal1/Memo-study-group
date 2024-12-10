@@ -1,4 +1,26 @@
-// PopupNotification.jsx
+/******************************************************************************
+*                        PopupNotification Component                          *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Display temporary notification messages to users                   *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* DISPLAY                   |   BEHAVIOR                                      *
+* ------------------------- |   -------------------------------------------   *
+* - Message text            |   - Auto dismiss after 3s                       *
+* - Popup styling           |   - Cleanup on unmount                          *
+* - Fade animations         |   - Customizable message                        *
+*                                                                             *
+******************************************************************************/
+
 import React, { useEffect } from 'react';
 import '../styles/PopupNotification.css';
 
@@ -9,7 +31,7 @@ const PopupNotification = ({ message, onClose }) => {
       onClose();
     }, 3000);
 
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    return () => clearTimeout(timer);
   }, [onClose]);
 
   return (

@@ -1,3 +1,27 @@
+/******************************************************************************
+*                          EditTest Component                                 *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Interface for editing and managing existing tests                  *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* TEST EDITING              |   QUESTION MANAGEMENT                           *
+* ------------------------- |   ----------------------------------            *
+* - Update title/desc       |   - Add/remove questions                        *
+* - Save changes            |   - Edit answers                                *
+* - Delete test             |   - Multiple choice options                     *
+* - Cancel edits            |   - Validation checks                           *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';

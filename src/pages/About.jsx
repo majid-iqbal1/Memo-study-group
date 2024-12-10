@@ -20,17 +20,6 @@
  *                                                                            *
  *****************************************************************************/
 
-/****************************** Dependencies **********************************
- *                                                                            *
- *  COMPONENTS              |   ASSETS                                        *
- *  ----------------------  |   ----------------------------------------      *
- *  - NavLayout             |   - bruceImage.jpeg                             *
- *  - About.css             |   - ethanImage.jpg                              *
- *                          |   - sulavImage.jpeg                             *
- *                          |   - majidImage.jpg                              *
- *                                                                            *
- *****************************************************************************/
-
 import React from 'react';
 import '../styles/about.css';
 import NavLayout from '../components/NavLayout';

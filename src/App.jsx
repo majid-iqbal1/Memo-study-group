@@ -1,3 +1,27 @@
+/******************************************************************************
+*                              App Component                                  *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Main router and authentication management for the application      *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* ROUTE MANAGEMENT          |   AUTH HANDLING                                 *
+* ------------------------- |   ----------------------------------            *
+* - Protected routes        |   - Auth state tracking                         *
+* - Public routes           |   - Auto logout                                 *
+* - Navigation paths        |   - Route protection                            *
+* - Component routing       |   - Loading states                              *
+*                                                                             *
+*****************************************************************************/
+
 // Router for application
 import {
   BrowserRouter as Router,

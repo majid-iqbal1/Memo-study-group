@@ -1,3 +1,21 @@
+/*****************************************************************************
+*                 Firebase Configuration and Integration                     *
+******************************************************************************
+*                                                                            *
+* Purpose: Initialize Firebase app and retrieve references to core           *
+*          Firebase services for use throughout the application.             *
+*                                                                            * 
+* Created: November 2024                                                     *
+* Updated: December 2024                                                     *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich             *
+*                                                                            *
+* Features:                                                                  *
+*   - Firebase app initialization with environment-based configuration       *
+*   - Access to Firebase Authentication, Firestore, and Storage services     *
+*   - Authentication state change listener for user management               *
+*                                                                            *
+*****************************************************************************/
+
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';

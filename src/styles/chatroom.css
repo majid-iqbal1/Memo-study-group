@@ -1,28 +1,3 @@
-/*******************************************************************************
- * ChatRoom Component Styles
- * 
- * Layout Structure:
- * - Three-column grid layout (250px 1fr 250px)
- * - Left panel: Members & Resources
- * - Center panel: Chat Messages
- * - Right panel: Events
- * 
- * Main Sections:
- * - chat-container: Main grid container
- * - chat-sidebar: Left and right panels
- * - chat-main: Center messaging area
- * - message-input: Message input section
- * 
- * Features:
- * - Responsive design (breakpoints at 1024px and 768px)
- * - Custom scrollbars
- * - Modal overlays
- * - Context menus
- * 
- * Author: Author: Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich 
- * Created: November 2024
- * Updated: December 2024
- ******************************************************************************/
 
 .chat-container {
     display: grid;

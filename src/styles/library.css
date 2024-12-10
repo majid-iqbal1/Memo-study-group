@@ -1,4 +1,3 @@
-/* Base layout */
 .library-page {
     max-width: 1200px;
     margin: 0 auto;
@@ -10,7 +9,6 @@
     align-items: center;     
 }
 
-/* Title styling */
 .library-page h1 {
     font-size: 3rem;        
     color: #3c91e6;
@@ -19,7 +17,6 @@
     font-weight: bold;
 }
 
-/* Create button styles */
 .create-button {
     background-color: #2563EB;
     color: white;
@@ -45,7 +42,6 @@
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
-/* Empty library styles */
 .empty-library {
     text-align: center;
     background: white;
@@ -68,7 +64,6 @@
     max-width: 400px;
 }
 
-/* Flashcard grid */
 .flashcard-sets {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -107,7 +102,6 @@
     line-height: 1.4;
 }
 
-/* Set info and actions */
 .set-info {
     display: flex;
     justify-content: space-between;
@@ -155,7 +149,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Error message */
 .error-message {
     text-align: center;
     padding: 2rem;
@@ -189,7 +182,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -201,7 +193,6 @@
     }
 }
 
-/* Media queries */
 @media (max-width: 768px) {
     .library-page {
         padding: 1rem;

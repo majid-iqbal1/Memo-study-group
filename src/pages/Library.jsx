@@ -1,3 +1,26 @@
+/******************************************************************************
+*                          Library Component                                  *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Display and manage user's collection of flashcard sets             *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* LIBRARY DISPLAY           |   SET ACTIONS                                   *
+* ------------------------- |   ----------------------------------            *
+* - Flashcard sets list     |   - Study sets                                  *
+* - Set descriptions        |   - Edit sets                                   *
+* - Card count              |   - Create new sets                             *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";

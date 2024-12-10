@@ -1,3 +1,27 @@
+/******************************************************************************
+*                          Homepage Component                                 *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Main landing page with search and feature navigation               *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* SEARCH & FILTERS          |   NAVIGATION                                    *
+* ------------------------- |   ----------------------------------            *
+* - Search flashcards       |   - Flashcard creation                          *
+* - Filter by ownership     |   - Study groups                                *
+* - Real-time results       |   - Practice tests                              *
+* - Search history          |   - Feature guides                              *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";

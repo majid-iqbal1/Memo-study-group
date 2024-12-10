@@ -1,3 +1,27 @@
+/******************************************************************************
+*                        CreateGroup Component                                *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Form interface for creating new study groups                       *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+******************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* GROUP DETAILS             |   FORM HANDLING                                 *
+* ------------------------- |   ----------------------------------            *
+* - Basic info & image      |   - Data validation                             *
+* - Meeting schedule        |   - Image upload                                *
+* - Topic selection         |   - Form submission                             *
+* - Privacy settings        |   - Progress tracking                           *
+*                                                                             *
+******************************************************************************/
+
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";

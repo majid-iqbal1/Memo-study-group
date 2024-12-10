@@ -1,3 +1,27 @@
+/******************************************************************************
+*                        ProfileSidebar Component                             *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Sidebar for user profile management and account settings           *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+******************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* PROFILE MANAGEMENT        |   USER ACTIONS                                  *
+* ------------------------- |   -----------------------------------------     *
+* - Profile picture         |   - Edit name/bio                               *
+* - User streak tracking    |   - Upload photo                                *
+* - Bio information         |   - Sign out                                    *
+* - Slide animations        |   - Close sidebar                               *
+*                                                                             *
+******************************************************************************/
+
 import React, { useState, useEffect } from 'react';
 import { auth, db, storage } from '../Firebase';
 import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';

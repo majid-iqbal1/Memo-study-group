@@ -22,7 +22,6 @@
     }
 }
 
-/* Optional: Add fade in animation */
 .loading-container {
     animation: fadeIn 0.3s ease-in;
 }

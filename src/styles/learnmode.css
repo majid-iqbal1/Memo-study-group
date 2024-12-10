@@ -12,7 +12,6 @@
     margin-bottom: 2rem;
 }
 
-/* Flashcard sets grid */
 .flashcard-sets {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -56,7 +55,6 @@
     font-size: 0.8rem;
 }
 
-/* Study mode */
 .flashcard-study {
     max-width: 900px;
     margin: 0 auto;
@@ -107,7 +105,6 @@
     background: rgba(60, 145, 230, 0.1);
 }
 
-/* Flashcard */
 .flashcard-container {
     display: flex;
     flex-direction: column;
@@ -162,7 +159,6 @@
     background: #f8f9fa;
 }
 
-/* Navigation controls */
 .navigation-controls {
     display: flex;
     justify-content: center;
@@ -192,7 +188,6 @@
     transform: translateY(-2px);
 }
 
-/* Study tips */
 .study-tips {
     text-align: center;
     color: #666;
@@ -200,7 +195,6 @@
     font-style: italic;
 }
 
-/* Empty state */
 .empty-sets {
     text-align: center;
     background: white;
@@ -233,7 +227,6 @@
     transform: translateY(-2px);
 }
 
-/* Loading and error states */
 .loading,
 .error-message {
     text-align: center;
@@ -271,7 +264,6 @@
     transform: translateY(-2px);
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .learn-mode-page {
         padding: 1rem;

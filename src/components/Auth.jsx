@@ -75,6 +75,8 @@ export const Auth = () => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
+    // Creates a new profile when someone signs up
+    // Stores their name, email, and gives them a fresh start with 0 streak
     const createUserProfile = async (user, firstName, lastName, photoURL = '') => {
         if (!user) return;
     
@@ -100,6 +102,7 @@ export const Auth = () => {
         }
     };
     
+    // Keeps track of how many days in a row they've used the app
     const updateStreak = async (user) => {
         const userRef = doc(db, 'users', user.uid);
         const userSnap = await getDoc(userRef);
@@ -135,6 +138,8 @@ export const Auth = () => {
         return 1;
     };
     
+    // The main function that handles both signing up and logging in
+    // Has a bunch of checks to make sure everything's filled out right
     const handleEmailAuth = async () => {
         setError("");
         
@@ -218,6 +223,8 @@ export const Auth = () => {
         }
     };
     
+    // Handles the "Sign in with Google" button
+    // Easier than typing email/password - just one click!
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
@@ -244,10 +251,13 @@ export const Auth = () => {
         }
     };
 
+    // Switches to signup mode when they click "New Here?"
     const handleWelcomeClick = () => {
         setIsSigningUp(true);
     };
     
+    // The actual form they see on screen
+    // Has inputs for email/password and the Google sign-in button
     return (
         <div className="pageContainer">
             <div className="mainGrid">

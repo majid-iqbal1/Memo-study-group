@@ -1,3 +1,27 @@
+/******************************************************************************
+*                           NavLayout Component                               *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Main navigation layout with header, sidebar and content area       *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* NAVIGATION                |   USER INTERFACE                                *
+* ------------------------- |   --------------------------------------------- *          
+* - Homepage                |   - Profile picture/initials                    *
+* - Library                 |   - Sidebar toggle                              *
+* - Study Groups            |   - Active route highlighting                   *
+* - About & Contact         |   - Create content dropdown                     *
+*                                                                             *
+******************************************************************************/
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '../UserContext';

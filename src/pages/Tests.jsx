@@ -1,3 +1,26 @@
+/******************************************************************************
+*                          Tests Component                                    *
+******************************************************************************/
+
+/*************************** Component Information ****************************
+*                                                                             *
+* Purpose: Display and manage user's collection of created tests              *
+* Created: November 2024                                                      *
+* Updated: December 2024                                                      *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich              *
+*                                                                             *
+*****************************************************************************/
+
+/******************************** Features ************************************
+*                                                                             *
+* TEST MANAGEMENT           |   USER ACTIONS                                  *
+* ------------------------- |   ----------------------------------            *
+* - Test list display       |   - Take test                                   *
+* - Test descriptions       |   - Edit test                                   *
+* - Question count          |   - Create new test                             *
+*                                                                             *
+*****************************************************************************/
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs } from 'firebase/firestore';
