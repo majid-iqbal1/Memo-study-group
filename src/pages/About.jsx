@@ -5,7 +5,6 @@
 /*************************** Component Information ****************************
  *                                                                            *
  *  Purpose: Team member profiles and information display                     *
- *  Version: 1.2.0                                                            *
  *  Created: November 2024                                                    *
  *  Updated: December 2024                                                    *
  *  Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich            *

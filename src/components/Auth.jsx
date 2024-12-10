@@ -1,3 +1,44 @@
+/******************************************************************************************
+*                         Auth Component - User Authentication System                     *
+******************************************************************************************/
+
+/********************************* Component Information **********************************
+*                                                                                         *
+* Purpose: Manage user authentication, registration, and profile creation                 *
+* Created: November 2024                                                                  *
+* Updated: December 2024                                                                  *
+* Author:  Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich                        *
+*                                                                                         *
+******************************************************************************************/
+
+/******************************* Authentication Features **********************************
+*                                                                                         *
+* SIGN UP                                    | SIGN IN                                    *
+* -----------------------------------------  | ------------------------------------------ *
+* - Email Registration                       | - Email/Password Login                     *
+* - Password Validation                      | - Google OAuth Integration                 *
+* - Profile Creation                         | - Login Streak Tracking                    *
+* - Google Account Integration               | - Error Handling                           *
+*                                            |                                            *
+* SECURITY FEATURES                          | USER MANAGEMENT                            *
+* -----------------------------------------  | ------------------------------------------ *
+* - Password Strength Checking               | - Profile Updates                          *
+* - Email Verification                       | - Session Management                       *
+* - OAuth2 Security                          | - User Data Storage                        *
+*                                            |                                            *
+******************************************************************************************/
+
+/*********************************** Implementation ***************************************
+*                                                                                         *
+* DEPENDENCIES                               | STATE MANAGEMENT                           *
+* -----------------------------------------  | ------------------------------------------ *
+* - Firebase Authentication                  | - Form Input States                        *
+* - Firebase Firestore                       | - User Context                             *
+* - Google OAuth Provider                    | - Loading States                           *
+* - React Router                             | - Error States                             *
+*                                            |                                            *
+******************************************************************************************/
+
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider, db } from '../Firebase';
@@ -6,6 +47,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext'; 
 import '../styles/auth.css';
 
+// This is our login/signup page component where users can create accounts or sign in
 export const Auth = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -17,6 +59,7 @@ export const Auth = () => {
     const { setUser } = useUser(); 
     const navigate = useNavigate();
 
+    // Checks if password is strong enough - needs uppercase, lowercase, numbers etc
     const isValidPassword = (password) => {
         const hasMinLength = password.length >= 8;
         const hasLowerCase = /[a-z]/.test(password);
@@ -27,6 +70,7 @@ export const Auth = () => {
         return hasMinLength && hasLowerCase && hasUpperCase && hasNumber && hasSpecialChar;
     };
 
+     // Makes sure email looks like an actual email (has @ and stuff)
     const isValidEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };

@@ -5,7 +5,6 @@
 /**************************** Component Information ****************************
  *                                                                             *
  *  Purpose: Real-time group chat interface with resource and event mgmt       *
- *  Version: 1.9.0                                                             *
  *  Created: November 2024                                                     *
  *  Updated: December 2024                                                     *
  *  Author:  Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich           *                                         *

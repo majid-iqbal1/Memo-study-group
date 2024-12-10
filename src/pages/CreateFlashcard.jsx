@@ -5,7 +5,6 @@
 /*************************** Component Information ****************************
  *                                                                            *
  *  Purpose: Create and manage flashcard sets for study                       *
- *  Version: 1.6.0                                                            *
  *  Created: November 2024                                                    *
  *  Updated: December 2024                                                    *
  *  Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich            *
