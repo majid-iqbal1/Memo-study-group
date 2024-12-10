@@ -52,7 +52,6 @@ Core Dependencies:
 
 Development Dependencies:
 - Autoprefixer (v10.4.20)
-- PostCSS (v8.4.47)
 
 ## Features and Usage Guide
 
