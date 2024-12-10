@@ -49,6 +49,7 @@ const LearnMode = () => {
         setIsFlipped(false);
     }, []);
 
+    // Function to fetch the user's flashcard sets from Firestore
     const fetchFlashcardSets = useCallback(async () => {
         if (!user?.uid) return;
         setLoading(true);
@@ -79,10 +80,12 @@ const LearnMode = () => {
         }
     }, [user, setId]);
 
+    // Effect to fetch the flashcard sets when the component mounts
     useEffect(() => {
         fetchFlashcardSets();
     }, [fetchFlashcardSets]);
 
+    // Effect to select a specific flashcard set if the setId is provided in the URL
     useEffect(() => {
         if (setId && flashcardSets.length > 0) {
             const set = flashcardSets.find(s => s.id === setId);
@@ -92,10 +95,12 @@ const LearnMode = () => {
         }
     }, [setId, flashcardSets, handleSetClick]);
 
+    // Function to handle flipping the current flashcard
     const handleFlip = useCallback(() => {
         setIsFlipped(prev => !prev);
     }, []);
 
+    // Function to handle navigating to the next flashcard
     const handleNext = useCallback(() => {
         if (selectedSet && currentCardIndex < selectedSet.cards.length - 1) {
             setCurrentCardIndex(prev => prev + 1);
@@ -103,6 +108,7 @@ const LearnMode = () => {
         }
     }, [selectedSet, currentCardIndex]);
 
+    // Function to handle navigating to the previous flashcard
     const handlePrevious = useCallback(() => {
         if (currentCardIndex > 0) {
             setCurrentCardIndex(prev => prev - 1);
@@ -110,6 +116,7 @@ const LearnMode = () => {
         }
     }, [currentCardIndex]);
 
+    // Function to handle going back to the flashcard set selection
     const handleBackToSets = useCallback(() => {
         setSelectedSet(null);
         setCurrentCardIndex(0);
@@ -117,6 +124,7 @@ const LearnMode = () => {
         navigate('/library');
     }, [navigate]);
 
+    // Effect to handle keyboard shortcuts for flashcard navigation and flipping
     useEffect(() => {
         const handleKeyPress = (e) => {
             if (selectedSet) {
@@ -148,6 +156,7 @@ const LearnMode = () => {
         return <LoadingSpinner />;
     }
 
+    // Render the error message if there is an error
     if (error) {
         return (
             <NavLayout>
@@ -163,6 +172,7 @@ const LearnMode = () => {
         );
     }
 
+    // Render the flashcard study interface if a set is selected
     if (selectedSet) {
         return (
             <NavLayout>
@@ -218,6 +228,7 @@ const LearnMode = () => {
         );
     }
 
+    // Render the flashcard set selection if no set is selected
     return (
         <NavLayout>
             <div className="learn-mode-page">

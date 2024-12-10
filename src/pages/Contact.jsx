@@ -38,6 +38,7 @@ const Contact = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const form = useRef();
 
+    // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -65,6 +66,7 @@ const Contact = () => {
         }
     };
 
+    // Function to handle form field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -73,6 +75,7 @@ const Contact = () => {
         }));
     };
 
+    // Render the contact form and related UI elements
     return (
         <NavLayout>
             <div className="contact-container">

@@ -36,6 +36,7 @@ const Library = () => {
   const { user } = useUser();
   const navigate = useNavigate();
 
+  // Function to fetch the user's flashcard sets from Firestore
   const fetchFlashcardSets = useCallback(async () => {
     if (!user?.uid) {
       setLoading(false);
@@ -61,14 +62,17 @@ const Library = () => {
     }
   }, [user]);
 
+  // Effect to fetch the flashcard sets when the component mounts
   useEffect(() => {
     fetchFlashcardSets();
   }, [fetchFlashcardSets]);
 
+  // Function to handle navigating to the learn mode with the selected flashcard set
   const handleStudy = (set) => {
     navigate(`/learn?setId=${set.id}`);
   };
 
+  // Function to handle navigating to the edit page for the selected flashcard set
   const handleEdit = (e, set) => {
     e.stopPropagation();
     navigate(`/edit/${set.id}`);
@@ -78,6 +82,7 @@ const Library = () => {
     return <LoadingSpinner />;
   }
 
+  // Display the user's flashcard sets
   return (
     <NavLayout>
       <div className="library-page">

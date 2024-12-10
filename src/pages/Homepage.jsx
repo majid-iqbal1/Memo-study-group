@@ -43,6 +43,7 @@ const Homepage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Effect to fetch flashcard sets based on the search mode (User or All)
   useEffect(() => {
     const fetchFlashcardSets = async () => {
       if (!user?.uid) return;
@@ -51,13 +52,11 @@ const Homepage = () => {
       try {
         let q;
         if (searchMode === "my") {
-          // Fetch only user's sets
           q = query(
             collection(db, "flashcardSets"),
             where("userId", "==", user.uid)
           );
         } else {
-          // Fetch all sets
           q = query(collection(db, "flashcardSets"));
         }
 
@@ -68,7 +67,6 @@ const Homepage = () => {
           createdAt: doc.data().createdAt?.toDate() || new Date(),
         }));
 
-        // Sort by creation date (newest first)
         sets.sort((a, b) => b.createdAt - a.createdAt);
         setFlashcardSets(sets);
       } catch (error) {
@@ -81,6 +79,7 @@ const Homepage = () => {
     fetchFlashcardSets();
   }, [user, searchMode]);
 
+  // Effect to filter the flashcard sets based on the search term
   useEffect(() => {
     if (searchTerm) {
       const filtered = flashcardSets.filter((set) =>
@@ -93,6 +92,7 @@ const Homepage = () => {
     }
   }, [searchTerm, flashcardSets]);
 
+  // Function to navigate to the learn page with the selected flashcard set
   const handleStudy = (set) => {
     navigate(`/learn?setId=${set.id}`);
   };
@@ -101,6 +101,7 @@ const Homepage = () => {
     return <LoadingSpinner />;
   }
 
+  // Render the loading spinner if the user data is still loading
   return (
     <NavLayout>
       <div className="homepage-content">
@@ -194,19 +195,6 @@ const Homepage = () => {
             <h3>Join Groups</h3>
             <p>Join groups to study with friends and classmates</p>
           </Link>
-          {/* <Link to="/learn" className="guide-item">
-            <img
-              src={`${process.env.PUBLIC_URL}/learn-more.png`}
-              alt="Learn More Logo"
-              className="logo-image"
-            />
-            <h3>Learn Mode</h3>
-            <p>
-              An adaptive learning feature. Tracks what terms you know well and
-              which terms need a little more work.
-            </p>
-          </Link> */}
-
           <Link to="/tests" className="guide-item">
             <img
               src={`${process.env.PUBLIC_URL}/test.png`}

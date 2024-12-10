@@ -26,9 +26,11 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../Firebase';
 
+// Custom hook that automatically logs out the user after a period of inactivity
 const useAutoLogout = (timeoutMinutes = 30) => {
     const navigate = useNavigate();
 
+    // Effect that sets up the auto-logout functionality
     useEffect(() => {
         let lastActivity = Date.now();
 
@@ -41,6 +43,7 @@ const useAutoLogout = (timeoutMinutes = 30) => {
             }
         };
 
+        // List of events that will be used to track user activity
         const events = [
             'mousedown',
             'mousemove',
@@ -57,7 +60,7 @@ const useAutoLogout = (timeoutMinutes = 30) => {
         events.forEach(event => {
             window.addEventListener(event, updateActivity);
         });
-
+        
         const intervalId = setInterval(() => {
             const timeoutMilliseconds = timeoutMinutes * 60 * 1000;
             if (Date.now() - lastActivity > timeoutMilliseconds) {

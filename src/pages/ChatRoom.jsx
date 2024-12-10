@@ -7,7 +7,7 @@
  *  Purpose: Real-time group chat interface with resource and event mgmt       *
  *  Created: November 2024                                                     *
  *  Updated: December 2024                                                     *
- *  Author:  Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich           *                                         *
+ *  Author:  Majid Iqbal, Sulav Shakya, Bruce Duong, & Ethan Humrich           *   
  *                                                                             *
  ******************************************************************************/
 
@@ -83,10 +83,12 @@ const ChatRoom = () => {
     eventId: null 
 });
 
+  // Effect to scroll to the bottom of the messages when the message list changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Effect to fetch group information from Firestore
   useEffect(() => {
     const fetchGroupInfo = async () => {
       try {
@@ -109,6 +111,7 @@ const ChatRoom = () => {
     fetchGroupInfo();
   },[groupId],[]);
 
+  // Effect to fetch and subscribe to real-time messages from Firestore
   useEffect(() => {
     if (!groupId) return;
 
@@ -126,6 +129,7 @@ const ChatRoom = () => {
     return () => unsubscribe();
   }, [groupId]);
 
+  // Effect to fetch user profiles for group members
   useEffect(() => {
     const fetchUserProfiles = async () => {
       if (!groupInfo?.users) return;
@@ -150,6 +154,7 @@ const ChatRoom = () => {
     }
   }, [groupInfo]);
 
+   // Effect to handle closing the context menus when clicking outside or pressing Escape
   useEffect(() => {
     const handleClickOutside = () => {
     
@@ -178,7 +183,7 @@ const ChatRoom = () => {
     };
 }, [contextMenu.show, eventContextMenu.show]);
 
-
+  // Effect to check for expired events and remove them from the group
   useEffect(() => {
     const checkExpiredEvents = async () => {
         if (!groupInfo?.events?.length) return;
@@ -209,7 +214,7 @@ const ChatRoom = () => {
     checkExpiredEvents();
   }, [groupInfo?.events, groupId]);
 
-
+// Function to handle editing an event
 const handleEditEvent = async (eventId) => {
   const event = groupInfo.events.find(e => e.id === eventId);
   if (!event) return;
@@ -237,6 +242,7 @@ const handleEditEvent = async (eventId) => {
   }
 };
 
+// Function to handle deleting an event
 const handleDeleteEvent = async (eventId) => {
   if (!window.confirm('Are you sure you want to delete this event?')) return;
 
@@ -253,84 +259,86 @@ const handleDeleteEvent = async (eventId) => {
   }
 };
 
+// Function to handle file uploads for messages and resources
+const handleFileUpload = async (file, type = 'message') => {
+  if (!file) return;
+  
+  if (file.size > 5 * 1024 * 1024) {
+    alert('File size should be less than 5MB');
+    return;
+  }
 
-  const handleFileUpload = async (file, type = 'message') => {
-    if (!file) return;
+  try {
+    setUploadProgress(0);
+    const storageFolder = type === 'message' ? 'chat-files' : 'resources';
+    const fileRef = ref(storage, `${storageFolder}/${groupId}/${Date.now()}-${file.name}`);
     
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size should be less than 5MB');
-      return;
+    await uploadBytes(fileRef, file);
+    const downloadURL = await getDownloadURL(fileRef);
+    
+    if (type === 'message') {
+      const messagesRef = collection(db, `group-database/${groupId}/messages`);
+      await addDoc(messagesRef, {
+        text: '',
+        userId: user.uid,
+        senderName: user.name,
+        timestamp: serverTimestamp(),
+        attachment: {
+          name: file.name,
+          url: downloadURL,
+          type: file.type
+        }
+      });
+      setAttachment(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } else {
+      const groupRef = doc(db, 'group-database', groupId);
+      await updateDoc(groupRef, {
+        'group.resources': arrayUnion({
+          name: newResource.name || file.name,
+          url: downloadURL,
+          type: file.type,
+          id: Date.now(),
+          addedBy: user.name,
+          addedAt: serverTimestamp()
+        })
+      });
     }
-  
-    try {
-      setUploadProgress(0);
-      const storageFolder = type === 'message' ? 'chat-files' : 'resources';
-      const fileRef = ref(storage, `${storageFolder}/${groupId}/${Date.now()}-${file.name}`);
-      
-      await uploadBytes(fileRef, file);
-      const downloadURL = await getDownloadURL(fileRef);
-      
-      if (type === 'message') {
-        const messagesRef = collection(db, `group-database/${groupId}/messages`);
-        await addDoc(messagesRef, {
-          text: '',
-          userId: user.uid,
-          senderName: user.name,
-          timestamp: serverTimestamp(),
-          attachment: {
-            name: file.name,
-            url: downloadURL,
-            type: file.type
-          }
-        });
-        setAttachment(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-      } else {
-        const groupRef = doc(db, 'group-database', groupId);
-        await updateDoc(groupRef, {
-          'group.resources': arrayUnion({
-            name: newResource.name || file.name,
-            url: downloadURL,
-            type: file.type,
-            id: Date.now(),
-            addedBy: user.name,
-            addedAt: serverTimestamp()
-          })
-        });
-      }
-  
-      setUploadProgress(100);
-      setTimeout(() => setUploadProgress(0), 1000);
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Failed to upload file. Please try again.');
-      setUploadProgress(0);
-    }
-  };
 
-  const handleDeleteResource = async (resourceId) => {
-    if (!window.confirm('Are you sure you want to delete this resource?')) return;
-
-    try {
-        const groupRef = doc(db, "group-database", groupId);
-        const groupDoc = await getDoc(groupRef);
-        const currentResources = groupDoc.data().group.resources || [];
-        
-        const updatedResources = currentResources.filter(resource => 
-            resource.id !== resourceId
-        );
-
-        await updateDoc(groupRef, {
-            'group.resources': updatedResources
-        });
-
-        setContextMenu({ show: false, x: 0, y: 0, resourceId: null });
-    } catch (error) {
-        console.error('Error deleting resource:', error);
-        alert('Failed to delete resource');
-    }
+    setUploadProgress(100);
+    setTimeout(() => setUploadProgress(0), 1000);
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    alert('Failed to upload file. Please try again.');
+    setUploadProgress(0);
+  }
 };
 
+// Function to handle deleting a resource
+const handleDeleteResource = async (resourceId) => {
+  if (!window.confirm('Are you sure you want to delete this resource?')) return;
+
+  try {
+      const groupRef = doc(db, "group-database", groupId);
+      const groupDoc = await getDoc(groupRef);
+      const currentResources = groupDoc.data().group.resources || [];
+      
+      const updatedResources = currentResources.filter(resource => 
+          resource.id !== resourceId
+      );
+
+      await updateDoc(groupRef, {
+          'group.resources': updatedResources
+      });
+
+      setContextMenu({ show: false, x: 0, y: 0, resourceId: null });
+  } catch (error) {
+      console.error('Error deleting resource:', error);
+      alert('Failed to delete resource');
+  }
+};
+
+  // Function to handle sending a new message
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() && !attachment) return;
@@ -362,6 +370,7 @@ const handleDeleteEvent = async (eventId) => {
     }
   };
 
+  // Function to handle adding a new event
   const handleAddEvent = async (e) => {
     e.preventDefault();
     
@@ -399,6 +408,7 @@ const handleDeleteEvent = async (eventId) => {
     }
   };
 
+  // Function to handle adding a new resource
   const handleAddResource = async (e) => {
     e.preventDefault();
     if (!newResource.file || !newResource.name.trim()) {
@@ -447,6 +457,7 @@ const handleDeleteEvent = async (eventId) => {
     }
 };
   
+// Function to handle resource file input changes
   const handleResourceFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -463,6 +474,7 @@ const handleDeleteEvent = async (eventId) => {
     }
 };
 
+// Function to handle attachment file input changes
   const handleAttachmentChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -475,6 +487,7 @@ const handleDeleteEvent = async (eventId) => {
     }
   };
 
+  // Function to format the event date and time
   const formatEventDateTime = (date, time) => {
     const eventDate = new Date(`${date} ${time}`);
     return eventDate.toLocaleString('en-US', { 
@@ -486,6 +499,7 @@ const handleDeleteEvent = async (eventId) => {
     });
   };
 
+  // Function to format the message date
   const formatMessageDate = (timestamp) => {
     if (!timestamp) return '';
     const date = timestamp.toDate();
@@ -506,6 +520,7 @@ const handleDeleteEvent = async (eventId) => {
     });
   };
   
+// Function to handle updating the group's name and image
   const handleUpdateGroup = async (updates) => {
     try {
       const groupRef = doc(db, "group-database", groupId);
@@ -521,6 +536,7 @@ const handleDeleteEvent = async (eventId) => {
     }
   };
   
+  // Function to handle leaving the group
   const handleLeaveGroup = async () => {
     if (window.confirm('Are you sure you want to leave this group?')) {
       try {
@@ -555,6 +571,7 @@ const handleDeleteEvent = async (eventId) => {
   if (loading) return <NavLayout><LoadingSpinner /></NavLayout>;
   if (!groupInfo) return <NavLayout><div className="error-message">Group not found</div></NavLayout>;
 
+  // Render the ChatRoom component
     return (
       <NavLayout>
         <div className="chat-container">

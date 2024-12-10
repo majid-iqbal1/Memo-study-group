@@ -40,6 +40,7 @@ const EditFlashcardSet = () => {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(null);
 
+  // Effect to fetch the flashcard set data from Firestore
   useEffect(() => {
     const fetchFlashcardSet = async () => {
       try {
@@ -65,6 +66,7 @@ const EditFlashcardSet = () => {
     fetchFlashcardSet();
   }, [setId]);
 
+  // Function to save the updated flashcard set to Firestore
   const handleSave = async () => {
     if (!title.trim()) {
       alert("Please enter a title for your flashcard set");
@@ -94,6 +96,7 @@ const EditFlashcardSet = () => {
     }
   };
 
+  // Function to delete the flashcard set from Firestore
   const handleDelete = async () => {
     if (
       window.confirm(
@@ -110,10 +113,12 @@ const EditFlashcardSet = () => {
     }
   };
 
+  // Function to add a new card to the flashcard set
   const handleAddCard = () => {
     setCards([...cards, { term: "", definition: "" }]);
   };
 
+  // Function to delete a card from the flashcard set
   const handleDeleteCard = (index) => {
     if (cards.length > 1) {
       setCards(cards.filter((_, i) => i !== index));
@@ -122,6 +127,7 @@ const EditFlashcardSet = () => {
     }
   };
 
+  // Function to handle changes to a card's term or definition
   const handleCardChange = (index, field, value) => {
     const newCards = [...cards];
     newCards[index] = { ...newCards[index], [field]: value };
@@ -132,6 +138,7 @@ const EditFlashcardSet = () => {
     return <LoadingSpinner />;
   }
 
+  // Render the error message and a "Back to Library" button if an error occurred
   if (error) {
     return (
       <NavLayout>
@@ -150,6 +157,7 @@ const EditFlashcardSet = () => {
     );
   }
 
+  // Render the error message and a "Back to Library" button if there are no errors.
   return (
     <NavLayout>
       <div className="edit-flashcard-page">

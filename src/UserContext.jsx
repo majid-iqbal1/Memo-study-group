@@ -6,8 +6,8 @@
 *          user data and state across the application.                       *
 *                                                                            *
 * Created: November 2024                                                     *
-* Updated: December 2024                                                               *
-* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich                                    *
+* Updated: December 2024                                                     *
+* Authors: Majid Iqbal, Sulav Shakya, Bruce Duong, Ethan Humrich             *
 *                                                                            *
 * Features:                                                                  *
 *   - User authentication state tracking                                     *
@@ -29,6 +29,7 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true); 
 
+    // Effect to set up the authentication state change listener
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
             if (authUser) {
@@ -46,6 +47,7 @@ export const UserProvider = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
+    // Provide the user context to the child components
     return (
         <UserContext.Provider value={{ user, setUser, loading }}>
             {children}

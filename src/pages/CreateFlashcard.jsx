@@ -38,6 +38,7 @@ import NavLayout from "../components/NavLayout";
 import { X } from "lucide-react";
 
 const Create = () => {
+  // State variables for flashcards, title, description, and submission status
   const [flashcards, setFlashcards] = useState([
     { id: 0, term: "", definition: "" },
   ]);
@@ -47,11 +48,13 @@ const Create = () => {
   const { user } = useUser();
   const navigate = useNavigate();
 
+   // Function to add a new flashcard to the set
   const addCard = () => {
     const newId = flashcards.length;
     setFlashcards([...flashcards, { id: newId, term: "", definition: "" }]);
   };
 
+  // Function to delete a flashcard from the set
   const deleteCard = (idToDelete) => {
     if (flashcards.length <= 1) {
       alert("You must have at least one flashcard.");
@@ -68,6 +71,7 @@ const Create = () => {
     setFlashcards(updatedFlashcards);
   };
 
+  // Function to handle changes to the term of a flashcard
   const handleTermChange = (id, value) => {
     setFlashcards(
       flashcards.map((card) =>
@@ -76,6 +80,7 @@ const Create = () => {
     );
   };
 
+  // Function to handle changes to the definition of a flashcard
   const handleDefinitionChange = (id, value) => {
     setFlashcards(
       flashcards.map((card) =>
@@ -84,6 +89,7 @@ const Create = () => {
     );
   };
 
+  // Function to handle the creation of a new flashcard set
   const handleCreateSet = async (redirectToPractice = false) => {
     if (!title.trim()) {
       alert("Please enter a title for your flashcard set");
@@ -128,10 +134,12 @@ const Create = () => {
     }
   };
 
+  // Function to handle the creation and immediate practice of a new flashcard set
   const handleCreateAndPractice = () => {
     handleCreateSet(true);
   };
 
+  // Render the flashcard creator UI with the necessary inputs and buttons
   return (
     <NavLayout>
       <div className="flashcard-creator">

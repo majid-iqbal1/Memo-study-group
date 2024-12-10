@@ -33,16 +33,19 @@ const NavLayout = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const location = useLocation();
 
+    // Determines if the current route matches the provided path
     const isActive = (path) => {
         return location.pathname === path ? 'active' : '';
     };
 
+    // Generates initials from the user's name
     const getInitials = (name) => {
         if (!name) return "";
         const names = name.split(" ");
         return names.length > 1 ? `${names[0][0]}${names[1][0]}`.toUpperCase() : names[0][0].toUpperCase();
     };
 
+    // Render the loading state if user data is still loading
     if (loading) return <div>Loading...</div>;
 
     return (

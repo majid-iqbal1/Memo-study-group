@@ -16,11 +16,13 @@
 *                                                                            *
 *****************************************************************************/
 
+// Importing the necessary Firebase SDK functions
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
+// Define the Firebase configuration using environment variables
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey,
     authDomain: process.env.REACT_APP_authDomain,
@@ -30,8 +32,10 @@ const firebaseConfig = {
     appId: process.env.REACT_APP_appId,
 };
 
+// Initialize the Firebase app with the provided configuration
 const app = initializeApp(firebaseConfig);
 
+// Get references to the Firebase Authentication, Firestore, and Storage services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);

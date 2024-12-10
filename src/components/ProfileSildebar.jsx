@@ -31,6 +31,7 @@ import addIcon from '../assets/add-pic.png';
 import '../styles/profilesidebar.css';
 
 const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
+    // State for profile data, editing mode, and sidebar animation
     const [profile, setProfile] = useState({ name: '', bio: '', profilePictureURL: '', streak: 0 });
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
@@ -40,6 +41,7 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
 
     const user = auth.currentUser;
 
+    // Fetch the user's profile data from Firestore on component mount
     useEffect(() => {
         const fetchProfile = async () => {
             if (user) {
@@ -73,6 +75,7 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         setTimeout(() => setIsVisible(true), 50);
     }, [user]);
 
+    // Close the sidebar with an animation
     const handleClose = () => {
         setIsVisible(false);
         setIsClosing(true);
@@ -81,6 +84,7 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         }, 300);
     };
 
+    // Handle profile picture upload to Firebase Storage
     const handleProfilePictureUpload = async (file) => {
         if (!file) return;
         try {
@@ -96,6 +100,7 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         }
     };
 
+    // Save changes to the user's profile in Firestore
     const handleSave = async () => {
         if (user) {
             try {
@@ -117,12 +122,15 @@ const ProfileSidebar = ({ onClose, onProfileUpdate }) => {
         }
     };
 
+    // Sign the user out of the application
     const handleLogout = async () => {
         await signOut(auth);
     };
 
+    // Determine the CSS classes for the sidebar based on visibility and animation state
     const sidebarClasses = `sidebar ${isVisible ? 'opening' : ''} ${isClosing ? 'closing' : ''}`;
 
+    // Render the sidebar with the profile information and actions
     return (
         <>
             <div className="sidebar-overlay" onClick={handleClose} />
