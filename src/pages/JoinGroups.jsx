@@ -149,6 +149,14 @@ const JoinGroups = () => {
     }
   };
 
+  const getInitials = (name) => {
+    if (!name) return "";
+    const words = name.split(" ");
+    return words.length > 1
+        ? words[0][0] + words[1][0]
+        : words[0][0];
+};
+
   const navigateToChat = (groupId) => {
     navigate(`/chat/${groupId}`);
   };
@@ -229,10 +237,14 @@ const JoinGroups = () => {
                   onClick={() => navigateToChat(group.id)}
                 >
                   <div className="group-image">
-                    <img
-                      src={group.group.groupImage || '/default-group-image.png'}
-                      alt={group.group?.name}
-                    />
+                  {group.group.groupImage ? (
+                      <img
+                          src={group.group.groupImage}
+                          alt={group.group?.name || "Group"}
+                      />
+                  ) : (
+                      <div className="initials">{getInitials(group.group?.name || "G")}</div>
+                  )}
                   </div>
                   <div className="group-info">
                     <h3>{group.group?.name || "Unnamed Group"}</h3>
@@ -241,9 +253,7 @@ const JoinGroups = () => {
                       {group.group?.users?.length || 0} members
                     </span>
                   </div>
-                  <button className="enter-chat-button">
-                    Enter Chat
-                  </button>
+                  <button className="enter-chat-button">Enter Chat</button>
                 </div>
               ))}
             </div>
@@ -252,33 +262,35 @@ const JoinGroups = () => {
 
         {/* Quick Join Groups Section */}
         <div className="quick-join-container">
-          <h2>Featured Study Groups</h2>
-          <div className="quick-join-boxes">
-            {groupSets.map((group) => (
-              <div className="quick-join-box" key={group.id}>
-                <div className="group-image">
-                  <img
-                    src={group.group.groupImage || '/default-group-image.png'}
-                    alt={group.group?.name}
-                  />
+            <h2>Featured Study Groups</h2>
+            <div className="quick-join-boxes">
+              {groupSets.map((group) => (
+                <div className="quick-join-box" key={group.id}>
+                  <div className="group-image">
+                  {group.group.groupImage ? (
+                    <img
+                        src={group.group.groupImage}
+                        alt={group.group?.name || "Group"}
+                    />
+                ) : (
+                    <div className="initials">{getInitials(group.group?.name || "G")}</div>
+                )}
+                  </div>
+                  <div className="box-title">{group.group?.name || 'Unnamed Group'}</div>
+                  <div className="member-count">
+                    {group.group?.users?.length || 0} members
+                  </div>
+                  <button
+                    onClick={() => handleJoinGroup(group.id)}
+                    className="join-button"
+                    disabled={joinedGroupIds[group.id]}
+                  >
+                    {joinedGroupIds[group.id] ? '✓ Joined' : 'Join'}
+                  </button>
                 </div>
-                <div className="box-title">
-                  {group.group?.name || "Unnamed Group"}
-                </div>
-                <div className="member-count">
-                  {group.group?.users?.length || 0} members
-                </div>
-                <button
-                  onClick={() => handleJoinGroup(group.id)}
-                  className="join-button"
-                  disabled={joinedGroupIds[group.id]}
-                >
-                  {joinedGroupIds[group.id] ? "✓ Joined" : "Join"}
-                </button>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
         {showPopup && (
           <PopupNotification

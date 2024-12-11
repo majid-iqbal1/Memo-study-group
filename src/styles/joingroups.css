@@ -189,6 +189,8 @@
     margin-bottom: 1rem;
     color: #666;
     object-fit: cover;
+    overflow: hidden;
+    font-size: 1.8rem;
 }
 
 .box-title {
@@ -221,6 +223,10 @@
 .join-button:hover {
     background-color: #2a78c4;
     transform: translateY(-4px);
+}
+
+.create-own-container a {
+    text-decoration: none; 
 }
 
 .create-own-container {
@@ -321,7 +327,7 @@
 .group-image {
     width: 150px;
     height: 150px;
-    border-radius: 50%;  /* Makes the image circular */
+    border-radius: 50%;  
     margin: -20px;
     overflow: hidden;
     clip-path: circle(30%);
@@ -411,7 +417,16 @@ button:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%;
   }
+
+  .quick-join-box .group-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
   
   .joined-group-box .group-info {
     text-align: center;
