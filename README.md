@@ -1,4 +1,4 @@
-# [Memo+ Study Group Application](https://memo-study-group.vercel.app/)
+# [Memo+ Study Group Application](https://memo-plus.com)
 
 A collaborative learning platform that allows users to create and join study groups, make flashcards, take tests, and communicate in real-time.
 
