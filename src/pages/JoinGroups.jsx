@@ -160,6 +160,14 @@ const JoinGroups = () => {
     navigate(`/chat/${groupId}`);
   };
 
+  const getInitials = (name) => {
+    if (!name) return "";
+    const words = name.split(" ");
+    return words.length > 1
+        ? words[0][0] + words[1][0]
+        : words[0][0];
+};
+
   return (
     <NavLayout>
       <div className="join-groups-page">
@@ -245,10 +253,14 @@ const JoinGroups = () => {
                   onClick={() => navigateToChat(group.id)}
                 >
                   <div className="group-image">
-                    <img
-                      src={group.group.groupImage || '/default-group-image.png'}
-                      alt={group.group?.name}
-                    />
+                  {group.group.groupImage ? (
+                      <img
+                          src={group.group.groupImage}
+                          alt={group.group?.name || "Group"}
+                      />
+                  ) : (
+                      <div className="initials">{getInitials(group.group?.name || "G")}</div>
+                  )}
                   </div>
                   <div className="group-info">
                     <h3>{group.group?.name || "Unnamed Group"}</h3>
@@ -273,11 +285,15 @@ const JoinGroups = () => {
             {groupSets.map((group) => (
               <div className="quick-join-box" key={group.id}>
                 <div className="group-image">
-                  <img
-                    src={group.group.groupImage || '/default-group-image.png'}
-                    alt={group.group?.name}
-                  />
-                </div>
+                  {group.group.groupImage ? (
+                    <img
+                        src={group.group.groupImage}
+                        alt={group.group?.name || "Group"}
+                    />
+                ) : (
+                    <div className="initials">{getInitials(group.group?.name || "G")}</div>
+                )}
+                  </div>
                 <div className="box-title">
                   {group.group?.name || "Unnamed Group"}
                 </div>
