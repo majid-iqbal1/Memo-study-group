@@ -54,6 +54,8 @@ const JoinGroups = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [joinedGroupIds, setJoinedGroupIds] = useState({});
 
+  /*when the user is changed  update the group database
+    with this react hook*/
   useEffect(() => {
     const fetchGroups = async () => {
       if (!user?.uid) return;
@@ -74,11 +76,13 @@ const JoinGroups = () => {
         let available = allGroups.filter(group => 
           !group.group?.users?.includes(user.uid)
         );
-        console.log("size of avialble" +  available.length);
+        console.log("size of available" +  available.length);
         if(available.length > 6)
         {
           let numberToRemove = available.length - 6;
           
+
+          //this limits the amount of recommended groups can show to 6 no matter the size of the entire pool of not joined groups
           console.log("This is how many I should delete" + numberToRemove );
           available = available.slice(0, 6);
           console.log(available);
@@ -103,6 +107,7 @@ const JoinGroups = () => {
     fetchGroups();
   }, [user]);
 
+  //react hook used for detecting when the user is searching to search
   useEffect(() => {
     if (searchTerm) {
       const allGroups = [...joinedGroups, ...groupSets];
@@ -123,6 +128,8 @@ const JoinGroups = () => {
     }
 
     try {
+
+      //pulls group data for the users
       const groupRef = doc(db, "group-database", groupId);
       await updateDoc(groupRef, {
         "group.users": arrayUnion(user.uid),
@@ -159,6 +166,8 @@ const JoinGroups = () => {
         <div className="group-container-box">
           <h1>Study Groups</h1>
 
+
+          
           <div className="search-container">
             <div className="search-box">
               <input
@@ -169,7 +178,7 @@ const JoinGroups = () => {
                 className="search-input"
               />
             </div>
-
+            {/*code for filtering groups whilst searching*/}
             {isSearching && (
               <div className="search-results">
                 <h2>Search Results</h2>
@@ -183,16 +192,20 @@ const JoinGroups = () => {
                       <div
                         key={group.id}
                         className="result-item"
+                        //Clicking the blurb of the group you have joined takes you to its chat room
                         onClick={() => navigateToChat(group.id)}
                       >
                         <div className="result-info">
+                          {/*Name of the group*/}
                           <span className="result-title">
                             {group.group?.name || "Unnamed Group"}
                           </span>
+                          {/*Owner of the group*/}
                           <span className="result-creator">
                             Owner: {group.createdBy?.name || "Unknown"}
                           </span>
                         </div>
+                        {/*makes sure that the word member is a plural or not depending on the number of people*/}
                         <span className="member-count">
                           {group.group?.users?.length || 0}{" "}
                           {group.group?.users?.length === 1 ? "member" : "members"}
@@ -201,6 +214,7 @@ const JoinGroups = () => {
                     ))}
                   </div>
                 ) : (
+                  //If the user searches a term that is not within the group
                   <div className="no-results">
                     <p>No groups found matching "{searchTerm}"</p>
                   </div>
@@ -208,6 +222,8 @@ const JoinGroups = () => {
               </div>
             )}
           </div>
+
+          {/*Button for creating group page from join group*/}
 
           <div className="create-own-container">
             <h2>or</h2>
@@ -273,15 +289,18 @@ const JoinGroups = () => {
                   className="join-button"
                   disabled={joinedGroupIds[group.id]}
                 >
+                  {/*Prevent the user from joining the group twice.*/}
                   {joinedGroupIds[group.id] ? "✓ Joined" : "Join"}
                 </button>
               </div>
             ))}
           </div>
         </div>
-
+        
+        {/*Popup notifcation when the user joins a group to show*/}
         {showPopup && (
           <PopupNotification
+
             message={popupMessage}
             onClose={() => setShowPopup(false)}
           />
