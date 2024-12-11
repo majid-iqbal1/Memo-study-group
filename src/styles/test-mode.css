@@ -50,7 +50,7 @@ p {
 }
 
 .score-block button:hover {
-    background-color: #2a7bd7;
+    background-color: #3c91e6;
 }
 
 .question-block {
@@ -152,5 +152,5 @@ p {
 }
 
 .next-button:hover:enabled {
-    background-color: #2a7bd7;
+    background-color: #3c91e6;
 }
