@@ -13,16 +13,20 @@ Before you begin, ensure you have installed:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/majid-iqbal1/firebase-project.git
-cd firebase-project
+git clone https://github.com/majid-iqbal1/Memo-study-group.git
+cd Memo-study-group
 ```
 
 2. Install dependencies:
 ```bash
-npm install
+npm install react@18.2.0
+npm install react-dom@18.2.0 
+npm install react-router-dom@6.20.0
+npm install firebase@10.7.0
+npm install lucide-react@0.263.1
 ```
 
-3. Create a `.env` file in the root directory and add your Firebase and EmailJS configuration:
+3. You will need a `.env` file in the root directory and add your Firebase and EmailJS configuration to be able to run the program:
 ```env
 REACT_APP_apiKey=your_firebase_api_key
 REACT_APP_authDomain=your_firebase_domain
@@ -49,9 +53,6 @@ Core Dependencies:
 - Firebase (v11.0.1)
 - EmailJS Browser (v4.4.1)
 - Lucide React (v0.456.0)
-
-Development Dependencies:
-- Autoprefixer (v10.4.20)
 
 ## Features and Usage Guide
 
