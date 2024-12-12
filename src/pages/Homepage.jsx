@@ -26,7 +26,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../Firebase.jsx";
-import "../styles/Homepage.css";
+import "../styles/homepage.css";
 import { useUser } from "../UserContext.jsx";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
