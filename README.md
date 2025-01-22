@@ -137,7 +137,3 @@ This project and its contents are protected under copyright law. No part of this
 - Sulav Shakya
 - Bruce Duong
 - Ethan Humrich
-
-## Acknowledgments
-- UW Bothell CSS 481 Course
-- Professor Ethan Uong
