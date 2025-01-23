@@ -210,7 +210,7 @@ const Homepage = () => {
       </section>
 
       <footer>
-        <p>&copy; 2024 Memo+</p>
+        <p>&copy; 2025 Memo+</p>
       </footer>
     </NavLayout>
   );
